@@ -2,6 +2,20 @@
 
 [ext_resource type="PackedScene" uid="uid://cyfl7ve4hup03" path="res://game/meshes/meteor.glb" id="1_tcwo0"]
 
-[node name="Meteor" type="Node3D" unique_id=788611388]
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_tcwo0"]
+bounce = 0.51
 
-[node name="meteor" parent="." unique_id=1208533006 instance=ExtResource("1_tcwo0")]
+[sub_resource type="SphereShape3D" id="SphereShape3D_tcwo0"]
+radius = 1.033
+
+[node name="Meteor" type="RigidBody3D" unique_id=217224758]
+collision_layer = 3
+collision_mask = 1048575
+physics_material_override = SubResource("PhysicsMaterial_tcwo0")
+gravity_scale = 0.0
+continuous_cd = true
+
+[node name="meteor" parent="." unique_id=1435494417 instance=ExtResource("1_tcwo0")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=196492444]
+shape = SubResource("SphereShape3D_tcwo0")

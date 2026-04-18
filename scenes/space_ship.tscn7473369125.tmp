@@ -27,43 +27,38 @@ size = Vector3(4.935, 7.075, 5.605)
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_ivtut"]
 data = PackedVector3Array(-0.0001, 0.8279, -14, 3.1134, 1.5446999, -14, -0.0001, 1.828, -13.882299, -0.0001, 0.8279, -14, 3.7889, 0.8279, -14, 3.1134, 1.5446999, -14, 3.7889, 0.8279, -13, 3.1134, 1.5446999, -12, 3.1134, 1.5446999, -13, 3.7889, 0.8279, -13, 3.7889, 0.8279, -12, 3.1134, 1.5446999, -12, 3.7889, 0.8279, -14, 3.7889, 0.8279, -13, 3.1134, 1.5446999, -13, 3.7889, 0.8279, -14, 3.1134, 1.5446999, -13, 3.1134, 1.5446999, -14, -0.0001, -0.17199999, -13, 3.7889, -0.17199999, -12, 3.7889, -0.17199999, -13, -0.0001, -0.17199999, -13, -0.0001, -0.17199999, -12, 3.7889, -0.17199999, -12, -0.0001, -0.17199999, -13, -3.7889, -0.17199999, -12, -0.0001, -0.17199999, -12, -0.0001, -0.17199999, -13, -3.7889, -0.17199999, -13, -3.7889, -0.17199999, -12, -0.0001, -0.17199999, -14, -0.0001, -0.17199999, -13, 3.7889, -0.17199999, -13, -0.0001, -0.17199999, -14, -3.7889, -0.17199999, -13, -0.0001, -0.17199999, -13, -0.0001, -0.17199999, -14, 3.7889, -0.17199999, -13, 3.7889, -0.17199999, -14, -0.0001, -0.17199999, -14, -3.7889, -0.17199999, -14, -3.7889, -0.17199999, -13, 3.1134, 1.5446999, -13, -0.0001, 1.2717, -12, -0.0001, 1.828, -13.1177, 3.1134, 1.5446999, -13, 3.1134, 1.5446999, -12, -0.0001, 1.2717, -12, 3.1134, 1.5446999, -14, -0.0001, 1.828, -13.1177, -0.0001, 1.828, -13.882299, 3.1134, 1.5446999, -14, 3.1134, 1.5446999, -13, -0.0001, 1.828, -13.1177, 3.7889, -0.17199999, -12, -0.0001, 0.8279, -12, 3.7889, 0.8279, -12, 3.7889, -0.17199999, -12, -0.0001, -0.17199999, -12, -0.0001, 0.8279, -12, -3.7889, -0.17199999, -12, -0.0001, 0.8279, -12, -0.0001, -0.17199999, -12, -3.7889, -0.17199999, -12, -3.7889, 0.8279, -12, -0.0001, 0.8279, -12, 3.7889, 0.8279, -12, -0.0001, 0.8279, -12, -0.0001, 1.2717, -12, -3.7889, 0.8279, -12, -0.0001, 1.2717, -12, -0.0001, 0.8279, -12, 3.7889, 0.8279, -12, -0.0001, 1.2717, -12, 3.1134, 1.5446999, -12, -3.7889, 0.8279, -12, -3.1134999, 1.5446999, -12, -0.0001, 1.2717, -12, 3.7889, -0.17199999, -13, 3.7889, 0.8279, -12, 3.7889, 0.8279, -13, 3.7889, -0.17199999, -13, 3.7889, -0.17199999, -12, 3.7889, 0.8279, -12, 3.7889, -0.17199999, -14, 3.7889, -0.17199999, -13, 3.7889, 0.8279, -13, 3.7889, -0.17199999, -14, 3.7889, 0.8279, -13, 3.7889, 0.8279, -14, -0.0001, -0.17199999, -14, 3.7889, 0.8279, -14, -0.0001, 0.8279, -14, -0.0001, -0.17199999, -14, 3.7889, -0.17199999, -14, 3.7889, 0.8279, -14, -0.0001, -0.17199999, -14, -0.0001, 0.8279, -14, -3.7889, 0.8279, -14, -0.0001, -0.17199999, -14, -3.7889, 0.8279, -14, -3.7889, -0.17199999, -14, -0.0001, 0.8279, -14, -3.1134999, 1.5446999, -14, -3.7889, 0.8279, -14, -0.0001, 0.8279, -14, -0.0001, 1.828, -13.882299, -3.1134999, 1.5446999, -14, -3.7889, 0.8279, -13, -3.1134999, 1.5446999, -12, -3.7889, 0.8279, -12, -3.7889, 0.8279, -13, -3.1134999, 1.5446999, -13, -3.1134999, 1.5446999, -12, -3.7889, 0.8279, -14, -3.1134999, 1.5446999, -13, -3.7889, 0.8279, -13, -3.7889, 0.8279, -14, -3.1134999, 1.5446999, -14, -3.1134999, 1.5446999, -13, -3.1134999, 1.5446999, -13, -0.0001, 1.2717, -12, -3.1134999, 1.5446999, -12, -3.1134999, 1.5446999, -13, -0.0001, 1.828, -13.1177, -0.0001, 1.2717, -12, -3.1134999, 1.5446999, -14, -0.0001, 1.828, -13.1177, -3.1134999, 1.5446999, -13, -3.1134999, 1.5446999, -14, -0.0001, 1.828, -13.882299, -0.0001, 1.828, -13.1177, -3.7889, -0.17199999, -13, -3.7889, 0.8279, -12, -3.7889, -0.17199999, -12, -3.7889, -0.17199999, -13, -3.7889, 0.8279, -13, -3.7889, 0.8279, -12, -3.7889, -0.17199999, -14, -3.7889, 0.8279, -13, -3.7889, -0.17199999, -13, -3.7889, -0.17199999, -14, -3.7889, 0.8279, -14, -3.7889, 0.8279, -13)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_ship_hull"]
-size = Vector3(14, 9, 28)
-
 [node name="SpaceShip" type="CharacterBody3D" unique_id=1555982470]
-collision_layer = 2
-collision_mask = 2
 script = ExtResource("1_bt5oy")
 
 [node name="spaceship" parent="." unique_id=1661679270 instance=ExtResource("1_dp8cb")]
 
-[node name="StaticBody3D" type="AnimatableBody3D" parent="spaceship/Exit" parent_id_path=PackedInt32Array(1661679270, 1427591902) index="0" unique_id=1664425832]
+[node name="StaticBody3D" type="StaticBody3D" parent="spaceship/Exit" parent_id_path=PackedInt32Array(1661679270, 1427591902) index="0" unique_id=1664425832]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="spaceship/Exit/StaticBody3D" unique_id=2110113369]
 shape = SubResource("ConcavePolygonShape3D_dp8cb")
 
-[node name="StaticBody3D" type="AnimatableBody3D" parent="spaceship/RightSide" parent_id_path=PackedInt32Array(1661679270, 109321178) index="0" unique_id=883703258]
+[node name="StaticBody3D" type="StaticBody3D" parent="spaceship/RightSide" parent_id_path=PackedInt32Array(1661679270, 109321178) index="0" unique_id=883703258]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="spaceship/RightSide/StaticBody3D" unique_id=1738213286]
 shape = SubResource("ConcavePolygonShape3D_bt5oy")
 
-[node name="StaticBody3D" type="AnimatableBody3D" parent="spaceship/LeftSide" parent_id_path=PackedInt32Array(1661679270, 1254734911) index="0" unique_id=107202312]
+[node name="StaticBody3D" type="StaticBody3D" parent="spaceship/LeftSide" parent_id_path=PackedInt32Array(1661679270, 1254734911) index="0" unique_id=107202312]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="spaceship/LeftSide/StaticBody3D" unique_id=1345460424]
 shape = SubResource("ConcavePolygonShape3D_jy7xo")
 
-[node name="StaticBody3D" type="AnimatableBody3D" parent="spaceship/Glass" parent_id_path=PackedInt32Array(1661679270, 490605233) index="0" unique_id=2120421237]
+[node name="StaticBody3D" type="StaticBody3D" parent="spaceship/Glass" parent_id_path=PackedInt32Array(1661679270, 490605233) index="0" unique_id=2120421237]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="spaceship/Glass/StaticBody3D" unique_id=2052291817]
 shape = SubResource("ConcavePolygonShape3D_n0g6o")
 
-[node name="StaticBody3D" type="AnimatableBody3D" parent="spaceship/Floor" parent_id_path=PackedInt32Array(1661679270, 1492034367) index="0" unique_id=1340081988]
+[node name="StaticBody3D" type="StaticBody3D" parent="spaceship/Floor" parent_id_path=PackedInt32Array(1661679270, 1492034367) index="0" unique_id=1340081988]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.915112, -3.6343021)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="spaceship/Floor/StaticBody3D" unique_id=787411269]
 shape = SubResource("BoxShape3D_4246p")
 
-[node name="StaticBody3D" type="AnimatableBody3D" parent="spaceship/Chair" parent_id_path=PackedInt32Array(1661679270, 1521920877) index="0" unique_id=1271767578]
+[node name="StaticBody3D" type="StaticBody3D" parent="spaceship/Chair" parent_id_path=PackedInt32Array(1661679270, 1521920877) index="0" unique_id=1271767578]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="spaceship/Chair/StaticBody3D" unique_id=827942316]
 shape = SubResource("ConcavePolygonShape3D_n8dcg")
@@ -78,14 +73,10 @@ transform = Transform3D(0.64000005, 0, 0, 0, 0.64000005, 0, 0, 0, 0.64000005, 0,
 [node name="CollisionShape3D" type="CollisionShape3D" parent="spaceship/Chair/Camera3D/ChairArea" unique_id=1476018799]
 shape = SubResource("BoxShape3D_dp8cb")
 
-[node name="StaticBody3D" type="AnimatableBody3D" parent="spaceship/Panel" parent_id_path=PackedInt32Array(1661679270, 518514998) index="0" unique_id=670048533]
+[node name="StaticBody3D" type="StaticBody3D" parent="spaceship/Panel" parent_id_path=PackedInt32Array(1661679270, 518514998) index="0" unique_id=670048533]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="spaceship/Panel/StaticBody3D" unique_id=1401247168]
 shape = SubResource("ConcavePolygonShape3D_ivtut")
-
-[node name="ShipHullCollision" type="CollisionShape3D" parent="." unique_id=106548467]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, -2)
-shape = SubResource("BoxShape3D_ship_hull")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1208399449]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.8759172, 3.7683153)
@@ -105,13 +96,7 @@ light_color = Color(1, 0.94419736, 0.8288257, 1)
 light_indirect_energy = 3.963
 omni_range = 4096.0
 
-[node name="TurretPos" type="Node3D" parent="." unique_id=1904573655]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6448154, 0, -13.066308)
-
-[node name="TurretPos2" type="Node3D" parent="." unique_id=1696347090]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5773087, 0, -13.066308)
-
-[connection signal="body_entered" from="spaceship/Chair/Camera3D/ChairArea" to="." method="on_chair_area_body_entered"]
-[connection signal="body_exited" from="spaceship/Chair/Camera3D/ChairArea" to="." method="on_chair_area_body_exited"]
+[connection signal="body_entered" from="spaceship/Chair/Camera3D/ChairArea" to="." method="_on_chair_area_body_entered"]
+[connection signal="body_exited" from="spaceship/Chair/Camera3D/ChairArea" to="." method="_on_chair_area_body_exited"]
 
 [editable path="spaceship"]
