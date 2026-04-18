@@ -5,13 +5,15 @@
 [ext_resource type="PackedScene" uid="uid://d3g7wxtsivdfs" path="res://game/meshes/fixed_antenna.glb" id="3_fixed"]
 [ext_resource type="Material" uid="uid://8smc4k8e250j" path="res://game/meshes/CrosshairReticleMaterial.tres" id="4_chm"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_body"]
-size = Vector3(2, 4, 2)
+[sub_resource type="SphereShape3D" id="SphereShape3D_body"]
+radius = 2.05
 
 [sub_resource type="QuadMesh" id="QuadMesh_crosshair"]
 
 [node name="Antenna" type="StaticBody3D" unique_id=2014974688 node_paths=PackedStringArray("crosshair_marker")]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
+collision_layer = 3
+collision_mask = 1048575
 script = ExtResource("1_ant")
 crosshair_marker = NodePath("CrosshairMarker")
 
@@ -21,11 +23,10 @@ crosshair_marker = NodePath("CrosshairMarker")
 visible = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=489978499]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
-shape = SubResource("BoxShape3D_body")
+shape = SubResource("SphereShape3D_body")
 
 [node name="CrosshairMarker" type="Marker3D" parent="." unique_id=1088830538]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.05, 0)
 
 [node name="Reticle" type="MeshInstance3D" parent="CrosshairMarker" unique_id=1233347621]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.5, 0)
@@ -67,3 +68,7 @@ show_percentage = false
 pixel_size = 0.012
 billboard = 1
 render_priority = 8
+
+[node name="TowerMusic" type="AudioStreamPlayer3D" parent="." unique_id=1596016657]
+unit_size = 320.0
+max_distance = 20000.0

@@ -5,8 +5,10 @@ class_name SpaceShip
 const METEOR_PROJECTILE_SCENE: PackedScene = preload("uid://b65juspb4p45s")
 const REPAIR_PROJECTILE_SCENE: PackedScene = preload("res://scenes/repair_proyectile.tscn")
 
-const SPEED = 20.0
-const ACCEL = 6.0
+const ACCEL: float = 6.0
+const MIN_CRUISE: float = 5.0
+const MAX_CRUISE: float = 80.0
+const CRUISE_STEP: float = 2.0
 
 const SEAT_OFFSET_LOCAL: Vector3 = Vector3(0, 1.2, -2.0)
 const EXIT_PROBE_OFFSET: Vector3 = Vector3(0.0, 0.35, 0.65)
@@ -31,6 +33,7 @@ var next_turret_left: bool = true
 @onready var repair_shooting_cooldown: Timer = $RepairShootingCooldown
 @onready var radio: Radio = $Radio
 
+var cruise_speed: float = 20.0
 var can_fire_repair: bool = true
 
 var _mouse_yaw_delta: float = 0.0
@@ -47,13 +50,24 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	handle_input()
 	if radio != null:
-		radio.tick(global_position, is_active)
+		radio.tick(radio_listener_position())
+
+
+func radio_listener_position() -> Vector3:
+	if GlobalValues.player != null and GlobalValues.player.vehicle != self:
+		return GlobalValues.player.global_position
+	return global_position
 
 func _input(event: InputEvent) -> void:
 	if not is_active:
 		return
 	if event is InputEventMouseMotion:
 		_mouse_yaw_delta += event.relative.x
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			cruise_speed = minf(cruise_speed + CRUISE_STEP, MAX_CRUISE)
+		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			cruise_speed = maxf(cruise_speed - CRUISE_STEP, MIN_CRUISE)
 
 func _physics_process(delta: float) -> void:
 	if is_active:
@@ -61,7 +75,6 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 	_sync_interior_animatable_bodies_to_physics()
 
-## collision bodies with the parent unless their transform is pushed to the physics server
 func _sync_interior_animatable_bodies_to_physics() -> void:
 	for n in find_children("*", "AnimatableBody3D", true, false):
 		var ab: AnimatableBody3D = n as AnimatableBody3D
@@ -85,8 +98,6 @@ func handle_input() -> void:
 		update_meteor_primary_hold()
 		tick_repair_hold_fire()
 		tick_meteor_primary_auto_fire()
-		if Input.is_action_just_pressed("Ping"):
-			radio.play_ping(global_position)
 	
 func set_piloting(piloting: bool) -> void:
 	is_active = piloting
@@ -176,7 +187,7 @@ func handle_movement(delta: float) -> void:
 		velocity = velocity.lerp(Vector3.ZERO, ACCEL * delta)
 		return
 	wish = wish.normalized()
-	velocity = velocity.lerp(wish * SPEED, ACCEL * delta)
+	velocity = velocity.lerp(wish * cruise_speed, ACCEL * delta)
 #endregion
 
 #region Ship weapons
@@ -203,8 +214,10 @@ func try_fire_repair_bolt() -> void:
 	var muzzle: Node3D = turret_pos if next_turret_left else turret_pos_2
 	next_turret_left = not next_turret_left
 	var bolt: RepairProyectile = REPAIR_PROJECTILE_SCENE.instantiate() as RepairProyectile
+	if not ShipWeaponSpawn.add_to_current_scene(self, bolt):
+		bolt.queue_free()
+		return
 	bolt.configure_homing(_reticle_antenna, muzzle)
-	ShipWeaponSpawn.add_to_current_scene(self, bolt)
 	can_fire_repair = false
 	repair_shooting_cooldown.start()
 
@@ -223,8 +236,10 @@ func try_spawn_meteor_projectile() -> void:
 	var muzzle: Node3D = turret_pos if next_turret_left else turret_pos_2
 	next_turret_left = not next_turret_left
 	var projectile: Proyectile = METEOR_PROJECTILE_SCENE.instantiate() as Proyectile
+	if not ShipWeaponSpawn.add_to_current_scene(self, projectile):
+		projectile.queue_free()
+		return
 	projectile.configure_homing(_reticle_meteor, muzzle)
-	ShipWeaponSpawn.add_to_current_scene(self, projectile)
 
 	can_shoot = false
 	shooting_cooldown.start()

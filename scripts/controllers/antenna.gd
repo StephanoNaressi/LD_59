@@ -1,22 +1,32 @@
 extends StaticBody3D
 class_name Antenna
 
+#region exports
 @export var metal_cost: int = 1
 @export var rock_cost: int = 1
 @export var crosshair_marker: Marker3D
 @export var repair_charge_per_hit: float = 0.05
+@export var music_stream: AudioStream
+#endregion
 
+#region signals
 signal was_repaired
+#endregion
 
+#region state
 var is_repaired: bool = false
 var repair_progress: float = 0.0
+#endregion
 
+#region nodes
 @onready var broken_mesh: Node3D = $BrokenMesh
 @onready var fixed_mesh: Node3D = $FixedMesh
 @onready var repair_progress_root: Node3D = $RepairProgressRoot
 @onready var repair_viewport: SubViewport = $RepairProgressRoot/RepairSubViewport
 @onready var repair_progress_bar: ProgressBar = $RepairProgressRoot/RepairSubViewport/ProgressRoot/RepairProgressBar
 @onready var repair_billboard: Sprite3D = $RepairProgressRoot/RepairBillboard
+@onready var tower_music: AudioStreamPlayer3D = $TowerMusic
+#endregion
 
 
 func _ready() -> void:
@@ -24,7 +34,43 @@ func _ready() -> void:
 	if crosshair_marker:
 		crosshair_marker.visible = false
 	repair_progress_root.visible = false
+	if music_stream != null:
+		tower_music.stream = music_stream
 	call_deferred("connect_repair_billboard_texture")
+
+
+func planet_surface_radius() -> float:
+	if crosshair_marker:
+		var d: float = global_position.distance_to(crosshair_marker.global_position)
+		if d > 1.0:
+			return d
+	return 80.0
+
+
+static func closest_to(world_position: Vector3, tree: SceneTree) -> Antenna:
+	var best: Antenna = null
+	var best_distance: float = INF
+	for node in tree.get_nodes_in_group("antennas"):
+		if not (node is Antenna):
+			continue
+		var antenna: Antenna = node as Antenna
+		var distance: float = world_position.distance_to(antenna.global_position)
+		if distance < best_distance:
+			best_distance = distance
+			best = antenna
+	return best
+
+
+func set_tower_music_playing(playing: bool) -> void:
+	if music_stream == null:
+		if tower_music.playing:
+			tower_music.stop()
+		return
+	if playing:
+		if not tower_music.playing:
+			tower_music.play()
+	else:
+		tower_music.stop()
 
 
 func connect_repair_billboard_texture() -> void:

@@ -23,6 +23,18 @@ func _input(event: InputEvent) -> void:
 	handle_camera(event)
 	handle_mouse_capture(event)
 
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not Input.is_action_just_pressed("Ping"):
+		return
+	var ship: SpaceShip = get_tree().get_first_node_in_group("rideable_ship") as SpaceShip
+	if ship == null or ship.radio == null:
+		return
+	var origin: Vector3 = global_position
+	if vehicle != null:
+		origin = vehicle.global_position
+	ship.radio.play_ping(origin)
+
 func _physics_process(delta: float) -> void:
 	if vehicle != null:
 		sync_pilot_to_seat()

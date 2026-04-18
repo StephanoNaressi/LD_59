@@ -36,6 +36,7 @@ size = Vector3(14, 9, 28)
 radius = 24.452
 
 [node name="SpaceShip" type="CharacterBody3D" unique_id=1555982470]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
 collision_layer = 2
 collision_mask = 2
 script = ExtResource("1_bt5oy")

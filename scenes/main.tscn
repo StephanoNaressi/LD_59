@@ -5,6 +5,18 @@
 [ext_resource type="PackedScene" uid="uid://bbv5mm5ddjy31" path="res://scenes/asteroid_belt.tscn" id="4_belt"]
 [ext_resource type="PackedScene" uid="uid://6dx8yn04eb3d" path="res://scenes/antenna.tscn" id="5_ant"]
 [ext_resource type="Script" uid="uid://b2e76c86a8bso" path="res://scripts/controllers/ui.gd" id="5_tbgi4"]
+[ext_resource type="Script" uid="uid://c4nixicea8og0" path="res://scripts/main_world.gd" id="6_mainw"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sun"]
+shading_mode = 2
+albedo_color = Color(1, 0.55, 0.12, 1)
+emission_enabled = true
+emission = Color(1, 0.75, 0.25, 1)
+emission_energy_multiplier = 5.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_sun"]
+radius = 1.0
+height = 2.0
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0wfyh"]
 sky_top_color = Color(0.08789865, 0, 0.19748032, 1)
@@ -52,23 +64,40 @@ scale_curve = SubResource("CurveTexture_tefeu")
 [sub_resource type="SphereMesh" id="SphereMesh_tipki"]
 
 [node name="Main" type="Node3D" unique_id=1268587365]
+script = ExtResource("6_mainw")
+
+[node name="SunLight" type="DirectionalLight3D" parent="." unique_id=2000000102]
+transform = Transform3D(0.66913056, -0.4875469, 0.56085855, 0, 0.7547096, 0.656059, -0.74314487, -0.43898913, 0.5049993, 0, 0, 0)
+light_color = Color(1, 0.96, 0.88, 1)
+light_energy = 1.42
+shadow_enabled = true
+
+[node name="SunVisual" type="MeshInstance3D" parent="." unique_id=2000000103]
+transform = Transform3D(300, 0, 0, 0, 300, 0, 0, 0, 300, 0, 120, -6070)
+material_override = SubResource("StandardMaterial3D_sun")
+mesh = SubResource("SphereMesh_sun")
 
 [node name="SpaceShip" parent="." unique_id=1148349640 instance=ExtResource("1_0wfyh")]
 
 [node name="AsteroidBelt" parent="." unique_id=1327652023 instance=ExtResource("4_belt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -159.94873, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -520, 0, 240)
 min_distance_from_player = 1.0
 
-[node name="AntennaA" parent="." unique_id=2000000001 instance=ExtResource("5_ant")]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 80.00905, 0, 12)
-rock_cost = 2
+[node name="AsteroidBelt2" parent="." unique_id=1327652024 instance=ExtResource("4_belt")]
+transform = Transform3D(0.9659258, 0, -0.25881904, 0, 1, 0, 0.25881904, 0, 0.9659258, 1100, -30, -720)
+min_distance_from_player = 1.0
 
-[node name="AntennaB" parent="." unique_id=2000000002 instance=ExtResource("5_ant")]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 48.009045, 0, 22)
-metal_cost = 2
+[node name="AsteroidBelt3" parent="." unique_id=1327652025 instance=ExtResource("4_belt")]
+transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, 180, 50, 1400)
+min_distance_from_player = 1.0
 
-[node name="AntennaC" parent="." unique_id=2000000003 instance=ExtResource("5_ant")]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 70.00905, 0, -20)
+[node name="AsteroidBelt4" parent="." unique_id=1327652026 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1400, 40, 500)
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt5" parent="." unique_id=1327652027 instance=ExtResource("4_belt")]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, 600, -20, -1600)
+min_distance_from_player = 1.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1053174916]
 environment = SubResource("Environment_jyhfs")
@@ -113,6 +142,22 @@ text = "ROCKS : 10"
 layout_mode = 2
 text = "Metal : 10"
 
+[node name="PlayerCoords" type="Label" parent="CanvasLayer/UI/VBoxRoot" unique_id=1820381872]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "YOU X:0 Y:0"
+
+[node name="TowerCoords" type="Label" parent="CanvasLayer/UI/VBoxRoot" unique_id=1820381873]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "TOWERS"
+
+[node name="ShipSpeed" type="Label" parent="CanvasLayer/UI/VBoxRoot" unique_id=1820381874]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "SPD 0 / 0"
+
 [node name="Spacer" type="Control" parent="CanvasLayer/UI/VBoxRoot" unique_id=1651439110]
 layout_mode = 2
 size_flags_vertical = 3
@@ -139,3 +184,6 @@ METAL 0/0"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
+
+[node name="Antenna" parent="." unique_id=2014974688 instance=ExtResource("5_ant")]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -736.25726, 102.714966, 1285.1725)

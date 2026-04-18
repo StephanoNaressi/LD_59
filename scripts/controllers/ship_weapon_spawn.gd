@@ -1,10 +1,6 @@
 extends RefCounted
 class_name ShipWeaponSpawn
 
-## Shared helpers for ship-fired projectiles (camera aim, scene root, physics exclusions).
-
-
-## Picks the overlapping body whose screen position is closest to the view center (same rule as ship crosshair).
 static func pick_body_in_engagement(
 	camera: Camera3D,
 	engagement: Area3D,
