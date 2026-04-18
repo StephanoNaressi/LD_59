@@ -16,6 +16,7 @@ func _ready() -> void:
 	process_priority = 0
 	collision_layer = 1
 	collision_mask = 1
+	floor_snap_length = 0.25
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 func _input(event: InputEvent) -> void:
@@ -44,9 +45,9 @@ func end_pilot() -> void:
 		return
 	var ship: SpaceShip = vehicle
 	vehicle = null
-	set_collision_shapes_enabled(true)
 	global_position = ship.get_exit_world_position()
 	velocity = Vector3.ZERO
+	set_collision_shapes_enabled(true)
 	camera_3d.current = true
 	ship.deactivate_pilot_camera()
 	ship.set_piloting(false)
@@ -64,10 +65,6 @@ func sync_pilot_to_seat() -> void:
 
 #region Movement
 func handle_movement(delta: float) -> void:
-	var riding: CharacterBody3D = get_riding_ship()
-	if riding:
-		global_position += riding.velocity * delta
-
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
@@ -84,24 +81,6 @@ func handle_movement(delta: float) -> void:
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 
 	move_and_slide()
-
-func get_riding_ship() -> CharacterBody3D:
-	if not is_on_floor():
-		return null
-	var slide_count: int = get_slide_collision_count()
-	for slide_index in range(slide_count):
-		var slide_hit: KinematicCollision3D = get_slide_collision(slide_index)
-		if slide_hit == null:
-			continue
-		var collider: CollisionObject3D = slide_hit.get_collider() as CollisionObject3D
-		if collider == null:
-			continue
-		var ancestor: Node = collider
-		while ancestor:
-			if ancestor.is_in_group("rideable_ship"):
-				return ancestor as CharacterBody3D
-			ancestor = ancestor.get_parent()
-	return null
 #endregion
 
 #region Input

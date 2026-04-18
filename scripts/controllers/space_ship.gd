@@ -6,20 +6,16 @@ const PROJECTILE = preload("uid://b65juspb4p45s")
 
 const SPEED = 20.0
 const ACCEL = 6.0
-const YAW_SPEED: float = 2.2
-const MOUSE_YAW_SENS: float = 0.0035
-const MOUSE_PITCH_SENS: float = 0.0025
-const ROLL_SPEED = 2.5
-const ROLL_RETURN_SPEED: float = 1.2
 
 const SEAT_OFFSET_LOCAL: Vector3 = Vector3(0, 1.2, -2.0)
+const EXIT_PROBE_OFFSET: Vector3 = Vector3(0.0, 0.35, 0.65)
+const EXIT_SPAWN_ABOVE_FLOOR: float = 1.12
 #endregion
 
 #region variables
 var is_active: bool = false
 var is_player_in_area: bool = false
 
-var roll: float = 0.0
 @onready var turret_pos: Node3D = $TurretPos
 @onready var turret_pos_2: Node3D = $TurretPos2
 
@@ -42,25 +38,16 @@ func _physics_process(delta: float) -> void:
 	if is_active:
 		handle_movement(delta)
 		move_and_slide()
-		apply_flight_leveling(delta)
+	_sync_interior_animatable_bodies_to_physics()
 
-func _unhandled_input(event: InputEvent) -> void:
-	if not is_active:
-		return
-	if event is InputEventMouseMotion:
-		camera_3d.rotation.y -= event.relative.x * MOUSE_YAW_SENS
-		camera_3d.rotation.x -= event.relative.y * MOUSE_PITCH_SENS
-		camera_3d.rotation.x = clamp(camera_3d.rotation.x, -deg_to_rad(89.0), deg_to_rad(89.0))
-		get_viewport().set_input_as_handled()
-
-func apply_flight_leveling(delta: float) -> void:
-	if Input.is_action_pressed("RollLeft"):
-		roll += ROLL_SPEED * delta
-	elif Input.is_action_pressed("RollRight"):
-		roll -= ROLL_SPEED * delta
-	else:
-		roll = move_toward(roll, 0.0, ROLL_RETURN_SPEED * delta)
-	rotation.z = roll
+## collision bodies with the parent unless their transform is pushed to the physics server
+func _sync_interior_animatable_bodies_to_physics() -> void:
+	for n in find_children("*", "AnimatableBody3D", true, false):
+		var ab: AnimatableBody3D = n as AnimatableBody3D
+		var rid: RID = ab.get_rid()
+		if not rid.is_valid():
+			continue
+		PhysicsServer3D.body_set_state(rid, PhysicsServer3D.BODY_STATE_TRANSFORM, ab.global_transform)
 
 func handle_input() -> void:
 	if Input.is_action_just_pressed("Interact"):
@@ -91,26 +78,40 @@ func get_seat_world_transform() -> Transform3D:
 	return Transform3D(anchor_transform.basis, anchor_transform * SEAT_OFFSET_LOCAL)
 
 func get_exit_world_position() -> Vector3:
-	if exit_anchor:
-		return exit_anchor.global_position + exit_anchor.global_transform.basis * Vector3(0, 0.5, 0.5)
-	return global_position + global_transform.basis * Vector3(0, 2.0, 4.0)
+	var ship_basis: Basis = global_transform.basis
+	var origin: Vector3 = exit_anchor.global_position if exit_anchor else global_position
+	var probe: Vector3 = origin + ship_basis * EXIT_PROBE_OFFSET
+	var ray_from: Vector3 = probe + ship_basis.y * 4.0
+	var ray_to: Vector3 = probe - ship_basis.y * 15.0
+	var ray: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.create(ray_from, ray_to)
+	ray.collision_mask = 1
+	var hit: Dictionary = get_world_3d().direct_space_state.intersect_ray(ray)
+	if hit.has("position"):
+		return hit.position + ship_basis.y * EXIT_SPAWN_ABOVE_FLOOR
+	return probe + ship_basis.y * (EXIT_SPAWN_ABOVE_FLOOR + 0.35)
 
 #region Movement
 func handle_movement(delta: float) -> void:
 	var input_dir: Vector2 = Input.get_vector("Left", "Right", "Forward", "Backward")
-	rotate_y(-input_dir.x * YAW_SPEED * delta)
 	var vertical: float = 0.0
 	if Input.is_action_pressed("FlyUp") or Input.is_physical_key_pressed(KEY_SPACE):
 		vertical += 1.0
 	if Input.is_action_pressed("FlyDown") or Input.is_physical_key_pressed(KEY_CTRL):
 		vertical -= 1.0
-	var cam_basis: Basis = camera_3d.global_transform.basis
-	var local_move: Vector3 = Vector3(0.0, vertical, input_dir.y)
-	if local_move.length_squared() < 0.0001:
+	var forward: Vector3 = -global_transform.basis.z
+	forward.y = 0.0
+	if forward.length_squared() > 0.0001:
+		forward = forward.normalized()
+	var right: Vector3 = global_transform.basis.x
+	right.y = 0.0
+	if right.length_squared() > 0.0001:
+		right = right.normalized()
+	var wish: Vector3 = forward * (-input_dir.y) + right * input_dir.x + Vector3.UP * vertical
+	if wish.length_squared() < 0.0001:
 		velocity = velocity.lerp(Vector3.ZERO, ACCEL * delta)
 		return
-	var direction: Vector3 = cam_basis * local_move.normalized()
-	velocity = velocity.lerp(direction * SPEED, ACCEL * delta)
+	wish = wish.normalized()
+	velocity = velocity.lerp(wish * SPEED, ACCEL * delta)
 #endregion
 
 #region Shooting
