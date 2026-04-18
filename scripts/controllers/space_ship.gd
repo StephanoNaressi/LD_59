@@ -6,6 +6,7 @@ const PROJECTILE = preload("uid://b65juspb4p45s")
 
 const SPEED = 20.0
 const ACCEL = 6.0
+const YAW_SPEED: float = 2.2
 
 const SEAT_OFFSET_LOCAL: Vector3 = Vector3(0, 1.2, -2.0)
 const EXIT_PROBE_OFFSET: Vector3 = Vector3(0.0, 0.35, 0.65)
@@ -93,6 +94,8 @@ func get_exit_world_position() -> Vector3:
 #region Movement
 func handle_movement(delta: float) -> void:
 	var input_dir: Vector2 = Input.get_vector("Left", "Right", "Forward", "Backward")
+	rotate_y(-input_dir.x * YAW_SPEED * delta)
+
 	var vertical: float = 0.0
 	if Input.is_action_pressed("FlyUp") or Input.is_physical_key_pressed(KEY_SPACE):
 		vertical += 1.0
@@ -102,11 +105,7 @@ func handle_movement(delta: float) -> void:
 	forward.y = 0.0
 	if forward.length_squared() > 0.0001:
 		forward = forward.normalized()
-	var right: Vector3 = global_transform.basis.x
-	right.y = 0.0
-	if right.length_squared() > 0.0001:
-		right = right.normalized()
-	var wish: Vector3 = forward * (-input_dir.y) + right * input_dir.x + Vector3.UP * vertical
+	var wish: Vector3 = forward * (-input_dir.y) + Vector3.UP * vertical
 	if wish.length_squared() < 0.0001:
 		velocity = velocity.lerp(Vector3.ZERO, ACCEL * delta)
 		return

@@ -17,6 +17,9 @@ gravity_scale = 0.0
 continuous_cd = true
 script = ExtResource("1_pxso2")
 
+[node name="DriftTimer" type="Timer" parent="." unique_id=554864498]
+wait_time = 3.0
+
 [node name="meteor" parent="." unique_id=1435494417 instance=ExtResource("1_tcwo0")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=196492444]

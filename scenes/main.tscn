@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bsp00jucjsi55"]
 
 [ext_resource type="PackedScene" uid="uid://c573jw2rht2o7" path="res://scenes/space_ship.tscn" id="1_0wfyh"]
+[ext_resource type="Material" uid="uid://b4cidsmi3vmyu" path="res://game/meshes/GlowStar.tres" id="3_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://rjo8ayjs3awq" path="res://scenes/meteor.tscn" id="3_sugp2"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0wfyh"]
@@ -17,6 +18,32 @@ sky_material = SubResource("ProceduralSkyMaterial_0wfyh")
 [sub_resource type="Environment" id="Environment_jyhfs"]
 background_mode = 2
 sky = SubResource("Sky_sugp2")
+glow_enabled = true
+glow_strength = 1.19
+adjustment_enabled = true
+adjustment_brightness = 1.04
+adjustment_contrast = 1.115
+adjustment_saturation = 1.44
+
+[sub_resource type="Curve" id="Curve_tbgi4"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.75, 0.8314607), 0.0, 0.0, 0, 0, Vector2(1, 0.011235952), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_tefeu"]
+curve = SubResource("Curve_tbgi4")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_o6xl0"]
+emission_shape_scale = Vector3(50, 50, 50)
+emission_shape = 1
+emission_sphere_radius = 128.0
+gravity = Vector3(0, 0, 0)
+radial_accel_min = -0.10000224
+radial_accel_max = 0.09999776
+scale_min = 0.5
+scale_max = 0.79999995
+scale_curve = SubResource("CurveTexture_tefeu")
+
+[sub_resource type="SphereMesh" id="SphereMesh_tipki"]
 
 [node name="Main" type="Node3D" unique_id=1268587365]
 
@@ -27,3 +54,11 @@ environment = SubResource("Environment_jyhfs")
 
 [node name="Meteor" parent="." unique_id=788611388 instance=ExtResource("3_sugp2")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.6223426, 3.7296398, -17.77658)
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="." unique_id=1233695872]
+material_override = ExtResource("3_jyhfs")
+amount = 1000
+lifetime = 84.44000000000001
+visibility_aabb = AABB(-5000, -5000, -5000, 10000, 10000, 10000)
+process_material = SubResource("ParticleProcessMaterial_o6xl0")
+draw_pass_1 = SubResource("SphereMesh_tipki")

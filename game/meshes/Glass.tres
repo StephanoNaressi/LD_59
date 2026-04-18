@@ -14,7 +14,6 @@ color_ramp = SubResource("Gradient_dedg5")
 [resource]
 resource_name = "Glass"
 transparency = 1
-cull_mode = 2
 albedo_color = Color(0.7840497, 0.7698384, 0.9143204, 0.43137255)
 roughness = 0.5
 normal_enabled = true

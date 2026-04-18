@@ -72,8 +72,10 @@ func handle_movement(delta: float) -> void:
 		velocity.y = JUMP_VELOCITY
 
 	var input_dir: Vector2 = Input.get_vector("Left", "Right", "Forward", "Backward")
-	var direction: Vector3 = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	if direction:
+	var direction: Vector3 = global_transform.basis * Vector3(input_dir.x, 0, input_dir.y)
+	direction.y = 0.0
+	if direction.length_squared() > 0.0001:
+		direction = direction.normalized()
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED
 	else:
