@@ -2,13 +2,14 @@ extends CharacterBody3D
 class_name Player
 
 #region constants
-const SPEED = 5.0
+const SPEED = 3.0
 const JUMP_VELOCITY = 4.5
 const MOUSE_SENS = 0.002
 #endregion
 
 var is_locked: bool = false
 var vehicle: SpaceShip = null
+var _global_xform_before_pilot: Transform3D
 @onready var camera_3d: Camera3D = $Camera3D
 
 func _ready() -> void:
@@ -25,6 +26,9 @@ func _input(event: InputEvent) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if Input.is_action_just_pressed("TankUse"):
+		_try_use_looked_at_resource_tank()
+		return
 	if not Input.is_action_just_pressed("Ping"):
 		return
 	var ship: SpaceShip = get_tree().get_first_node_in_group("rideable_ship") as SpaceShip
@@ -34,6 +38,29 @@ func _unhandled_input(event: InputEvent) -> void:
 	if vehicle != null:
 		origin = vehicle.global_position
 	ship.radio.play_ping(origin)
+
+
+func _try_use_looked_at_resource_tank() -> void:
+	var cam: Camera3D = _active_camera_3d()
+	if cam == null:
+		return
+	var space: PhysicsDirectSpaceState3D = cam.get_world_3d().direct_space_state
+	var from: Vector3 = cam.global_position
+	var to: Vector3 = from - cam.global_transform.basis.z * 12.0
+	var q: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.create(from, to)
+	q.collision_mask = 8
+	var hit: Dictionary = space.intersect_ray(q)
+	if hit.is_empty():
+		return
+	var collider: Object = hit.get("collider")
+	if collider is ResourceTank:
+		(collider as ResourceTank).try_deposit_from_inventory()
+
+
+func _active_camera_3d() -> Camera3D:
+	if vehicle != null:
+		return vehicle.camera_3d
+	return camera_3d
 
 func _physics_process(delta: float) -> void:
 	if vehicle != null:
@@ -45,6 +72,7 @@ func is_piloting(ship: Node) -> bool:
 	return vehicle != null and vehicle == ship
 
 func begin_pilot(ship: SpaceShip) -> void:
+	_global_xform_before_pilot = global_transform
 	vehicle = ship
 	is_locked = true
 	set_collision_shapes_enabled(false)
@@ -57,13 +85,15 @@ func end_pilot() -> void:
 		return
 	var ship: SpaceShip = vehicle
 	vehicle = null
-	global_position = ship.get_exit_world_position()
+	global_transform = Transform3D(_global_xform_before_pilot.basis, ship.get_exit_spawn_global())
 	velocity = Vector3.ZERO
+	up_direction = Vector3.UP
 	set_collision_shapes_enabled(true)
 	camera_3d.current = true
 	ship.deactivate_pilot_camera()
 	ship.set_piloting(false)
 	is_locked = false
+	move_and_slide()
 
 func set_collision_shapes_enabled(enabled: bool) -> void:
 	for child in find_children("*", "CollisionShape3D", true, false):

@@ -38,7 +38,6 @@ tonemap_white = 1.35
 sdfgi_enabled = true
 sdfgi_read_sky_light = false
 glow_enabled = true
-volumetric_fog_enabled = true
 volumetric_fog_albedo = Color(0.11972272, 0, 0.19090384, 1)
 adjustment_enabled = true
 adjustment_contrast = 1.08
@@ -76,22 +75,182 @@ mesh = SubResource("SphereMesh_sun")
 
 [node name="AsteroidBelt" parent="." unique_id=1327652023 instance=ExtResource("4_belt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -520, 0, 240)
+belt_resource = 0
 min_distance_from_player = 1.0
 
 [node name="AsteroidBelt2" parent="." unique_id=1327652024 instance=ExtResource("4_belt")]
 transform = Transform3D(0.9659258, 0, -0.25881904, 0, 1, 0, 0.25881904, 0, 0.9659258, 1100, -30, -720)
+belt_resource = 1
 min_distance_from_player = 1.0
 
 [node name="AsteroidBelt3" parent="." unique_id=1327652025 instance=ExtResource("4_belt")]
 transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, 180, 50, 1400)
+belt_resource = 2
 min_distance_from_player = 1.0
 
 [node name="AsteroidBelt4" parent="." unique_id=1327652026 instance=ExtResource("4_belt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1400, 40, 500)
+belt_resource = 3
 min_distance_from_player = 1.0
 
 [node name="AsteroidBelt5" parent="." unique_id=1327652027 instance=ExtResource("4_belt")]
 transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, 600, -20, -1600)
+belt_resource = 0
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt6" parent="." unique_id=1327652028 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2200, -40, 300)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt7" parent="." unique_id=1327652029 instance=ExtResource("4_belt")]
+transform = Transform3D(0.8660254, 0, -0.5, 0, 1, 0, 0.5, 0, 0.8660254, -600, 25, 1800)
+belt_resource = 2
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt8" parent="." unique_id=1327652030 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1800, 35, -400)
+belt_resource = 3
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt9" parent="." unique_id=1327652031 instance=ExtResource("4_belt")]
+transform = Transform3D(0.9659258, 0, 0.25881904, 0, 1, 0, -0.25881904, 0, 0.9659258, 1400, 55, -1400)
+belt_resource = 0
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt10" parent="." unique_id=1327652032 instance=ExtResource("4_belt")]
+transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, -200, 15, -2200)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt11" parent="." unique_id=1327652033 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3200, 40, -2800)
+belt_resource = 0
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt12" parent="." unique_id=1327652034 instance=ExtResource("4_belt")]
+transform = Transform3D(0.9659258, 0, 0.25881904, 0, 1, 0, -0.25881904, 0, 0.9659258, -4000, -25, 1200)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt13" parent="." unique_id=1327652035 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 800, 60, 4200)
+belt_resource = 2
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt14" parent="." unique_id=1327652036 instance=ExtResource("4_belt")]
+transform = Transform3D(0.8660254, 0, -0.5, 0, 1, 0, 0.5, 0, 0.8660254, -2600, 45, -5200)
+belt_resource = 3
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt15" parent="." unique_id=1327652037 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4800, -35, 600)
+belt_resource = 0
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt16" parent="." unique_id=1327652038 instance=ExtResource("4_belt")]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -5200, 50, -1800)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt17" parent="." unique_id=1327652039 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 600, 20, -4800)
+belt_resource = 2
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt18" parent="." unique_id=1327652040 instance=ExtResource("4_belt")]
+transform = Transform3D(0.9659258, 0, -0.25881904, 0, 1, 0, 0.25881904, 0, 0.9659258, 2600, 70, 2200)
+belt_resource = 3
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt19" parent="." unique_id=1327652041 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -900, 30, 2600)
+belt_resource = 0
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt20" parent="." unique_id=1327652042 instance=ExtResource("4_belt")]
+transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, 5400, 40, -4200)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt21" parent="." unique_id=1327652043 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3400, -20, 3900)
+belt_resource = 2
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt22" parent="." unique_id=1327652044 instance=ExtResource("4_belt")]
+transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, 1200, 55, -6200)
+belt_resource = 3
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt23" parent="." unique_id=1327652045 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6200, 35, 3400)
+belt_resource = 0
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt24" parent="." unique_id=1327652046 instance=ExtResource("4_belt")]
+transform = Transform3D(0.9659258, 0, 0.25881904, 0, 1, 0, -0.25881904, 0, 0.9659258, 400, 25, 5800)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt25" parent="." unique_id=1327652047 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1800, 48, -900)
+belt_resource = 2
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt26" parent="." unique_id=1327652048 instance=ExtResource("4_belt")]
+transform = Transform3D(0.8660254, 0, -0.5, 0, 1, 0, 0.5, 0, 0.8660258, 7200, -40, -1600)
+belt_resource = 3
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt27" parent="." unique_id=1327652049 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4200, 22, -3100)
+belt_resource = 0
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt28" parent="." unique_id=1327652050 instance=ExtResource("4_belt")]
+transform = Transform3D(0.9659258, 0, -0.25881904, 0, 1, 0, 0.25881904, 0, 0.9659258, 5100, 18, 2900)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt29" parent="." unique_id=1327652051 instance=ExtResource("4_belt")]
+transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, -5800, 35, 4600)
+belt_resource = 0
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt30" parent="." unique_id=1327652052 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6400, 28, -3800)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt31" parent="." unique_id=1327652053 instance=ExtResource("4_belt")]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -2400, 40, 5200)
+belt_resource = 0
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt32" parent="." unique_id=1327652054 instance=ExtResource("4_belt")]
+transform = Transform3D(0.9659258, 0, 0.25881904, 0, 1, 0, -0.25881904, 0, 0.9659258, 3800, -15, -4100)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt33" parent="." unique_id=1327652055 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6600, 30, -1200)
+belt_resource = 0
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt34" parent="." unique_id=1327652056 instance=ExtResource("4_belt")]
+transform = Transform3D(0.8660254, 0, -0.5, 0, 1, 0, 0.5, 0, 0.8660254, 2100, 45, 6100)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt35" parent="." unique_id=1327652057 instance=ExtResource("4_belt")]
+transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, -3100, 20, -5400)
+belt_resource = 0
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt36" parent="." unique_id=1327652058 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7200, 32, 1800)
+belt_resource = 1
 min_distance_from_player = 1.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1053174916]
@@ -106,6 +265,52 @@ process_material = SubResource("ParticleProcessMaterial_o6xl0")
 draw_pass_1 = SubResource("SphereMesh_tipki")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=2065222516]
+
+[node name="GameOverOverlay" type="ColorRect" parent="CanvasLayer" unique_id=2065222517]
+process_mode = 3
+visible = false
+z_index = 100
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.05, 0.02, 0.08, 0.85)
+
+[node name="GameOverLabel" type="Label" parent="CanvasLayer/GameOverOverlay" unique_id=2065222518]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.62, 0.68, 0.74, 1)
+theme_override_font_sizes/font_size = 22
+text = "Game over"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LootToast" type="Label" parent="CanvasLayer" unique_id=2065222519]
+visible = false
+z_index = 50
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -280.0
+offset_top = -52.0
+offset_right = -18.0
+offset_bottom = -14.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.52, 0.72, 0.58, 0.96)
+horizontal_alignment = 2
+vertical_alignment = 2
+text = "+Fuel"
 
 [node name="UI" type="MarginContainer" parent="CanvasLayer" unique_id=464815422]
 anchors_preset = 15
@@ -125,40 +330,48 @@ layout_mode = 2
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/VBoxRoot" unique_id=1738603080]
 layout_mode = 2
 size_flags_vertical = 0
-theme_override_constants/separation = 32
+theme_override_constants/separation = 14
 alignment = 1
 
 [node name="Rocks" type="Label" parent="CanvasLayer/UI/VBoxRoot/HBoxContainer" unique_id=1820381871]
 layout_mode = 2
-text = "ROCKS : 10"
+text = "R 0"
 
 [node name="Metal" type="Label" parent="CanvasLayer/UI/VBoxRoot/HBoxContainer" unique_id=159608582]
 layout_mode = 2
-text = "Metal : 10"
+text = "M 0"
+
+[node name="Oxygen" type="Label" parent="CanvasLayer/UI/VBoxRoot/HBoxContainer" unique_id=1820381875]
+layout_mode = 2
+text = "O 0"
+
+[node name="Water" type="Label" parent="CanvasLayer/UI/VBoxRoot/HBoxContainer" unique_id=1820381876]
+layout_mode = 2
+text = "W 0"
 
 [node name="PlayerCoords" type="Label" parent="CanvasLayer/UI/VBoxRoot" unique_id=1820381872]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
-text = "YOU X:0 Y:0"
+text = "0 0 0"
 
 [node name="TowerCoords" type="Label" parent="CanvasLayer/UI/VBoxRoot" unique_id=1820381873]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
-text = "TOWERS"
+text = "—"
 
 [node name="ShipSpeed" type="Label" parent="CanvasLayer/UI/VBoxRoot" unique_id=1820381874]
 visible = false
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
-text = "SPD 0 / 0"
+text = "0 | 0"
 
 [node name="Hints" type="Label" parent="CanvasLayer/UI/VBoxRoot" unique_id=7258942]
 layout_mode = 2
-size_flags_vertical = 8
-theme_override_colors/font_color = Color(0.75, 0.82, 0.9, 0.92)
-theme_override_font_sizes/font_size = 13
-text = "1 — sonar   ·   F — drive"
-horizontal_alignment = 1
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(0.45, 0.52, 0.58, 0.82)
+theme_override_font_sizes/font_size = 12
+text = "1 ping · F ship · meteors give resources + fuel"
+horizontal_alignment = 0
 
 [node name="Spacer" type="Control" parent="CanvasLayer/UI/VBoxRoot" unique_id=1651439110]
 layout_mode = 2
@@ -166,7 +379,7 @@ size_flags_vertical = 3
 
 [node name="AntennaRepairPanel" type="PanelContainer" parent="CanvasLayer/UI/VBoxRoot" unique_id=1263110986]
 visible = false
-custom_minimum_size = Vector2(300, 0)
+custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
@@ -180,12 +393,23 @@ theme_override_constants/margin_bottom = 12
 
 [node name="AntennaRepairLabel" type="Label" parent="CanvasLayer/UI/VBoxRoot/AntennaRepairPanel/MarginContainer" unique_id=253719764]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "ROCKS 0/0
-METAL 0/0"
+theme_override_font_sizes/font_size = 15
+text = "—"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="Antenna" parent="." unique_id=2014974688 instance=ExtResource("5_ant")]
-transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -736.25726, 102.714966, 1285.1725)
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -7800.0, 125.0, 5600.0)
+
+[node name="Antenna2" parent="." unique_id=2014974689 instance=ExtResource("5_ant")]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 9000.0, 120.0, -5000.0)
+
+[node name="Antenna3" parent="." unique_id=2014974690 instance=ExtResource("5_ant")]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -4600.0, 108.0, -9800.0)
+
+[node name="Antenna4" parent="." unique_id=2014974691 instance=ExtResource("5_ant")]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 9800.0, 132.0, 2800.0)
+
+[node name="Antenna5" parent="." unique_id=2014974692 instance=ExtResource("5_ant")]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -5400.0, 98.0, -3400.0)

@@ -16,12 +16,13 @@ static func pick_forward_body_in_area(
 	for body in engagement.get_overlapping_bodies():
 		if not accept.call(body):
 			continue
-		var to_b: Vector3 = (body as Node3D).global_position - origin
-		if forward.dot(to_b) <= 0.0:
+		var body_node: Node3D = body as Node3D
+		var to_body: Vector3 = body_node.global_position - origin
+		if forward.dot(to_body) <= 0.0:
 			continue
-		var world_d2: float = to_b.length_squared()
+		var world_d2: float = to_body.length_squared()
 		var screen_d2: float = (
-			camera.unproject_position((body as Node3D).global_position) - viewport_center
+			camera.unproject_position(body_node.global_position) - viewport_center
 		).length_squared()
 		if (
 			best == null

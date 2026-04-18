@@ -27,14 +27,13 @@ func _ready() -> void:
 
 func on_piloting_changed(piloting: bool) -> void:
 	if piloting:
-		pass
-	else:
-		is_shooting = false
-		shooting_cooldown.stop()
-		repair_shooting_cooldown.stop()
-		can_shoot = true
-		can_fire_repair = true
-		clear_reticles()
+		return
+	is_shooting = false
+	shooting_cooldown.stop()
+	repair_shooting_cooldown.stop()
+	can_shoot = true
+	can_fire_repair = true
+	clear_reticles()
 
 
 func handle_combat_frame() -> void:
@@ -87,9 +86,7 @@ func tick_repair_hold() -> void:
 
 
 func try_fire_repair() -> void:
-	if not can_fire_repair:
-		return
-	if reticle_antenna == null:
+	if not can_fire_repair or reticle_antenna == null:
 		return
 	if not GlobalValues.can_afford_items(reticle_antenna.metal_cost, reticle_antenna.rock_cost):
 		return
@@ -111,9 +108,7 @@ func tick_meteor_auto_fire() -> void:
 
 
 func try_spawn_meteor() -> void:
-	if not can_shoot:
-		return
-	if reticle_meteor == null:
+	if not can_shoot or reticle_meteor == null:
 		return
 	var muzzle: Node3D = turret_pos if next_turret_left else turret_pos_2
 	next_turret_left = not next_turret_left
@@ -130,7 +125,7 @@ func pick_meteor() -> Meteor:
 	var body: Node = EngagementTargeting.pick_forward_body_in_area(
 		camera_3d,
 		engagement_area,
-		func(b: Node) -> bool: return b is Meteor
+		func(body_candidate: Node) -> bool: return body_candidate is Meteor
 	)
 	return body as Meteor
 
@@ -139,7 +134,7 @@ func pick_antenna() -> Antenna:
 	var body: Node = EngagementTargeting.pick_forward_body_in_area(
 		camera_3d,
 		engagement_area,
-		func(b: Node) -> bool: return antenna_is_repair_target(b)
+		func(body_candidate: Node) -> bool: return antenna_is_repair_target(body_candidate)
 	)
 	return body as Antenna
 

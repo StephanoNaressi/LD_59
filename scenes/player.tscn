@@ -11,6 +11,7 @@ script = ExtResource("1_3vyb7")
 shape = SubResource("CapsuleShape3D_u8vuu")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1852713957]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2237777, 0)
-near = 0.2
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7500566, 0)
+fov = 84.0
+near = 0.002
 far = 50000.0

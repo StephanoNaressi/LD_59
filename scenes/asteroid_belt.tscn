@@ -4,3 +4,4 @@
 
 [node name="AsteroidBelt" type="Node3D" unique_id=327652023]
 script = ExtResource("1_k544b")
+belt_resource = 0

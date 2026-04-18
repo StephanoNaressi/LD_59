@@ -5,12 +5,17 @@ const VELOCITY_RESPONSE: float = 3.25
 const MIN_CRUISE: float = 5.0
 const MAX_CRUISE: float = 80.0
 const CRUISE_STEP: float = 2.0
+const TANK_CAPACITY: float = 100.0
+const FUEL_DRAIN_PER_SEC: float = 0.005
+const MIN_FUEL_TO_INCREASE_SPEED: float = 0.02
+const NO_FUEL_THRUST_CAP: float = 3.0
+const LIFE_SUPPORT_O2_DRAIN_PER_SEC: float = 0.2
+const LIFE_SUPPORT_H2O_DRAIN_PER_SEC: float = 0.2
 const MOUSE_YAW_SENS: float = 0.002
 const YAW_SMOOTHING: float = 10.5
 
-const SEAT_OFFSET_LOCAL: Vector3 = Vector3(0, 1.2, -2.0)
-const EXIT_PROBE_OFFSET: Vector3 = Vector3(0.0, 0.35, 0.65)
-const EXIT_SPAWN_ABOVE_FLOOR: float = 1.12
+const SEAT_OFFSET_LOCAL: Vector3 = Vector3(0, 1.2, -1.0)
+const EXIT_SPEED_MAX: float = 2.0
 
 var is_active: bool = false
 var is_player_in_area: bool = false
@@ -22,6 +27,9 @@ var is_player_in_area: bool = false
 @onready var weapons: ShipWeaponSystem = $WeaponSystem
 
 var cruise_speed: float = 20.0
+var oxygen_tank_fill: float = 0.0
+var water_tank_fill: float = 0.0
+var fuel: float = 1.0
 var flight: ShipFlightModel = ShipFlightModel.new()
 
 var mouse_yaw_delta: float = 0.0
@@ -31,6 +39,8 @@ func _ready() -> void:
 	process_priority = -10
 	camera_3d.current = false
 	add_to_group("rideable_ship")
+	oxygen_tank_fill = TANK_CAPACITY * 0.5
+	water_tank_fill = TANK_CAPACITY * 0.5
 
 
 func _process(delta: float) -> void:
@@ -52,18 +62,40 @@ func _input(event: InputEvent) -> void:
 		mouse_yaw_delta += event.relative.x
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
-			cruise_speed = minf(cruise_speed + CRUISE_STEP, MAX_CRUISE)
+			if fuel > MIN_FUEL_TO_INCREASE_SPEED:
+				cruise_speed = minf(cruise_speed + CRUISE_STEP, MAX_CRUISE)
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			cruise_speed = maxf(cruise_speed - CRUISE_STEP, MIN_CRUISE)
 
 
 func _physics_process(delta: float) -> void:
 	if is_active:
+		if flight.is_thrusting(self) and cruise_speed > MIN_CRUISE:
+			var t: float = (cruise_speed - MIN_CRUISE) / maxf(0.001, MAX_CRUISE - MIN_CRUISE)
+			fuel = maxf(0.0, fuel - FUEL_DRAIN_PER_SEC * t * delta)
+		if fuel <= MIN_FUEL_TO_INCREASE_SPEED:
+			cruise_speed = MIN_CRUISE
+		oxygen_tank_fill = maxf(0.0, oxygen_tank_fill - LIFE_SUPPORT_O2_DRAIN_PER_SEC * delta)
+		water_tank_fill = maxf(0.0, water_tank_fill - LIFE_SUPPORT_H2O_DRAIN_PER_SEC * delta)
+		if oxygen_tank_fill <= 0.001 or water_tank_fill <= 0.001:
+			GlobalValues.trigger_game_over("Life support failed — O₂ or H₂O depleted.")
+			return
 		var yaw_accum: float = mouse_yaw_delta
 		mouse_yaw_delta = 0.0
-		flight.apply_arcade_thrust(self, delta, cruise_speed, VELOCITY_RESPONSE, yaw_accum, MOUSE_YAW_SENS, YAW_SMOOTHING)
+		var thrust_cruise: float = get_effective_thrust_cruise_speed()
+		flight.apply_arcade_thrust(self, delta, thrust_cruise, VELOCITY_RESPONSE, yaw_accum, MOUSE_YAW_SENS, YAW_SMOOTHING)
 		move_and_slide()
 	AnimatableBodySync.push_transforms_to_physics(self)
+
+
+func get_effective_thrust_cruise_speed() -> float:
+	if fuel > MIN_FUEL_TO_INCREASE_SPEED:
+		return cruise_speed
+	return minf(cruise_speed, NO_FUEL_THRUST_CAP)
+
+
+func add_fuel_amount(amount: float) -> void:
+	fuel = clampf(fuel + amount, 0.0, 1.0)
 
 
 func handle_input() -> void:
@@ -72,7 +104,8 @@ func handle_input() -> void:
 		if pilot == null:
 			return
 		if pilot.is_piloting(self):
-			pilot.end_pilot()
+			if velocity.length() <= EXIT_SPEED_MAX:
+				pilot.end_pilot()
 		elif is_player_in_area:
 			pilot.begin_pilot(self)
 	if is_active:
@@ -99,21 +132,14 @@ func deactivate_pilot_camera() -> void:
 
 func get_seat_world_transform() -> Transform3D:
 	var anchor_transform: Transform3D = seat_anchor.global_transform
-	return Transform3D(anchor_transform.basis, anchor_transform * SEAT_OFFSET_LOCAL)
+	var basis: Basis = anchor_transform.basis.orthonormalized()
+	return Transform3D(basis, anchor_transform * SEAT_OFFSET_LOCAL)
 
 
-func get_exit_world_position() -> Vector3:
-	var ship_basis: Basis = global_transform.basis
-	var origin: Vector3 = exit_anchor.global_position if exit_anchor else global_position
-	var probe: Vector3 = origin + ship_basis * EXIT_PROBE_OFFSET
-	var ray_from: Vector3 = probe + ship_basis.y * 4.0
-	var ray_to: Vector3 = probe - ship_basis.y * 15.0
-	var ray: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.create(ray_from, ray_to)
-	ray.collision_mask = 1
-	var hit: Dictionary = get_world_3d().direct_space_state.intersect_ray(ray)
-	if hit.has("position"):
-		return hit.position + ship_basis.y * EXIT_SPAWN_ABOVE_FLOOR
-	return probe + ship_basis.y * (EXIT_SPAWN_ABOVE_FLOOR + 0.35)
+func get_exit_spawn_global() -> Vector3:
+	if exit_anchor != null:
+		return exit_anchor.global_position + Vector3.UP * 0.12
+	return global_position + global_transform.basis.x * 3.0 + Vector3.UP * 1.0
 
 
 func on_chair_area_body_entered(body: Node3D) -> void:
@@ -124,3 +150,19 @@ func on_chair_area_body_entered(body: Node3D) -> void:
 func on_chair_area_body_exited(body: Node3D) -> void:
 	if body is Player:
 		is_player_in_area = false
+
+# PLAYER FALLS THRU GROUND
+func add_oxygen_to_tank(amount: float) -> void:
+	oxygen_tank_fill = minf(TANK_CAPACITY, oxygen_tank_fill + amount)
+
+
+func add_water_to_tank(amount: float) -> void:
+	water_tank_fill = minf(TANK_CAPACITY, water_tank_fill + amount)
+
+
+func oxygen_tank_remaining_capacity() -> float:
+	return maxf(0.0, TANK_CAPACITY - oxygen_tank_fill)
+
+
+func water_tank_remaining_capacity() -> float:
+	return maxf(0.0, TANK_CAPACITY - water_tank_fill)

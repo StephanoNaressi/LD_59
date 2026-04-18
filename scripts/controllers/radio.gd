@@ -24,6 +24,10 @@ func _ready() -> void:
 	sonar_player.max_distance = 80000.0
 
 
+func _closest_tower(listener_pos: Vector3) -> Antenna:
+	return Antenna.closest_to(listener_pos, get_tree())
+
+
 func play_ping(listener_pos: Vector3) -> void:
 	sonar_player.pitch_scale = 1.0
 	sonar_player.volume_db = SONAR_DB
@@ -44,21 +48,21 @@ func distance_to_tower_surface(listener_pos: Vector3, tower: Antenna) -> float:
 
 
 func echo_is_in_range(listener_pos: Vector3) -> bool:
-	var tower: Antenna = Antenna.closest_to(listener_pos, get_tree())
+	var tower: Antenna = _closest_tower(listener_pos)
 	if tower == null or tower.is_repaired:
 		return false
 	return distance_to_tower_surface(listener_pos, tower) <= ECHO_SHELL_DEPTH
 
 
 func tower_echo_pitch(listener_pos: Vector3) -> float:
-	var tower: Antenna = Antenna.closest_to(listener_pos, get_tree())
+	var tower: Antenna = _closest_tower(listener_pos)
 	var dist_surface: float = distance_to_tower_surface(listener_pos, tower)
 	var closeness: float = 1.0 - clampf(dist_surface / ECHO_SHELL_DEPTH, 0.0, 1.0)
 	return lerpf(0.88, 2.05, closeness)
 
 
 func tick(listener_pos: Vector3) -> void:
-	var tower: Antenna = Antenna.closest_to(listener_pos, get_tree())
+	var tower: Antenna = _closest_tower(listener_pos)
 	if tower == null:
 		noise_player.stop()
 		set_music_focus(null)

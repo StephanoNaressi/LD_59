@@ -7,7 +7,6 @@ class_name Antenna
 @export var crosshair_marker: Marker3D
 @export var repair_charge_per_hit: float = 0.05
 @export var music_stream: AudioStream
-@export var planet_spin_center: Vector3 = Vector3.ZERO
 @export var planet_spin_deg_per_sec: float = 2.2
 #endregion
 
@@ -57,9 +56,9 @@ static func closest_to(world_position: Vector3, tree: SceneTree) -> Antenna:
 	var best: Antenna = null
 	var best_distance: float = INF
 	for node in tree.get_nodes_in_group(TowerRegistry.GROUP_ANTENNAS):
-		if not (node is Antenna):
-			continue
 		var antenna: Antenna = node as Antenna
+		if antenna == null:
+			continue
 		var distance: float = world_position.distance_to(antenna.global_position)
 		if distance < best_distance:
 			best_distance = distance
@@ -72,23 +71,20 @@ func set_tower_music_playing(playing: bool) -> void:
 		if tower_music.playing:
 			tower_music.stop()
 		return
-	if playing:
-		if not tower_music.playing:
-			tower_music.play()
-	else:
+	if not playing:
 		tower_music.stop()
+		return
+	if not tower_music.playing:
+		tower_music.play()
 
 
 func connect_repair_billboard_texture() -> void:
-	if repair_billboard and repair_viewport:
+	if repair_billboard != null and repair_viewport != null:
 		repair_billboard.texture = repair_viewport.get_texture()
 
 
 func _process(delta: float) -> void:
-	var axis: Vector3 = global_position - planet_spin_center
-	if axis.length_squared() < 0.0001:
-		return
-	global_rotate(axis.normalized(), deg_to_rad(planet_spin_deg_per_sec) * delta)
+	global_rotate(Vector3.UP, deg_to_rad(planet_spin_deg_per_sec) * delta)
 
 
 func get_weapon_aim_position() -> Vector3:

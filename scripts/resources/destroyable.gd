@@ -29,13 +29,23 @@ func take_damage(damage: float) -> void:
 	health -= damage
 	if health <= 0.0:
 		dead = true
-		for i in range(drop_rate):
-			var drop: Item = Item.new()
-			drop.type = resource_drop
-			GlobalValues.inventory.append(drop)
-		GlobalValues.update_ui.emit()
+		if _drops_inventory_on_death():
+			for i in range(drop_rate):
+				var drop: Item = Item.new()
+				drop.type = resource_drop
+				GlobalValues.inventory.append(drop)
+			GlobalValues.update_ui.emit()
 		destroyed.emit()
+		_on_destroyable_destroyed()
 		queue_free()
+
+
+func _drops_inventory_on_death() -> bool:
+	return true
+
+
+func _on_destroyable_destroyed() -> void:
+	pass
 
 
 func untarget_destroyable() -> void:
