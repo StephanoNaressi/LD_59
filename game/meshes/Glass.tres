@@ -14,9 +14,10 @@ color_ramp = SubResource("Gradient_dedg5")
 [resource]
 resource_name = "Glass"
 transparency = 1
-albedo_color = Color(0.7840497, 0.7698384, 0.9143204, 0.43137255)
+albedo_color = Color(0.10725029, 0.088341795, 0.26324546, 0.43137255)
 roughness = 0.5
 normal_enabled = true
 normal_scale = 16.0
 normal_texture = SubResource("NoiseTexture2D_dedg5")
 rim = 0.08
+refraction_scale = 0.51
