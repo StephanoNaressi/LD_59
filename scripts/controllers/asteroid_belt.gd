@@ -47,6 +47,11 @@ func _spawn_meteor_at_safe_position() -> void:
 	var meteor: Meteor = METEOR_SCENE.instantiate() as Meteor
 	add_child(meteor)
 	meteor.global_position = pos
+	if _rng.randf() < 0.5:
+		meteor.resource_drop = Item.Item_Type.METAL
+	else:
+		meteor.resource_drop = Item.Item_Type.ROCK
+	meteor.drop_rate = 3
 	meteor.destroyed.connect(_on_meteor_destroyed, CONNECT_ONE_SHOT)
 
 

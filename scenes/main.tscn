@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://c573jw2rht2o7" path="res://scenes/space_ship.tscn" id="1_0wfyh"]
 [ext_resource type="Material" uid="uid://b4cidsmi3vmyu" path="res://game/meshes/GlowStar.tres" id="3_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://bbv5mm5ddjy31" path="res://scenes/asteroid_belt.tscn" id="4_belt"]
+[ext_resource type="PackedScene" uid="uid://c4n7q2m8antenna" path="res://scenes/antenna.tscn" id="5_ant"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0wfyh"]
 sky_top_color = Color(0.08789865, 0, 0.19748032, 1)
@@ -56,6 +57,21 @@ scale_curve = SubResource("CurveTexture_tefeu")
 [node name="AsteroidBelt" parent="." unique_id=1327652023 instance=ExtResource("4_belt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -159.94873, 0, 0)
 min_distance_from_player = 1.0
+
+[node name="AntennaA" parent="." unique_id=2000000001 instance=ExtResource("5_ant")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 12)
+metal_cost = 1
+rock_cost = 2
+
+[node name="AntennaB" parent="." unique_id=2000000002 instance=ExtResource("5_ant")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, 22)
+metal_cost = 2
+rock_cost = 1
+
+[node name="AntennaC" parent="." unique_id=2000000003 instance=ExtResource("5_ant")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -20)
+metal_cost = 1
+rock_cost = 1
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1053174916]
 environment = SubResource("Environment_jyhfs")

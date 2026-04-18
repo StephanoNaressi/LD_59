@@ -2,7 +2,8 @@ extends CharacterBody3D
 class_name SpaceShip
 
 #region constants
-const PROJECTILE = preload("uid://b65juspb4p45s")
+const METEOR_PROJECTILE_SCENE: PackedScene = preload("uid://b65juspb4p45s")
+const REPAIR_PROJECTILE_SCENE: PackedScene = preload("res://scenes/repair_proyectile.tscn")
 
 const SPEED = 20.0
 const ACCEL = 6.0
@@ -27,10 +28,14 @@ var next_turret_left: bool = true
 @onready var exit_anchor: Node3D = $"spaceship/Exit" as Node3D
 @onready var engagement_area: Area3D = $EngagementRange
 @onready var shooting_cooldown: Timer = $ShootingCooldown
+@onready var repair_shooting_cooldown: Timer = $RepairShootingCooldown
+
+var can_fire_repair: bool = true
 
 var _mouse_yaw_delta: float = 0.0
 var _smoothed_yaw_delta: float = 0.0
 var _reticle_meteor: Meteor = null
+var _reticle_antenna: Antenna = null
 #endregion
 
 func _ready() -> void:
@@ -72,12 +77,11 @@ func handle_input() -> void:
 		elif is_player_in_area:
 			pilot.begin_pilot(self)
 	
-	if is_active and Input.is_action_just_pressed("MouseLeft"):
-		is_shooting = true
-	if is_active and Input.is_action_just_released("MouseLeft"):
-		is_shooting = false
 	if is_active:
-		shoot()
+		refresh_weapon_reticles()
+		update_meteor_primary_hold()
+		tick_repair_hold_fire()
+		tick_meteor_primary_auto_fire()
 	
 func set_piloting(piloting: bool) -> void:
 	is_active = piloting
@@ -87,13 +91,36 @@ func set_piloting(piloting: bool) -> void:
 	else:
 		is_shooting = false
 		shooting_cooldown.stop()
+		repair_shooting_cooldown.stop()
 		can_shoot = true
-		_clear_target_reticle()
+		can_fire_repair = true
+		clear_weapon_reticles()
 
-func _clear_target_reticle() -> void:
+func clear_weapon_reticles() -> void:
 	if _reticle_meteor != null and is_instance_valid(_reticle_meteor):
 		_reticle_meteor.untarget_destroyable()
 	_reticle_meteor = null
+	if _reticle_antenna != null and is_instance_valid(_reticle_antenna):
+		_reticle_antenna.untarget_destroyable()
+	_reticle_antenna = null
+
+
+func refresh_weapon_reticles() -> void:
+	var new_meteor: Meteor = pick_meteor_in_crosshair()
+	if new_meteor != _reticle_meteor:
+		if _reticle_meteor != null and is_instance_valid(_reticle_meteor):
+			_reticle_meteor.untarget_destroyable()
+		_reticle_meteor = new_meteor
+		if _reticle_meteor != null:
+			_reticle_meteor.target_destroyable()
+
+	var new_antenna: Antenna = pick_antenna_in_crosshair()
+	if new_antenna != _reticle_antenna:
+		if _reticle_antenna != null and is_instance_valid(_reticle_antenna):
+			_reticle_antenna.untarget_destroyable()
+		_reticle_antenna = new_antenna
+		if _reticle_antenna != null:
+			_reticle_antenna.target_destroyable()
 
 func activate_pilot_camera() -> void:
 	camera_3d.current = true
@@ -145,51 +172,83 @@ func handle_movement(delta: float) -> void:
 	velocity = velocity.lerp(wish * SPEED, ACCEL * delta)
 #endregion
 
-#region Shooting
-func shoot() -> void:
-	if not is_shooting or not can_shoot:
-		return
+#region Ship weapons
+func update_meteor_primary_hold() -> void:
+	if Input.is_action_just_pressed("MouseLeft"):
+		is_shooting = true
+	if Input.is_action_just_released("MouseLeft"):
+		is_shooting = false
 
-	if _reticle_meteor != null and not is_instance_valid(_reticle_meteor):
-		_reticle_meteor = null
-	var meteor: Meteor = _closest_meteor_in_front()
-	if meteor == null:
+
+func tick_repair_hold_fire() -> void:
+	if not Input.is_action_pressed("MouseRight"):
 		return
-	if _reticle_meteor != meteor:
-		if _reticle_meteor != null and is_instance_valid(_reticle_meteor):
-			_reticle_meteor.untarget_destroyable()
-		_reticle_meteor = meteor
-		meteor.target_destroyable()
+	try_fire_repair_bolt()
+
+
+func try_fire_repair_bolt() -> void:
+	if not can_fire_repair:
+		return
+	if _reticle_antenna == null:
+		return
 	var muzzle: Node3D = turret_pos if next_turret_left else turret_pos_2
 	next_turret_left = not next_turret_left
-	var projectile: Proyectile = PROJECTILE.instantiate() as Proyectile
-	projectile.target = meteor
-	get_tree().current_scene.add_child(projectile)
-	projectile.global_position = muzzle.global_position
+	var bolt: RepairProyectile = REPAIR_PROJECTILE_SCENE.instantiate() as RepairProyectile
+	bolt.configure_homing(_reticle_antenna, muzzle)
+	ShipWeaponSpawn.add_to_current_scene(self, bolt)
+	can_fire_repair = false
+	repair_shooting_cooldown.start()
+
+
+func tick_meteor_primary_auto_fire() -> void:
+	if not is_shooting:
+		return
+	try_spawn_meteor_projectile()
+
+
+func try_spawn_meteor_projectile() -> void:
+	if not can_shoot:
+		return
+	if _reticle_meteor == null:
+		return
+	var muzzle: Node3D = turret_pos if next_turret_left else turret_pos_2
+	next_turret_left = not next_turret_left
+	var projectile: Proyectile = METEOR_PROJECTILE_SCENE.instantiate() as Proyectile
+	projectile.configure_homing(_reticle_meteor, muzzle)
+	ShipWeaponSpawn.add_to_current_scene(self, projectile)
 
 	can_shoot = false
 	shooting_cooldown.start()
 
-func _closest_meteor_in_front() -> Meteor:
-	var origin: Vector3 = camera_3d.global_position
-	var forward: Vector3 = -camera_3d.global_transform.basis.z
-	var viewport_center: Vector2 = camera_3d.get_viewport().get_visible_rect().size * 0.5
-	var best: Meteor = null
-	var best_screen_d2: float = INF
-	var best_world_d2: float = INF
-	for body in engagement_area.get_overlapping_bodies():
-		if body is Meteor:
-			var m: Meteor = body as Meteor
-			var to_m: Vector3 = m.global_position - origin
-			if forward.dot(to_m) <= 0.0:
-				continue
-			var world_d2: float = to_m.length_squared()
-			var screen_d2: float = (camera_3d.unproject_position(m.global_position) - viewport_center).length_squared()
-			if best == null or screen_d2 < best_screen_d2 or (is_equal_approx(screen_d2, best_screen_d2) and world_d2 < best_world_d2):
-				best = m
-				best_screen_d2 = screen_d2
-				best_world_d2 = world_d2
-	return best
+
+func pick_meteor_in_crosshair() -> Meteor:
+	var body: Node = ShipWeaponSpawn.pick_body_in_engagement(
+		camera_3d,
+		engagement_area,
+		func(b: Node) -> bool: return b is Meteor
+	)
+	return body as Meteor
+
+
+func pick_antenna_in_crosshair() -> Antenna:
+	var body: Node = ShipWeaponSpawn.pick_body_in_engagement(
+		camera_3d,
+		engagement_area,
+		func(b: Node) -> bool: return antenna_is_repair_target(b)
+	)
+	return body as Antenna
+
+
+func antenna_is_repair_target(body: Node) -> bool:
+	if not (body is Antenna):
+		return false
+	var antenna: Antenna = body as Antenna
+	if antenna.is_repaired:
+		return false
+	if antenna.repair_progress > 0.001:
+		return true
+	return GlobalValues.can_afford_items(antenna.metal_cost, antenna.rock_cost)
+
 #endregion
 
 #region Area Detection
@@ -205,3 +264,7 @@ func on_chair_area_body_exited(body: Node3D) -> void:
 
 func _on_shooting_cooldown_timeout() -> void:
 	can_shoot = true
+
+
+func repair_cooldown_finished() -> void:
+	can_fire_repair = true

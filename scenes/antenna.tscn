@@ -1,0 +1,70 @@
+[gd_scene load_steps=6 format=3 uid="uid://6dx8yn04eb3d"]
+
+[ext_resource type="Script" uid="uid://kp7mj4xhcv7k" path="res://scripts/controllers/antenna.gd" id="1_ant"]
+[ext_resource type="PackedScene" uid="uid://ruga60glvqw0" path="res://game/meshes/broken_antenna.glb" id="2_broken"]
+[ext_resource type="PackedScene" uid="uid://d3g7wxtsivdfs" path="res://game/meshes/fixed_antenna.glb" id="3_fixed"]
+[ext_resource type="Material" uid="uid://d7k2crosshairmat" path="res://game/meshes/CrosshairReticleMaterial.tres" id="4_chm"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_body"]
+size = Vector3(2, 4, 2)
+
+[sub_resource type="QuadMesh" id="QuadMesh_crosshair"]
+size = Vector2(1, 1)
+
+[node name="Antenna" type="StaticBody3D" node_paths=PackedStringArray("crosshair_marker")]
+script = ExtResource("1_ant")
+crosshair_marker = NodePath("CrosshairMarker")
+
+[node name="BrokenMesh" parent="." instance=ExtResource("2_broken")]
+
+[node name="FixedMesh" parent="." instance=ExtResource("3_fixed")]
+visible = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+shape = SubResource("BoxShape3D_body")
+
+[node name="CrosshairMarker" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+
+[node name="Reticle" type="MeshInstance3D" parent="CrosshairMarker"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.5, 0)
+mesh = SubResource("QuadMesh_crosshair")
+material_override = ExtResource("4_chm")
+
+[node name="RepairProgressRoot" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 0)
+
+[node name="RepairSubViewport" type="SubViewport" parent="RepairProgressRoot"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(300, 40)
+render_target_update_mode = 3
+
+[node name="ProgressRoot" type="Control" parent="RepairProgressRoot/RepairSubViewport"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RepairProgressBar" type="ProgressBar" parent="RepairProgressRoot/RepairSubViewport/ProgressRoot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+max = 100.0
+show_percentage = false
+value = 0.0
+
+[node name="RepairBillboard" type="Sprite3D" parent="RepairProgressRoot"]
+pixel_size = 0.0045
+billboard = 1
+position = Vector3(0, 0, 0)

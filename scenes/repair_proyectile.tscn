@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://b5ar0nt7m2vbe"]
+
+[ext_resource type="Script" path="res://scripts/controllers/repair_proyectile.gd" id="1_rp"]
+[ext_resource type="Material" path="res://game/meshes/RepairGlow.tres" id="2_glow"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_rp"]
+radius = 0.22
+height = 0.44
+
+[node name="RepairProyectile" type="Node3D"]
+script = ExtResource("1_rp")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = ExtResource("2_glow")
+mesh = SubResource("SphereMesh_rp")

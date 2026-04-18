@@ -1,0 +1,16 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://8smc4k8e250j"]
+
+[ext_resource type="Texture2D" uid="uid://b3q14iswyb0xn" path="res://game/textures/target.png" id="1_tex"]
+
+[resource]
+resource_name = "CrosshairReticle"
+transparency = 1
+cull_mode = 2
+no_depth_test = true
+albedo_color = Color(1.25, 1.25, 1.25, 1)
+albedo_texture = ExtResource("1_tex")
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 2.75
+emission_texture = ExtResource("1_tex")
+billboard_mode = 1
