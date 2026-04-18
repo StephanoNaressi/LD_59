@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://bsp00jucjsi55"]
+
+[ext_resource type="PackedScene" uid="uid://c573jw2rht2o7" path="res://scenes/space_ship.tscn" id="1_0wfyh"]
+[ext_resource type="PackedScene" uid="uid://cuutkagxm6kgs" path="res://scenes/player.tscn" id="2_sugp2"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0wfyh"]
+sky_top_color = Color(0.08789865, 0, 0.19748032, 1)
+sky_horizon_color = Color(0, 0, 0, 1)
+ground_bottom_color = Color(0.018883582, 0, 0.039644003, 1)
+ground_horizon_color = Color(0, 0, 0, 1)
+sun_angle_max = 0.0
+sun_curve = 0.072445296
+
+[sub_resource type="Sky" id="Sky_sugp2"]
+sky_material = SubResource("ProceduralSkyMaterial_0wfyh")
+
+[sub_resource type="Environment" id="Environment_jyhfs"]
+background_mode = 2
+sky = SubResource("Sky_sugp2")
+
+[node name="Main" type="Node3D" unique_id=1268587365]
+
+[node name="SpaceShip" parent="." unique_id=1148349640 instance=ExtResource("1_0wfyh")]
+
+[node name="Player" parent="." unique_id=1725343240 instance=ExtResource("2_sugp2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.084888, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1053174916]
+environment = SubResource("Environment_jyhfs")

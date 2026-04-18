@@ -1,0 +1,23 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dm6p5yh0q8y3l"]
+
+[sub_resource type="Gradient" id="Gradient_dedg5"]
+offsets = PackedFloat32Array(0, 0.37662336)
+colors = PackedColorArray(0.70387197, 0.70387197, 0.70387197, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_tieob"]
+frequency = 0.0221
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_dedg5"]
+noise = SubResource("FastNoiseLite_tieob")
+color_ramp = SubResource("Gradient_dedg5")
+
+[resource]
+resource_name = "Glass"
+transparency = 1
+cull_mode = 2
+albedo_color = Color(0.56754863, 0.51972955, 1, 0.43137255)
+roughness = 0.5
+normal_enabled = true
+normal_scale = 16.0
+normal_texture = SubResource("NoiseTexture2D_dedg5")
+rim = 0.08

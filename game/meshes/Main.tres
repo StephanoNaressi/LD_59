@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bhqyr28x4g8yl"]
+
+[ext_resource type="Texture2D" uid="uid://drxnsybfuwupj" path="res://game/textures/Gradient_Pallete.png" id="1_lkyfd"]
+
+[resource]
+resource_name = "Main"
+cull_mode = 2
+diffuse_mode = 3
+albedo_texture = ExtResource("1_lkyfd")
+metallic = 0.13
+roughness = 0.0
