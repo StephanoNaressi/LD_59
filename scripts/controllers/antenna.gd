@@ -51,7 +51,9 @@ func untarget_destroyable() -> void:
 
 
 func target_destroyable() -> void:
-	if crosshair_marker and not is_repaired:
+	if is_repaired:
+		return
+	if crosshair_marker:
 		crosshair_marker.visible = true
 
 
@@ -85,4 +87,5 @@ func complete_repair() -> void:
 	repair_progress_root.visible = false
 	RepairProyectile.despawn_all_in_tree(get_tree())
 	untarget_destroyable()
+	GlobalValues.antenna_repair_hud_changed.emit(null)
 	was_repaired.emit()

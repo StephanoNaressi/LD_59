@@ -4,6 +4,8 @@ var player: Player
 
 var inventory: Array[Item]
 
+signal update_ui
+signal antenna_repair_hud_changed(antenna: Antenna)
 
 func count_item_of_type(item_type: Item.Item_Type) -> int:
 	var total: int = 0
@@ -38,4 +40,5 @@ func try_spend_items(metal_needed: int, rock_needed: int) -> bool:
 		return false
 	remove_items_of_type(Item.Item_Type.METAL, metal_needed)
 	remove_items_of_type(Item.Item_Type.ROCK, rock_needed)
+	update_ui.emit()
 	return true

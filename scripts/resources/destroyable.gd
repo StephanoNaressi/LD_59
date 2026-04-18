@@ -33,6 +33,7 @@ func take_damage(damage: float) -> void:
 			var drop: Item = Item.new()
 			drop.type = resource_drop
 			GlobalValues.inventory.append(drop)
+		GlobalValues.update_ui.emit()
 		destroyed.emit()
 		queue_free()
 

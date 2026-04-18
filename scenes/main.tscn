@@ -3,7 +3,8 @@
 [ext_resource type="PackedScene" uid="uid://c573jw2rht2o7" path="res://scenes/space_ship.tscn" id="1_0wfyh"]
 [ext_resource type="Material" uid="uid://b4cidsmi3vmyu" path="res://game/meshes/GlowStar.tres" id="3_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://bbv5mm5ddjy31" path="res://scenes/asteroid_belt.tscn" id="4_belt"]
-[ext_resource type="PackedScene" uid="uid://c4n7q2m8antenna" path="res://scenes/antenna.tscn" id="5_ant"]
+[ext_resource type="PackedScene" uid="uid://6dx8yn04eb3d" path="res://scenes/antenna.tscn" id="5_ant"]
+[ext_resource type="Script" uid="uid://b2e76c86a8bso" path="res://scripts/controllers/ui.gd" id="5_tbgi4"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0wfyh"]
 sky_top_color = Color(0.08789865, 0, 0.19748032, 1)
@@ -59,19 +60,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -159.94873, 0, 0)
 min_distance_from_player = 1.0
 
 [node name="AntennaA" parent="." unique_id=2000000001 instance=ExtResource("5_ant")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 12)
-metal_cost = 1
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 80.00905, 0, 12)
 rock_cost = 2
 
 [node name="AntennaB" parent="." unique_id=2000000002 instance=ExtResource("5_ant")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, 22)
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 48.009045, 0, 22)
 metal_cost = 2
-rock_cost = 1
 
 [node name="AntennaC" parent="." unique_id=2000000003 instance=ExtResource("5_ant")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -20)
-metal_cost = 1
-rock_cost = 1
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 70.00905, 0, -20)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1053174916]
 environment = SubResource("Environment_jyhfs")
@@ -84,3 +81,61 @@ lifetime = 84.44000000000001
 visibility_aabb = AABB(-5000, -5000, -5000, 10000, 10000, 10000)
 process_material = SubResource("ParticleProcessMaterial_o6xl0")
 draw_pass_1 = SubResource("SphereMesh_tipki")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=2065222516]
+
+[node name="UI" type="MarginContainer" parent="CanvasLayer" unique_id=464815422]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("5_tbgi4")
+
+[node name="VBoxRoot" type="VBoxContainer" parent="CanvasLayer/UI" unique_id=1383053797]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/VBoxRoot" unique_id=1738603080]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 403
+alignment = 1
+
+[node name="Rocks" type="Label" parent="CanvasLayer/UI/VBoxRoot/HBoxContainer" unique_id=1820381871]
+layout_mode = 2
+text = "ROCKS : 10"
+
+[node name="Metal" type="Label" parent="CanvasLayer/UI/VBoxRoot/HBoxContainer" unique_id=159608582]
+layout_mode = 2
+text = "Metal : 10"
+
+[node name="Spacer" type="Control" parent="CanvasLayer/UI/VBoxRoot" unique_id=1651439110]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="AntennaRepairPanel" type="PanelContainer" parent="CanvasLayer/UI/VBoxRoot" unique_id=1263110986]
+visible = false
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/VBoxRoot/AntennaRepairPanel" unique_id=235581115]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 12
+
+[node name="AntennaRepairLabel" type="Label" parent="CanvasLayer/UI/VBoxRoot/AntennaRepairPanel/MarginContainer" unique_id=253719764]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "ROCKS 0/0
+METAL 0/0"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2

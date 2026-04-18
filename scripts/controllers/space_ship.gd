@@ -103,6 +103,7 @@ func clear_weapon_reticles() -> void:
 	if _reticle_antenna != null and is_instance_valid(_reticle_antenna):
 		_reticle_antenna.untarget_destroyable()
 	_reticle_antenna = null
+	GlobalValues.antenna_repair_hud_changed.emit(null)
 
 
 func refresh_weapon_reticles() -> void:
@@ -121,6 +122,7 @@ func refresh_weapon_reticles() -> void:
 		_reticle_antenna = new_antenna
 		if _reticle_antenna != null:
 			_reticle_antenna.target_destroyable()
+		GlobalValues.antenna_repair_hud_changed.emit(_reticle_antenna)
 
 func activate_pilot_camera() -> void:
 	camera_3d.current = true
@@ -191,6 +193,8 @@ func try_fire_repair_bolt() -> void:
 		return
 	if _reticle_antenna == null:
 		return
+	if not GlobalValues.can_afford_items(_reticle_antenna.metal_cost, _reticle_antenna.rock_cost):
+		return
 	var muzzle: Node3D = turret_pos if next_turret_left else turret_pos_2
 	next_turret_left = not next_turret_left
 	var bolt: RepairProyectile = REPAIR_PROJECTILE_SCENE.instantiate() as RepairProyectile
@@ -243,11 +247,7 @@ func antenna_is_repair_target(body: Node) -> bool:
 	if not (body is Antenna):
 		return false
 	var antenna: Antenna = body as Antenna
-	if antenna.is_repaired:
-		return false
-	if antenna.repair_progress > 0.001:
-		return true
-	return GlobalValues.can_afford_items(antenna.metal_cost, antenna.rock_cost)
+	return not antenna.is_repaired
 
 #endregion
 
