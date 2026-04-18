@@ -4,29 +4,9 @@ var player: Player
 
 var inventory: Array[Item]
 
-var tower_xy_by_name: Dictionary = {}
-
 signal update_ui
 signal antenna_repair_hud_changed(antenna: Antenna)
 
-
-func refresh_towers_from_scene(tree: SceneTree) -> void:
-	tower_xy_by_name.clear()
-	for n in tree.get_nodes_in_group("antennas"):
-		if not (n is Antenna):
-			continue
-		var antenna: Antenna = n as Antenna
-		tower_xy_by_name[antenna.name] = Vector2(antenna.global_position.x, antenna.global_position.z)
-
-
-func tower_list_lines() -> PackedStringArray:
-	var keys: Array = tower_xy_by_name.keys()
-	keys.sort()
-	var lines: PackedStringArray = PackedStringArray()
-	for k in keys:
-		var flat: Vector2 = tower_xy_by_name[k]
-		lines.append("%s   X:%.0f   Z:%.0f" % [str(k), flat.x, flat.y])
-	return lines
 
 func count_item_of_type(item_type: Item.Item_Type) -> int:
 	var total: int = 0

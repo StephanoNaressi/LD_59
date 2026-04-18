@@ -2,21 +2,8 @@
 
 [ext_resource type="Texture2D" uid="uid://drxnsybfuwupj" path="res://game/textures/Gradient_Pallete.png" id="1_lkyfd"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lkyfd"]
-render_priority = 1
-transparency = 1
-shading_mode = 0
-albedo_color = Color(0, 0.97552013, 1, 1)
-grow = true
-grow_amount = 0.01
-stencil_mode = 3
-stencil_flags = 1
-stencil_compare = 5
-metadata/_stencil_owned = true
-
 [resource]
 resource_name = "Main"
-next_pass = SubResource("StandardMaterial3D_lkyfd")
 cull_mode = 2
 diffuse_mode = 3
 albedo_texture = ExtResource("1_lkyfd")
@@ -27,6 +14,5 @@ rim_enabled = true
 rim_tint = 1.0
 backlight_enabled = true
 backlight = Color(1, 0.47594166, 0.15802127, 1)
-stencil_mode = 1
 stencil_flags = 2
 stencil_color = Color(0, 0.97552013, 1, 1)

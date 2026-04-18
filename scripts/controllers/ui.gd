@@ -8,6 +8,7 @@ extends MarginContainer
 @onready var ship_speed: Label = $VBoxRoot/ShipSpeed
 @onready var antenna_repair_panel: PanelContainer = $VBoxRoot/AntennaRepairPanel
 @onready var antenna_repair_label: Label = $VBoxRoot/AntennaRepairPanel/MarginContainer/AntennaRepairLabel
+@onready var hints: Label = $VBoxRoot/Hints
 
 var antenna_hud_target: Antenna = null
 
@@ -38,7 +39,7 @@ func refresh_antenna_repair_panel() -> void:
 	var r_have: int = GlobalValues.count_item_of_type(Item.Item_Type.ROCK)
 	var text: String = "Repair %s\nRocks %d / %d\nMetal %d / %d" % [a.name, r_have, a.rock_cost, m_have, a.metal_cost]
 	if GlobalValues.can_afford_items(a.metal_cost, a.rock_cost):
-		text += "\nRight-click to fire repair"
+		text += "\nRight-click — repair shot"
 	antenna_repair_label.text = text
 	antenna_repair_panel.visible = true
 
@@ -46,8 +47,8 @@ func refresh_antenna_repair_panel() -> void:
 func on_inventory_changed() -> void:
 	var rock_n: int = GlobalValues.count_item_of_type(Item.Item_Type.ROCK)
 	var metal_n: int = GlobalValues.count_item_of_type(Item.Item_Type.METAL)
-	rocks.text = "Rocks  %d" % rock_n
-	metal.text = "Metal  %d" % metal_n
+	rocks.text = "Rocks   %d" % rock_n
+	metal.text = "Metal   %d" % metal_n
 	refresh_antenna_repair_panel()
 
 
@@ -68,12 +69,12 @@ func update_navigation_readout() -> void:
 			var s: SpaceShip = GlobalValues.player.vehicle
 			ship_speed.visible = true
 			var spd: float = s.velocity.length()
-			ship_speed.text = "Speed  %.0f / %.0f   (mouse wheel sets cruise)" % [spd, s.cruise_speed]
+			ship_speed.text = "Speed   %.0f / %.0f   ·   wheel — cruise" % [spd, s.cruise_speed]
 		else:
 			ship_speed.visible = false
-	var lines: PackedStringArray = GlobalValues.tower_list_lines()
+	var lines: PackedStringArray = TowerRegistry.sorted_labels()
 	if lines.size() == 0:
-		tower_coords.text = "Towers — none registered"
+		tower_coords.text = "Towers   (none)"
 	else:
 		var tower_text: String = "Towers\n"
 		for i in range(lines.size()):

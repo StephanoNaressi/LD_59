@@ -1,10 +1,11 @@
 extends RefCounted
-class_name ShipWeaponSpawn
+class_name EngagementTargeting
 
-static func pick_body_in_engagement(
+
+static func pick_forward_body_in_area(
 	camera: Camera3D,
 	engagement: Area3D,
-	should_include: Callable
+	accept: Callable
 ) -> Node:
 	var origin: Vector3 = camera.global_position
 	var forward: Vector3 = -camera.global_transform.basis.z
@@ -13,7 +14,7 @@ static func pick_body_in_engagement(
 	var best_screen_d2: float = INF
 	var best_world_d2: float = INF
 	for body in engagement.get_overlapping_bodies():
-		if not should_include.call(body):
+		if not accept.call(body):
 			continue
 		var to_b: Vector3 = (body as Node3D).global_position - origin
 		if forward.dot(to_b) <= 0.0:
@@ -33,23 +34,15 @@ static func pick_body_in_engagement(
 	return best
 
 
-static func add_to_current_scene(ship: Node, node: Node) -> bool:
-	var scene: Node = ship.get_tree().current_scene
-	if scene == null:
-		return false
-	scene.add_child(node)
-	return true
-
-
-static func aim_from_camera(camera: Camera3D, forward_offset: float) -> Dictionary:
+static func ray_from_camera(camera: Camera3D, forward_offset: float) -> Dictionary:
 	var forward: Vector3 = -camera.global_transform.basis.z
 	if forward.length_squared() < 0.0001:
 		forward = Vector3(0, 0, -1)
 	else:
 		forward = forward.normalized()
-	var origin: Vector3 = camera.global_position + forward * forward_offset
-	return {"origin": origin, "forward": forward}
+	var ray_origin: Vector3 = camera.global_position + forward * forward_offset
+	return {"origin": ray_origin, "forward": forward}
 
 
-static func exclude_ship_rid(ship: Node3D) -> Array[RID]:
-	return [ship.get_rid()]
+static func exclude_rid(physics_body: Node3D) -> Array[RID]:
+	return [physics_body.get_rid()]

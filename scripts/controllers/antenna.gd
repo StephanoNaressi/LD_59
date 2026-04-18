@@ -7,6 +7,8 @@ class_name Antenna
 @export var crosshair_marker: Marker3D
 @export var repair_charge_per_hit: float = 0.05
 @export var music_stream: AudioStream
+@export var planet_spin_center: Vector3 = Vector3.ZERO
+@export var planet_spin_deg_per_sec: float = 2.2
 #endregion
 
 #region signals
@@ -28,14 +30,18 @@ var repair_progress: float = 0.0
 @onready var tower_music: AudioStreamPlayer3D = $TowerMusic
 #endregion
 
+var _tower_music_max_distance_base: float = 20000.0
+
 
 func _ready() -> void:
-	add_to_group("antennas")
+	add_to_group(TowerRegistry.GROUP_ANTENNAS)
 	if crosshair_marker:
 		crosshair_marker.visible = false
 	repair_progress_root.visible = false
 	if music_stream != null:
 		tower_music.stream = music_stream
+	_tower_music_max_distance_base = tower_music.max_distance
+	tower_music.max_distance = minf(_tower_music_max_distance_base, 900.0)
 	call_deferred("connect_repair_billboard_texture")
 
 
@@ -50,7 +56,7 @@ func planet_surface_radius() -> float:
 static func closest_to(world_position: Vector3, tree: SceneTree) -> Antenna:
 	var best: Antenna = null
 	var best_distance: float = INF
-	for node in tree.get_nodes_in_group("antennas"):
+	for node in tree.get_nodes_in_group(TowerRegistry.GROUP_ANTENNAS):
 		if not (node is Antenna):
 			continue
 		var antenna: Antenna = node as Antenna
@@ -76,6 +82,13 @@ func set_tower_music_playing(playing: bool) -> void:
 func connect_repair_billboard_texture() -> void:
 	if repair_billboard and repair_viewport:
 		repair_billboard.texture = repair_viewport.get_texture()
+
+
+func _process(delta: float) -> void:
+	var axis: Vector3 = global_position - planet_spin_center
+	if axis.length_squared() < 0.0001:
+		return
+	global_rotate(axis.normalized(), deg_to_rad(planet_spin_deg_per_sec) * delta)
 
 
 func get_weapon_aim_position() -> Vector3:
@@ -129,6 +142,7 @@ func complete_repair() -> void:
 		update_repair_ui()
 		return
 	is_repaired = true
+	tower_music.max_distance = maxf(_tower_music_max_distance_base, 22000.0)
 	broken_mesh.visible = false
 	fixed_mesh.visible = true
 	repair_progress_root.visible = false

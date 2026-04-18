@@ -13,6 +13,7 @@ radius = 1.033
 [sub_resource type="QuadMesh" id="QuadMesh_crosshair"]
 
 [node name="Meteor" type="RigidBody3D" unique_id=1871351217 node_paths=PackedStringArray("crosshair_marker")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0)
 collision_layer = 3
 collision_mask = 1048575
 physics_material_override = SubResource("PhysicsMaterial_tcwo0")
@@ -24,7 +25,7 @@ crosshair_marker = NodePath("CrosshairMarker")
 [node name="DriftTimer" type="Timer" parent="." unique_id=976458198]
 wait_time = 3.0
 
-[node name="meteor" parent="." unique_id=452359168 instance=ExtResource("1_tcwo0")]
+[node name="meteor" parent="." unique_id=1508659360 instance=ExtResource("1_tcwo0")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=515518666]
 shape = SubResource("SphereShape3D_tcwo0")

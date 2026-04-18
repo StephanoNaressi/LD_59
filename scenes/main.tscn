@@ -11,8 +11,8 @@
 shading_mode = 2
 albedo_color = Color(1, 0.55, 0.12, 1)
 emission_enabled = true
-emission = Color(1, 0.75, 0.25, 1)
-emission_energy_multiplier = 5.0
+emission = Color(2.5299916, 1.9150323, 0.694722, 1)
+emission_energy_multiplier = 16.0
 
 [sub_resource type="SphereMesh" id="SphereMesh_sun"]
 radius = 1.0
@@ -32,16 +32,17 @@ sky_material = SubResource("ProceduralSkyMaterial_0wfyh")
 [sub_resource type="Environment" id="Environment_jyhfs"]
 background_mode = 2
 sky = SubResource("Sky_sugp2")
-tonemap_exposure = 1.45
+tonemap_mode = 2
+tonemap_exposure = 1.12
+tonemap_white = 1.35
 sdfgi_enabled = true
 sdfgi_read_sky_light = false
 glow_enabled = true
-glow_strength = 1.19
+volumetric_fog_enabled = true
 volumetric_fog_albedo = Color(0.11972272, 0, 0.19090384, 1)
 adjustment_enabled = true
-adjustment_brightness = 1.04
-adjustment_contrast = 1.115
-adjustment_saturation = 1.44
+adjustment_contrast = 1.08
+adjustment_saturation = 1.08
 
 [sub_resource type="Curve" id="Curve_tbgi4"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.75, 0.8314607), 0.0, 0.0, 0, 0, Vector2(1, 0.011235952), 0.0, 0.0, 0, 0]
@@ -65,12 +66,6 @@ scale_curve = SubResource("CurveTexture_tefeu")
 
 [node name="Main" type="Node3D" unique_id=1268587365]
 script = ExtResource("6_mainw")
-
-[node name="SunLight" type="DirectionalLight3D" parent="." unique_id=2000000102]
-transform = Transform3D(0.66913056, -0.4875469, 0.56085855, 0, 0.7547096, 0.656059, -0.74314487, -0.43898913, 0.5049993, 0, 0, 0)
-light_color = Color(1, 0.96, 0.88, 1)
-light_energy = 1.42
-shadow_enabled = true
 
 [node name="SunVisual" type="MeshInstance3D" parent="." unique_id=2000000103]
 transform = Transform3D(300, 0, 0, 0, 300, 0, 0, 0, 300, 0, 120, -6070)
@@ -104,7 +99,6 @@ environment = SubResource("Environment_jyhfs")
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="." unique_id=1233695872]
 material_override = ExtResource("3_jyhfs")
-visibility_range_begin = 4.55
 amount = 1000
 lifetime = 84.44000000000001
 visibility_aabb = AABB(-5000, -5000, -5000, 10000, 10000, 10000)
@@ -131,7 +125,7 @@ layout_mode = 2
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/VBoxRoot" unique_id=1738603080]
 layout_mode = 2
 size_flags_vertical = 0
-theme_override_constants/separation = 403
+theme_override_constants/separation = 32
 alignment = 1
 
 [node name="Rocks" type="Label" parent="CanvasLayer/UI/VBoxRoot/HBoxContainer" unique_id=1820381871]
@@ -157,6 +151,14 @@ visible = false
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 text = "SPD 0 / 0"
+
+[node name="Hints" type="Label" parent="CanvasLayer/UI/VBoxRoot" unique_id=7258942]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(0.75, 0.82, 0.9, 0.92)
+theme_override_font_sizes/font_size = 13
+text = "1 — sonar   ·   F — drive"
+horizontal_alignment = 1
 
 [node name="Spacer" type="Control" parent="CanvasLayer/UI/VBoxRoot" unique_id=1651439110]
 layout_mode = 2

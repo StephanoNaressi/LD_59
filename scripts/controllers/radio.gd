@@ -4,10 +4,9 @@ class_name Radio
 const NOISE_STREAM: AudioStream = preload("res://game/audios/noise.ogg")
 const SONAR_STREAM: AudioStream = preload("res://game/audios/sonar.ogg")
 
-const ECHO_SHELL_DEPTH: float = 420.0
-const NOISE_SHELL_INNER: float = 220.0
-const NOISE_SHELL_OUTER: float = 14000.0
-const RADIO_HEAR: float = 220.0
+const ECHO_SHELL_DEPTH: float = 1600.0
+const BROKEN_STATIC_INNER_SURFACE: float = 70.0
+const BROKEN_STATIC_OUTER_SURFACE: float = 260.0
 const ECHO_DELAY: float = 0.22
 const SONAR_DB: float = -14.0
 
@@ -22,6 +21,7 @@ func _ready() -> void:
 	noise_player.volume_db = -80.0
 	sonar_player.stream = SONAR_STREAM
 	sonar_player.volume_db = SONAR_DB
+	sonar_player.max_distance = 80000.0
 
 
 func play_ping(listener_pos: Vector3) -> void:
@@ -69,23 +69,21 @@ func tick(listener_pos: Vector3) -> void:
 		set_music_focus(tower)
 		return
 	set_music_focus(null)
-	if dist_surface > NOISE_SHELL_OUTER:
+	if dist_surface >= BROKEN_STATIC_OUTER_SURFACE:
 		noise_player.stop()
 		return
-	var near_radio: float = clampf(1.0 - listener_pos.distance_to(global_position) / RADIO_HEAR, 0.0, 1.0)
-	if near_radio < 0.03:
+	var span: float = BROKEN_STATIC_OUTER_SURFACE - BROKEN_STATIC_INNER_SURFACE
+	var t: float = 1.0 - clampf((dist_surface - BROKEN_STATIC_INNER_SURFACE) / span, 0.0, 1.0)
+	if t <= 0.02:
 		noise_player.stop()
 		return
-	var span: float = NOISE_SHELL_OUTER - NOISE_SHELL_INNER
-	var tower_blend: float = 1.0 - clampf((dist_surface - NOISE_SHELL_INNER) / span, 0.0, 1.0)
-	var blend: float = tower_blend * near_radio
-	noise_player.volume_db = lerpf(-50.0, -28.0, blend)
+	noise_player.volume_db = lerpf(-52.0, -24.0, t * t)
 	if not noise_player.playing:
 		noise_player.play()
 
 
 func set_music_focus(focus: Antenna) -> void:
-	for node in get_tree().get_nodes_in_group("antennas"):
+	for node in get_tree().get_nodes_in_group(TowerRegistry.GROUP_ANTENNAS):
 		if node is Antenna:
 			var antenna: Antenna = node as Antenna
 			antenna.set_tower_music_playing(antenna == focus)
