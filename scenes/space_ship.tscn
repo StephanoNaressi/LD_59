@@ -32,7 +32,7 @@ data = PackedVector3Array(-0.0001, 0.8279, -14, 3.1134, 1.5446999, -14, -0.0001,
 size = Vector3(14, 9, 28)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_engagement"]
-radius = 51.819
+radius = 24.452
 
 [node name="SpaceShip" type="CharacterBody3D" unique_id=1555982470]
 collision_layer = 2
@@ -98,7 +98,7 @@ collision_mask = 3
 monitorable = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="EngagementRange" unique_id=1302459785]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -53.66329)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -36.398262)
 shape = SubResource("SphereShape3D_engagement")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1208399449]
@@ -127,7 +127,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5773087, 0, -13.066308)
 
 [node name="Player" parent="." unique_id=1725343240 instance=ExtResource("3_jy7xo")]
 
+[node name="ShootingCooldown" type="Timer" parent="." unique_id=1991370989]
+wait_time = 0.1
+one_shot = true
+
 [connection signal="body_entered" from="spaceship/Chair/Camera3D/ChairArea" to="." method="on_chair_area_body_entered"]
 [connection signal="body_exited" from="spaceship/Chair/Camera3D/ChairArea" to="." method="on_chair_area_body_exited"]
+[connection signal="timeout" from="ShootingCooldown" to="." method="_on_shooting_cooldown_timeout"]
 
 [editable path="spaceship"]

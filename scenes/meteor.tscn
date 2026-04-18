@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dm2eybuk17ugb" path="res://scripts/controllers/meteor.gd" id="1_pxso2"]
 [ext_resource type="PackedScene" uid="uid://cyfl7ve4hup03" path="res://game/meshes/meteor.glb" id="1_tcwo0"]
+[ext_resource type="Texture2D" uid="uid://b3q14iswyb0xn" path="res://game/textures/target.png" id="3_83eji"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_tcwo0"]
 bounce = 0.51
@@ -9,13 +10,14 @@ bounce = 0.51
 [sub_resource type="SphereShape3D" id="SphereShape3D_tcwo0"]
 radius = 1.033
 
-[node name="Meteor" type="RigidBody3D" unique_id=217224758]
+[node name="Meteor" type="RigidBody3D" unique_id=217224758 node_paths=PackedStringArray("target")]
 collision_layer = 3
 collision_mask = 1048575
 physics_material_override = SubResource("PhysicsMaterial_tcwo0")
 gravity_scale = 0.0
 continuous_cd = true
 script = ExtResource("1_pxso2")
+target = NodePath("TargetSprite")
 
 [node name="DriftTimer" type="Timer" parent="." unique_id=554864498]
 wait_time = 3.0
@@ -24,3 +26,10 @@ wait_time = 3.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=196492444]
 shape = SubResource("SphereShape3D_tcwo0")
+
+[node name="TargetSprite" type="Sprite3D" parent="." unique_id=481179135]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+billboard = 2
+no_depth_test = true
+render_priority = 10
+texture = ExtResource("3_83eji")

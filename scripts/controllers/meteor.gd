@@ -1,19 +1,15 @@
-extends RigidBody3D
+extends Destroyable
 class_name Meteor
-
-signal destroyed
 
 const DRIFT_INTERVAL_MIN: float = 2.0
 const DRIFT_INTERVAL_MAX: float = 5.5
 const DRIFT_IMPULSE_MIN: float = 0.12
 const DRIFT_IMPULSE_MAX: float = 0.55
 
-var health: float = 100.0
-var _dead: bool = false
-
 @onready var drift_timer: Timer = $DriftTimer
 
 func _ready() -> void:
+	super._ready()
 	drift_timer.timeout.connect(_on_drift_timer_timeout)
 	_randomize_drift_wait_time()
 	drift_timer.start()
@@ -28,12 +24,3 @@ func _on_drift_timer_timeout() -> void:
 	dir = dir.normalized()
 	apply_central_impulse(dir * randf_range(DRIFT_IMPULSE_MIN, DRIFT_IMPULSE_MAX))
 	_randomize_drift_wait_time()
-
-func take_damage(damage: float) -> void:
-	if _dead:
-		return
-	health -= damage
-	if health <= 0:
-		_dead = true
-		destroyed.emit()
-		queue_free()
