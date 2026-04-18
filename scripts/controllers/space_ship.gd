@@ -115,50 +115,35 @@ func handle_movement(delta: float) -> void:
 
 #region Shooting
 func shoot() -> void:
-	var target = get_best_target()
-	if target == null:
+	var meteor: Meteor = find_best_meteor_target()
+	if meteor == null:
 		return
-
-	var projectile = PROJECTILE.instantiate()
+	var projectile: Proyectile = PROJECTILE.instantiate() as Proyectile
+	projectile.target = meteor
+	projectile.global_position = (turret_pos if next_turret_left else turret_pos_2).global_position
+	next_turret_left = not next_turret_left
 	get_tree().current_scene.add_child(projectile)
 
-	var spawn_from: Node3D = turret_pos if next_turret_left else turret_pos_2
-	next_turret_left = not next_turret_left
-	projectile.global_position = spawn_from.global_position
-	projectile.target = target
-
-func get_best_target() -> Node3D:
-	var space_state = get_world_3d().direct_space_state
-
-	var origin = global_position
-	var forward = -camera_3d.global_transform.basis.z
-
-	var shape = SphereShape3D.new()
-	shape.radius = 30.0
-
-	var query = PhysicsShapeQueryParameters3D.new()
-	query.shape = shape
-	query.transform = Transform3D(Basis(), origin)
+func find_best_meteor_target() -> Meteor:
+	var sphere: SphereShape3D = SphereShape3D.new()
+	sphere.radius = 30.0
+	var query: PhysicsShapeQueryParameters3D = PhysicsShapeQueryParameters3D.new()
+	query.shape = sphere
+	query.transform = Transform3D(Basis(), global_position)
 	query.collision_mask = 2
-
-	var results = space_state.intersect_shape(query)
-
-	var best_target = null
-	var best_forward_dot: float = -1.0
-
-	for intersection in results:
-		var collider: Object = intersection.collider
-		if collider == null:
+	var forward: Vector3 = -camera_3d.global_transform.basis.z
+	var origin: Vector3 = global_position
+	var best: Meteor = null
+	var best_dot: float = -1.0
+	for hit in get_world_3d().direct_space_state.intersect_shape(query):
+		var m: Meteor = hit.collider as Meteor
+		if m == null:
 			continue
-
-		var to_target: Vector3 = (collider.global_position - origin).normalized()
-		var forward_dot: float = forward.dot(to_target)
-
-		if forward_dot > 0.6 and forward_dot > best_forward_dot:
-			best_forward_dot = forward_dot
-			best_target = collider
-
-	return best_target
+		var dot: float = forward.dot((m.global_position - origin).normalized())
+		if dot > 0.6 and dot > best_dot:
+			best_dot = dot
+			best = m
+	return best
 #endregion
 
 #region Area Detection

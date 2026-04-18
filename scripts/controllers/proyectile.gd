@@ -1,7 +1,7 @@
 extends Node3D
 class_name Proyectile
 
-var target: Node3D
+var target: Meteor
 var speed: float = 30.0
 var hit_distance: float = 0.5
 
@@ -13,4 +13,5 @@ func _process(delta: float) -> void:
 	position = position.move_toward(target.position, speed * delta)
 
 	if position.distance_to(target.position) <= hit_distance:
+		target.take_damage(10.0)
 		queue_free()
