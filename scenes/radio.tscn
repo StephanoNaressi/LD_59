@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://1fcrlfm5l5wx"]
+
+[ext_resource type="Script" uid="uid://1kkirbp1bbo6" path="res://scripts/controllers/radio.gd" id="1_y83x7"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_fo3mb"]
+
+[node name="Radio" type="Node3D" unique_id=1197043511]
+script = ExtResource("1_y83x7")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=923394693]
+transform = Transform3D(0.88083076, 0, 0, 0, 0.7510116, 0, 0, 0, 0.46524462, 0, 0, 0)
+mesh = SubResource("BoxMesh_fo3mb")
+
+[node name="SonarPlayer" type="AudioStreamPlayer3D" parent="." unique_id=1596016654]
+
+[node name="NoisePlayer" type="AudioStreamPlayer3D" parent="." unique_id=1596016655]
+
+[node name="MusicPlayer" type="AudioStreamPlayer3D" parent="." unique_id=1596016656]

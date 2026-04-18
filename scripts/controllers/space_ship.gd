@@ -29,6 +29,7 @@ var next_turret_left: bool = true
 @onready var engagement_area: Area3D = $EngagementRange
 @onready var shooting_cooldown: Timer = $ShootingCooldown
 @onready var repair_shooting_cooldown: Timer = $RepairShootingCooldown
+@onready var radio: Radio = $Radio
 
 var can_fire_repair: bool = true
 
@@ -45,6 +46,8 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	handle_input()
+	if radio != null:
+		radio.tick(global_position, is_active)
 
 func _input(event: InputEvent) -> void:
 	if not is_active:
@@ -82,6 +85,8 @@ func handle_input() -> void:
 		update_meteor_primary_hold()
 		tick_repair_hold_fire()
 		tick_meteor_primary_auto_fire()
+		if Input.is_action_just_pressed("Ping"):
+			radio.play_ping(global_position)
 	
 func set_piloting(piloting: bool) -> void:
 	is_active = piloting

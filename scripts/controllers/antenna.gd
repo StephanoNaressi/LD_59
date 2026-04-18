@@ -20,6 +20,7 @@ var repair_progress: float = 0.0
 
 
 func _ready() -> void:
+	add_to_group("antennas")
 	if crosshair_marker:
 		crosshair_marker.visible = false
 	repair_progress_root.visible = false
