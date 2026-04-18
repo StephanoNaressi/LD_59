@@ -31,6 +31,9 @@ data = PackedVector3Array(-0.0001, 0.8279, -14, 3.1134, 1.5446999, -14, -0.0001,
 [sub_resource type="BoxShape3D" id="BoxShape3D_ship_hull"]
 size = Vector3(14, 9, 28)
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_engagement"]
+radius = 51.819
+
 [node name="SpaceShip" type="CharacterBody3D" unique_id=1555982470]
 collision_layer = 2
 collision_mask = 2
@@ -87,6 +90,16 @@ shape = SubResource("ConcavePolygonShape3D_ivtut")
 [node name="ShipHullCollision" type="CollisionShape3D" parent="." unique_id=106548467]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, -2)
 shape = SubResource("BoxShape3D_ship_hull")
+
+[node name="EngagementRange" type="Area3D" parent="." unique_id=1562151102]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, -2)
+collision_layer = 0
+collision_mask = 3
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EngagementRange" unique_id=1302459785]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -53.66329)
+shape = SubResource("SphereShape3D_engagement")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1208399449]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.8759172, 3.7683153)

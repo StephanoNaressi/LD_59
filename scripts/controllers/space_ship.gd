@@ -25,6 +25,7 @@ var next_turret_left: bool = true
 @onready var camera_3d: Camera3D = $spaceship/Chair/Camera3D
 @onready var seat_anchor: Node3D = $spaceship/Chair
 @onready var exit_anchor: Node3D = $"spaceship/Exit" as Node3D
+@onready var engagement_area: Area3D = $EngagementRange
 #endregion
 
 func _ready() -> void:
@@ -115,34 +116,35 @@ func handle_movement(delta: float) -> void:
 
 #region Shooting
 func shoot() -> void:
-	var meteor: Meteor = find_best_meteor_target()
+	var meteor: Meteor = _closest_meteor_in_front()
 	if meteor == null:
 		return
+	var muzzle: Node3D = turret_pos if next_turret_left else turret_pos_2
+	next_turret_left = not next_turret_left
 	var projectile: Proyectile = PROJECTILE.instantiate() as Proyectile
 	projectile.target = meteor
-	projectile.global_position = (turret_pos if next_turret_left else turret_pos_2).global_position
-	next_turret_left = not next_turret_left
 	get_tree().current_scene.add_child(projectile)
+	projectile.global_position = muzzle.global_position
 
-func find_best_meteor_target() -> Meteor:
-	var sphere: SphereShape3D = SphereShape3D.new()
-	sphere.radius = 30.0
-	var query: PhysicsShapeQueryParameters3D = PhysicsShapeQueryParameters3D.new()
-	query.shape = sphere
-	query.transform = Transform3D(Basis(), global_position)
-	query.collision_mask = 2
+func _closest_meteor_in_front() -> Meteor:
+	var origin: Vector3 = camera_3d.global_position
 	var forward: Vector3 = -camera_3d.global_transform.basis.z
-	var origin: Vector3 = global_position
+	var viewport_center: Vector2 = camera_3d.get_viewport().get_visible_rect().size * 0.5
 	var best: Meteor = null
-	var best_dot: float = -1.0
-	for hit in get_world_3d().direct_space_state.intersect_shape(query):
-		var m: Meteor = hit.collider as Meteor
-		if m == null:
-			continue
-		var dot: float = forward.dot((m.global_position - origin).normalized())
-		if dot > 0.6 and dot > best_dot:
-			best_dot = dot
-			best = m
+	var best_screen_d2: float = INF
+	var best_world_d2: float = INF
+	for body in engagement_area.get_overlapping_bodies():
+		if body is Meteor:
+			var m: Meteor = body as Meteor
+			var to_m: Vector3 = m.global_position - origin
+			if forward.dot(to_m) <= 0.0:
+				continue
+			var world_d2: float = to_m.length_squared()
+			var screen_d2: float = (camera_3d.unproject_position(m.global_position) - viewport_center).length_squared()
+			if best == null or screen_d2 < best_screen_d2 or (is_equal_approx(screen_d2, best_screen_d2) and world_d2 < best_world_d2):
+				best = m
+				best_screen_d2 = screen_d2
+				best_world_d2 = world_d2
 	return best
 #endregion
 

@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://c573jw2rht2o7" path="res://scenes/space_ship.tscn" id="1_0wfyh"]
 [ext_resource type="Material" uid="uid://b4cidsmi3vmyu" path="res://game/meshes/GlowStar.tres" id="3_jyhfs"]
-[ext_resource type="PackedScene" uid="uid://rjo8ayjs3awq" path="res://scenes/meteor.tscn" id="3_sugp2"]
+[ext_resource type="PackedScene" uid="uid://bbv5mm5ddjy31" path="res://scenes/asteroid_belt.tscn" id="4_belt"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0wfyh"]
 sky_top_color = Color(0.08789865, 0, 0.19748032, 1)
@@ -23,7 +23,6 @@ sdfgi_enabled = true
 sdfgi_read_sky_light = false
 glow_enabled = true
 glow_strength = 1.19
-volumetric_fog_enabled = true
 volumetric_fog_albedo = Color(0.11972272, 0, 0.19090384, 1)
 adjustment_enabled = true
 adjustment_brightness = 1.04
@@ -54,11 +53,12 @@ scale_curve = SubResource("CurveTexture_tefeu")
 
 [node name="SpaceShip" parent="." unique_id=1148349640 instance=ExtResource("1_0wfyh")]
 
+[node name="AsteroidBelt" parent="." unique_id=1327652023 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -159.94873, 0, 0)
+min_distance_from_player = 1.0
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1053174916]
 environment = SubResource("Environment_jyhfs")
-
-[node name="Meteor" parent="." unique_id=788611388 instance=ExtResource("3_sugp2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.6223426, 3.7296398, -17.77658)
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="." unique_id=1233695872]
 material_override = ExtResource("3_jyhfs")

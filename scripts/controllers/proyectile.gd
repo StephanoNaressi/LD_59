@@ -6,12 +6,12 @@ var speed: float = 30.0
 var hit_distance: float = 0.5
 
 func _process(delta: float) -> void:
-	if target == null:
+	if target == null or not is_instance_valid(target):
 		queue_free()
 		return
 
-	position = position.move_toward(target.position, speed * delta)
+	global_position = global_position.move_toward(target.global_position, speed * delta)
 
-	if position.distance_to(target.position) <= hit_distance:
+	if global_position.distance_to(target.global_position) <= hit_distance:
 		target.take_damage(10.0)
 		queue_free()

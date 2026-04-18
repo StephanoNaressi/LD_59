@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bbv5mm5ddjy31"]
+
+[ext_resource type="Script" uid="uid://dvyk46wo2lrsp" path="res://scripts/controllers/asteroid_belt.gd" id="1_k544b"]
+
+[node name="AsteroidBelt" type="Node3D" unique_id=327652023]
+script = ExtResource("1_k544b")
