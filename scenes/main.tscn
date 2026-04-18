@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://c573jw2rht2o7" path="res://scenes/space_ship.tscn" id="1_0wfyh"]
 [ext_resource type="PackedScene" uid="uid://cuutkagxm6kgs" path="res://scenes/player.tscn" id="2_sugp2"]
+[ext_resource type="PackedScene" uid="uid://rjo8ayjs3awq" path="res://scenes/meteor.tscn" id="3_sugp2"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0wfyh"]
 sky_top_color = Color(0.08789865, 0, 0.19748032, 1)
@@ -27,3 +28,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.084888, 0)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1053174916]
 environment = SubResource("Environment_jyhfs")
+
+[node name="Meteor" parent="." unique_id=788611388 instance=ExtResource("3_sugp2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.6223426, 3.7296398, -17.77658)

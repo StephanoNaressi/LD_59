@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://b65juspb4p45s"]
+
+[ext_resource type="Script" uid="uid://dci5xbxba7pl" path="res://scripts/controllers/proyectile.gd" id="1_23gut"]
+[ext_resource type="Material" uid="uid://cy3elkktyyeql" path="res://game/meshes/Glow.tres" id="1_160ws"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_23gut"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_160ws"]
+
+[node name="Proyectile" type="Node3D" unique_id=1227877079]
+script = ExtResource("1_23gut")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1598890646]
+material_override = ExtResource("1_160ws")
+mesh = SubResource("SphereMesh_23gut")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=1564067824]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=829605909]
+shape = SubResource("SphereShape3D_160ws")

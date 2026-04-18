@@ -5,6 +5,8 @@ var is_player_in_area : bool = false
 var is_driving : bool = false
 var player : Player
 
+const PROYECTILE = preload("uid://b65juspb4p45s")
+
 func _ready() -> void:
 	camera_3d.current = false
 	
@@ -16,7 +18,14 @@ func _process(delta: float) -> void:
 			unlock_player_from_chair()
 		else:
 			lock_player_to_chair()
-
+	if is_driving and Input.is_action_just_pressed("MouseLeft"):
+		shoot(player)
+		
+func shoot(target: Node3D) -> void:
+	var p : Proyectile = PROYECTILE.instantiate()
+	get_tree().current_scene.add_child(p)
+	p.target = target
+	
 func lock_player_to_chair() -> void:
 	if player == null : return
 	player.is_locked = true

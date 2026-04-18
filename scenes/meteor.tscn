@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://rjo8ayjs3awq"]
+
+[ext_resource type="PackedScene" uid="uid://cyfl7ve4hup03" path="res://game/meshes/meteor.glb" id="1_tcwo0"]
+
+[node name="Meteor" type="Node3D" unique_id=788611388]
+
+[node name="meteor" parent="." unique_id=1208533006 instance=ExtResource("1_tcwo0")]
