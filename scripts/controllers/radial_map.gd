@@ -1,11 +1,12 @@
 extends Control
 
-@export var radar_radius_meters: float = 1200.0
+@export var radar_radius_meters: float = 3000.0
 @export var ring_fill: Color = Color(0.22, 0.28, 0.38, 0.92)
 @export var ring_stroke: Color = Color(0.4, 0.48, 0.58, 0.55)
 @export var heading_marker: Color = Color(0.55, 0.78, 1.0, 0.95)
 @export var belt_dot: Color = Color(0.55, 0.72, 0.55, 0.88)
 @export var ping_antenna_dot: Color = Color(1.0, 0.82, 0.45, 0.95)
+@export var repaired_antenna_dot: Color = Color(0.35, 0.92, 0.42, 0.95)
 @export var sonar_ring_color: Color = Color(0.35, 0.72, 1.0, 0.5)
 
 
@@ -14,10 +15,10 @@ func _process(_delta: float) -> void:
 
 
 func _draw() -> void:
-	var player: Player = GlobalValues.player
-	if player == null:
+	if GlobalValues.player == null:
 		return
-	var navigation_body: Node3D = player.vehicle if player.vehicle != null else player
+	var player: Node3D = GlobalValues.player
+	var body: Node3D = player.vehicle if player.vehicle != null else player
 	var widget_center: Vector2 = size * 0.5
 	var ring_radius: float = minf(size.x, size.y) * 0.5 - 6.0
 	if ring_radius <= 4.0:
@@ -55,16 +56,16 @@ func _draw() -> void:
 			false
 		)
 
-	var forward_xz: Vector2 = Vector2(
-		-navigation_body.global_transform.basis.z.x,
-		-navigation_body.global_transform.basis.z.z
-	)
-	if forward_xz.length_squared() < 0.0001:
+	var look_flat: Vector3 = -body.global_transform.basis.z
+	look_flat.y = 0.0
+	var forward_xz: Vector2
+	if look_flat.length_squared() < 0.0001:
 		forward_xz = Vector2(0.0, -1.0)
 	else:
-		forward_xz = forward_xz.normalized()
+		look_flat = look_flat.normalized()
+		forward_xz = Vector2(look_flat.x, look_flat.z)
 	var pixels_per_meter: float = ring_radius / maxf(radar_radius_meters, 1.0)
-	var player_xz: Vector2 = Vector2(navigation_body.global_position.x, navigation_body.global_position.z)
+	var player_xz: Vector2 = Vector2(body.global_position.x, body.global_position.z)
 
 	var nearest_belt_delta: Vector2 = Vector2.ZERO
 	var nearest_belt_dist_sq: float = INF
@@ -84,19 +85,46 @@ func _draw() -> void:
 			belt_dot
 		)
 
+	for node in get_tree().get_nodes_in_group(TowerRegistry.GROUP_ANTENNAS):
+		if not (node is Antenna):
+			continue
+		var map_antenna: Antenna = node as Antenna
+		if not map_antenna.is_repaired:
+			continue
+		var rep_delta: Vector2 = (
+			Vector2(map_antenna.global_position.x, map_antenna.global_position.z) - player_xz
+		)
+		draw_circle(
+			widget_center
+			+ to_map(rep_delta, forward_xz, pixels_per_meter, ring_radius, 4.0),
+			4.0,
+			repaired_antenna_dot
+		)
+
 	if now_sec < GlobalValues.radar_ping_until_sec:
-		var nearest_antenna_delta: Vector2 = Vector2.ZERO
-		var nearest_antenna_dist_sq: float = INF
-		for antenna_xz in TowerRegistry.xy_by_name.values():
-			var antenna_delta: Vector2 = antenna_xz - player_xz
-			var antenna_dist_sq: float = antenna_delta.length_squared()
-			if antenna_dist_sq < nearest_antenna_dist_sq:
-				nearest_antenna_dist_sq = antenna_dist_sq
-				nearest_antenna_delta = antenna_delta
-		if nearest_antenna_dist_sq < INF:
+		var ping_target: Antenna = null
+		var ping_best: float = INF
+		var any_target: Antenna = null
+		var any_best: float = INF
+		for ping_node in get_tree().get_nodes_in_group(TowerRegistry.GROUP_ANTENNAS):
+			if not (ping_node is Antenna):
+				continue
+			var cand: Antenna = ping_node as Antenna
+			var d2: float = (
+				Vector2(cand.global_position.x, cand.global_position.z) - player_xz
+			).length_squared()
+			if d2 < any_best:
+				any_best = d2
+				any_target = cand
+			if not cand.is_repaired and d2 < ping_best:
+				ping_best = d2
+				ping_target = cand
+		var show: Antenna = ping_target if ping_target != null else any_target
+		if show != null:
+			var ping_delta: Vector2 = Vector2(show.global_position.x, show.global_position.z) - player_xz
 			draw_circle(
 				widget_center
-				+ to_map(nearest_antenna_delta, forward_xz, pixels_per_meter, ring_radius, 5.0),
+				+ to_map(ping_delta, forward_xz, pixels_per_meter, ring_radius, 5.0),
 				5.0,
 				ping_antenna_dot
 			)

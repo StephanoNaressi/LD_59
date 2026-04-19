@@ -32,6 +32,7 @@ func _ready() -> void:
 
 func add_resource_labels() -> void:
 	var title_label: Label3D = Label3D.new()
+	title_label.font = ThemeDB.fallback_font
 	title_label.text = Item.type_name(belt_resource)
 	title_label.font_size = 128
 	title_label.pixel_size = 0.065

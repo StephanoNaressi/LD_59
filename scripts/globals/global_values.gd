@@ -63,9 +63,30 @@ func play_sfx_at(
 	sfx_player.volume_db = volume_db
 	sfx_player.pitch_scale = pitch_scale
 	sfx_player.max_distance = max_distance
+	sfx_player.unit_size = 48.0
+	sfx_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
 	sfx_player.global_position = world_position
 	sfx_player.finished.connect(sfx_player.queue_free)
 	sfx_player.play()
+
+
+func play_break_sfx(
+	audio_stream: AudioStream,
+	volume_db: float = AudioLevels.SFX_BREAK_VOLUME_DB,
+	pitch_scale: float = 1.0
+) -> void:
+	if audio_stream == null:
+		return
+	var scene: Node = get_tree().current_scene
+	if scene == null:
+		return
+	var player: AudioStreamPlayer = AudioStreamPlayer.new()
+	scene.add_child(player)
+	player.stream = audio_stream
+	player.volume_db = volume_db
+	player.pitch_scale = pitch_scale
+	player.finished.connect(player.queue_free)
+	player.play()
 
 
 func push_map_marker(world_position: Vector3) -> void:
@@ -87,7 +108,22 @@ func show_meteor_reward_toast(resource: Item.Item_Type, pickup_count: int) -> vo
 	loot_toast.emit("+%s %d  +Fuel" % [Item.type_name(resource), pickup_count])
 
 
-func add_fuel_from_meteor(amount: float = 0.07) -> void:
+func get_next_antenna_to_repair() -> Antenna:
+	var tree: SceneTree = get_tree()
+	if tree == null:
+		return null
+	var antennas: Array[Antenna] = []
+	for node in tree.get_nodes_in_group(TowerRegistry.GROUP_ANTENNAS):
+		if node is Antenna:
+			antennas.append(node as Antenna)
+	antennas.sort_custom(func(a: Antenna, b: Antenna) -> bool: return str(a.name) < str(b.name))
+	for antenna in antennas:
+		if not antenna.is_repaired:
+			return antenna
+	return null
+
+
+func add_fuel_from_meteor(amount: float = 0.052) -> void:
 	if game_over_occurred:
 		return
 	var ship: Node = get_tree().get_first_node_in_group("rideable_ship")

@@ -5,12 +5,13 @@ const SHIP_FLY_SFX: AudioStream = preload("res://game/audios/ship_fly.ogg")
 
 const VELOCITY_RESPONSE: float = 3.25
 const MIN_CRUISE: float = 5.0
-const MAX_CRUISE: float = 80.0
+const MAX_CRUISE: float = 160.0
+const FUEL_EMPTY_CRUISE: float = 25.0
 const CRUISE_STEP: float = 2.0
 const TANK_CAPACITY: float = 100.0
 const FUEL_DRAIN_PER_SEC: float = 0.009
 const MIN_FUEL_TO_INCREASE_SPEED: float = 0.02
-const NO_FUEL_THRUST_CAP: float = 15.0
+const NO_FUEL_THRUST_CAP: float = 25.0
 const LIFE_SUPPORT_O2_DRAIN_PER_SEC: float = 0.2
 const LIFE_SUPPORT_H2O_DRAIN_PER_SEC: float = 0.1
 const MOUSE_YAW_SENS: float = 0.002
@@ -51,8 +52,8 @@ func _ready() -> void:
 	camera_3d.current = false
 	pilot_camera_fov_default = camera_3d.fov
 	add_to_group("rideable_ship")
-	oxygen_tank_fill = TANK_CAPACITY * 0.5
-	water_tank_fill = TANK_CAPACITY * 0.5
+	oxygen_tank_fill = TANK_CAPACITY * 0.75
+	water_tank_fill = TANK_CAPACITY * 0.75
 	ship_fly_player = AudioStreamPlayer3D.new()
 	add_child(ship_fly_player)
 	var looped_ship: AudioStreamOggVorbis = SHIP_FLY_SFX.duplicate() as AudioStreamOggVorbis
@@ -71,7 +72,9 @@ func _process(delta: float) -> void:
 
 
 func get_radio_listener_position() -> Vector3:
-	if GlobalValues.player != null and GlobalValues.player.vehicle != self:
+	if GlobalValues.player != null and GlobalValues.player.vehicle == self:
+		return global_position
+	if GlobalValues.player != null:
 		return GlobalValues.player.global_position
 	return global_position
 
@@ -97,7 +100,7 @@ func _physics_process(delta: float) -> void:
 			)
 			fuel = maxf(0.0, fuel - FUEL_DRAIN_PER_SEC * cruise_speed_ratio * delta)
 		if fuel <= MIN_FUEL_TO_INCREASE_SPEED:
-			cruise_speed = MIN_CRUISE
+			cruise_speed = FUEL_EMPTY_CRUISE
 		oxygen_tank_fill = maxf(0.0, oxygen_tank_fill - LIFE_SUPPORT_O2_DRAIN_PER_SEC * delta)
 		water_tank_fill = maxf(0.0, water_tank_fill - LIFE_SUPPORT_H2O_DRAIN_PER_SEC * delta)
 		if oxygen_tank_fill <= 0.001 or water_tank_fill <= 0.001:

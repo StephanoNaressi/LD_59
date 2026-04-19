@@ -1,14 +1,13 @@
 extends StaticBody3D
 class_name Antenna
 
-#region exports
+#region export
 const WELL_DONE_SFX: AudioStream = preload("res://game/audios/well_done.ogg")
+const DEFAULT_PLANET_SURFACE_RADIUS: float = 80.0
 
 @export var metal_cost: int = 2
 @export var rock_cost: int = 2
-## Drain this percent of the piloted ship's *current* O₂ tank (not inventory).
 @export_range(0, 100) var oxygen_cost: int = 0
-## Drain this percent of the piloted ship's *current* H₂O tank (not inventory).
 @export_range(0, 100) var water_cost: int = 0
 @export var crosshair_marker: Marker3D
 @export var repair_charge_per_hit: float = 0.05
@@ -26,12 +25,14 @@ var repair_progress: float = 0.0
 #endregion
 
 #region nodes
-@onready var broken_mesh: Node3D = $BrokenMesh
-@onready var fixed_mesh: Node3D = $FixedMesh
-@onready var repair_progress_root: Node3D = $RepairProgressRoot
-@onready var repair_viewport: SubViewport = $RepairProgressRoot/RepairSubViewport
-@onready var repair_progress_bar: ProgressBar = $RepairProgressRoot/RepairSubViewport/ProgressRoot/RepairProgressBar
-@onready var repair_billboard: Sprite3D = $RepairProgressRoot/RepairBillboard
+@onready var broken_mesh: Node3D = $Visuals/BrokenMesh
+@onready var fixed_mesh: Node3D = $Visuals/FixedMesh
+@onready var repair_progress_root: Node3D = $Visuals/RepairProgressRoot
+@onready var repair_viewport: SubViewport = $Visuals/RepairProgressRoot/RepairSubViewport
+@onready var repair_progress_bar: ProgressBar = (
+	$Visuals/RepairProgressRoot/RepairSubViewport/ProgressRoot/RepairProgressBar
+)
+@onready var repair_billboard: Sprite3D = $Visuals/RepairProgressRoot/RepairBillboard
 #endregion
 
 
@@ -50,7 +51,7 @@ func planet_surface_radius() -> float:
 		)
 		if distance_to_marker > 1.0:
 			return distance_to_marker
-	return 80.0
+	return DEFAULT_PLANET_SURFACE_RADIUS
 
 
 static func closest_to(world_position: Vector3, tree: SceneTree) -> Antenna:
@@ -105,8 +106,7 @@ func target_destroyable() -> void:
 func update_repair_ui() -> void:
 	if repair_progress_bar:
 		repair_progress_bar.value = repair_progress * 100.0
-	var show_bar: bool = repair_progress > 0.001 and repair_progress < 0.999 and not is_repaired
-	repair_progress_root.visible = show_bar
+	repair_progress_root.visible = false
 
 
 func apply_repair_hit() -> void:
@@ -127,9 +127,18 @@ func complete_repair() -> void:
 		update_repair_ui()
 		return
 	is_repaired = true
+	var ship: SpaceShip = GlobalValues.get_piloted_ship()
+	if ship == null:
+		ship = get_tree().get_first_node_in_group("rideable_ship") as SpaceShip
+	if ship != null:
+		ship.fuel = 1.0
+		ship.oxygen_tank_fill = ship.TANK_CAPACITY
+		ship.water_tank_fill = ship.TANK_CAPACITY
 	GlobalValues.play_sfx_at(
 		WELL_DONE_SFX, global_position, AudioLevels.SFX_REPAIR_COMPLETE_VOLUME_DB, 1.0, 900.0
 	)
+	TowerRegistry.rebuild_from_tree(get_tree())
+	GlobalValues.update_ui.emit()
 	broken_mesh.visible = false
 	fixed_mesh.visible = true
 	repair_progress_root.visible = false

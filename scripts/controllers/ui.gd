@@ -8,11 +8,17 @@ const LIFE_SUPPORT_WARNING_PCT: int = 15
 @onready var rocks: Label = $VBoxRoot/HBoxContainer/Rocks
 @onready var metal: Label = $VBoxRoot/HBoxContainer/Metal
 @onready var resource_row: HBoxContainer = $VBoxRoot/HBoxContainer
+@onready var antenna_info: Label = $"../AntennaInfo"
 @onready var player_coords: Label = $VBoxRoot/PlayerCoords
-@onready var tower_coords: Label = $VBoxRoot/TowerCoords
+@onready var antenna_coords: Label = $VBoxRoot/AntennaCoords
 @onready var ship_speed: Label = $VBoxRoot/ShipSpeed
 @onready var antenna_repair_panel: PanelContainer = $VBoxRoot/AntennaRepairPanel
-@onready var antenna_repair_label: Label = $VBoxRoot/AntennaRepairPanel/MarginContainer/AntennaRepairLabel
+@onready var antenna_repair_progress: ProgressBar = (
+	$VBoxRoot/AntennaRepairPanel/MarginContainer/RepairVBox/RepairProgressBar
+)
+@onready var antenna_repair_label: Label = (
+	$VBoxRoot/AntennaRepairPanel/MarginContainer/RepairVBox/AntennaRepairLabel
+)
 @onready var markers_label: Label = $VBoxRoot/MarkersLabel
 @onready var hints: Label = $VBoxRoot/Hints
 @onready var game_over_overlay: ColorRect = $"../GameOverOverlay"
@@ -32,43 +38,39 @@ func _ready() -> void:
 	GlobalValues.map_markers_changed.connect(refresh_map_markers)
 	GlobalValues.update_ui.emit()
 	refresh_map_markers()
+	call_deferred("refresh_antenna_info")
 
 
 func apply_hud_visuals() -> void:
 	for label: Label in [rocks, metal, player_coords, ship_speed]:
-		if label == null:
-			continue
 		label.add_theme_color_override(&"font_color", HUD_MAIN)
-	if resource_row != null:
-		resource_row.visible = false
-	if tower_coords != null:
-		tower_coords.visible = false
-	if hints != null:
-		hints.add_theme_color_override(&"font_color", HUD_HINT)
-		hints.add_theme_font_size_override(&"font_size", 12)
-	if player_coords != null:
-		player_coords.add_theme_font_size_override(&"font_size", 14)
-	if ship_speed != null:
-		ship_speed.add_theme_font_size_override(&"font_size", 14)
+	resource_row.visible = false
+	antenna_coords.visible = false
+	hints.add_theme_color_override(&"font_color", HUD_HINT)
+	hints.add_theme_font_size_override(&"font_size", 12)
+	player_coords.add_theme_font_size_override(&"font_size", 14)
+	ship_speed.add_theme_font_size_override(&"font_size", 14)
+	antenna_info.add_theme_color_override(&"font_color", HUD_MAIN)
+	antenna_info.add_theme_font_size_override(&"font_size", 11)
 	if game_over_label != null:
 		game_over_label.add_theme_color_override(&"font_color", Color(0.62, 0.68, 0.74, 1))
 		game_over_label.add_theme_font_size_override(&"font_size", 22)
-	if antenna_repair_label != null:
-		antenna_repair_label.add_theme_color_override(&"font_color", HUD_MAIN)
-		antenna_repair_label.add_theme_font_size_override(&"font_size", 15)
+	antenna_repair_progress.add_theme_color_override(&"font_color", HUD_MAIN)
+	antenna_repair_label.add_theme_color_override(&"font_color", HUD_MAIN)
+	antenna_repair_label.add_theme_font_size_override(&"font_size", 15)
 	if loot_toast != null:
 		loot_toast.add_theme_color_override(&"font_color", Color(0.94, 0.97, 0.92, 1))
 		loot_toast.add_theme_color_override(&"font_outline_color", Color(0.05, 0.07, 0.06, 1))
 		loot_toast.add_theme_constant_override(&"outline_size", 5)
 		loot_toast.add_theme_font_size_override(&"font_size", 22)
 		loot_toast.z_index = 95
-	if markers_label != null:
-		markers_label.add_theme_color_override(&"font_color", HUD_MUTED)
-		markers_label.add_theme_font_size_override(&"font_size", 11)
+	markers_label.add_theme_color_override(&"font_color", HUD_MUTED)
+	markers_label.add_theme_font_size_override(&"font_size", 11)
 
 
 func _process(delta: float) -> void:
 	update_navigation_readout()
+	sync_repair_progress_bar()
 	if loot_toast_hide_seconds_remaining > 0.0:
 		loot_toast_hide_seconds_remaining -= delta
 		if loot_toast_hide_seconds_remaining <= 0.0 and loot_toast != null:
@@ -93,19 +95,20 @@ func on_game_over(reason: String) -> void:
 func on_antenna_repair_target_changed(antenna: Antenna) -> void:
 	antenna_hud_target = antenna
 	refresh_antenna_repair_panel()
+	refresh_antenna_info()
 
 
 func refresh_antenna_repair_panel() -> void:
-	if antenna_repair_panel == null or antenna_repair_label == null:
-		return
 	if (
 		antenna_hud_target == null
 		or not is_instance_valid(antenna_hud_target)
 		or antenna_hud_target.is_repaired
 	):
 		antenna_repair_panel.visible = false
+		antenna_repair_progress.value = 0.0
 		return
 	var target_antenna: Antenna = antenna_hud_target
+	antenna_repair_progress.value = target_antenna.repair_progress * 100.0
 	var rock_count: int = GlobalValues.count_items(Item.Item_Type.ROCK)
 	var metal_count: int = GlobalValues.count_items(Item.Item_Type.METAL)
 	var pilot_ship: SpaceShip = (
@@ -139,9 +142,39 @@ func refresh_antenna_repair_panel() -> void:
 	antenna_repair_panel.visible = true
 
 
-func refresh_map_markers() -> void:
-	if markers_label == null:
+func sync_repair_progress_bar() -> void:
+	if not antenna_repair_panel.visible:
 		return
+	if (
+		antenna_hud_target == null
+		or not is_instance_valid(antenna_hud_target)
+		or antenna_hud_target.is_repaired
+	):
+		return
+	antenna_repair_progress.value = antenna_hud_target.repair_progress * 100.0
+
+
+func refresh_antenna_info() -> void:
+	var antennas: Array[Antenna] = []
+	for node in get_tree().get_nodes_in_group(TowerRegistry.GROUP_ANTENNAS):
+		if node is Antenna:
+			antennas.append(node as Antenna)
+	antennas.sort_custom(func(a: Antenna, b: Antenna) -> bool: return str(a.name) < str(b.name))
+	var total: int = antennas.size()
+	var fixed_count: int = 0
+	var repaired_names: PackedStringArray = PackedStringArray()
+	for antenna in antennas:
+		if antenna.is_repaired:
+			fixed_count += 1
+			repaired_names.append(antenna.name)
+	var header: String = "Antennas: %d / %d fixed" % [fixed_count, total]
+	if repaired_names.is_empty():
+		antenna_info.text = header
+	else:
+		antenna_info.text = header + "\n" + "\n".join(repaired_names)
+
+
+func refresh_map_markers() -> void:
 	if GlobalValues.map_marker_positions.is_empty():
 		markers_label.text = ""
 		markers_label.visible = false
@@ -164,11 +197,10 @@ func on_inventory_changed() -> void:
 	rocks.text = "Rock %d" % rock_count
 	metal.text = "Metal %d" % metal_count
 	refresh_antenna_repair_panel()
+	refresh_antenna_info()
 
 
 func update_navigation_readout() -> void:
-	if player_coords == null:
-		return
 	var player: Player = GlobalValues.player
 	var navigation_root: Node3D = (
 		player.vehicle if player != null and player.vehicle != null else player
@@ -180,19 +212,18 @@ func update_navigation_readout() -> void:
 			roundi(world_position.y),
 			roundi(world_position.z),
 		]
-	if ship_speed != null:
-		var ship: SpaceShip = player.vehicle if player != null else null
-		if ship != null:
-			ship_speed.visible = true
-			var speed: float = ship.velocity.length()
-			var oxygen_percent: int = int(roundf(100.0 * ship.oxygen_tank_fill / ship.TANK_CAPACITY))
-			var water_percent: int = int(roundf(100.0 * ship.water_tank_fill / ship.TANK_CAPACITY))
-			var fuel_percent: int = int(roundf(100.0 * ship.fuel))
-			var rock_count: int = GlobalValues.count_items(Item.Item_Type.ROCK)
-			var metal_count: int = GlobalValues.count_items(Item.Item_Type.METAL)
-			ship_speed.text = (
-				"Speed %.0f m/s  |  Cruise %.0f m/s\nFuel %d%%  |  O₂ %d%%  |  H₂O %d%%  |  Rock %d  |  Metal %d"
-				% [
+	var ship: SpaceShip = player.vehicle if player != null else null
+	if ship != null:
+		ship_speed.visible = true
+		var speed: float = ship.velocity.length()
+		var oxygen_percent: int = int(roundf(100.0 * ship.oxygen_tank_fill / ship.TANK_CAPACITY))
+		var water_percent: int = int(roundf(100.0 * ship.water_tank_fill / ship.TANK_CAPACITY))
+		var fuel_percent: int = int(roundf(100.0 * ship.fuel))
+		var rock_count: int = GlobalValues.count_items(Item.Item_Type.ROCK)
+		var metal_count: int = GlobalValues.count_items(Item.Item_Type.METAL)
+		ship_speed.text = (
+			"Speed %.0f m/s  |  Cruise %.0f m/s\nFuel %d%%  |  O₂ %d%%  |  H₂O %d%%  |  Rock %d  |  Metal %d"
+			% [
 				speed,
 				ship.cruise_speed,
 				fuel_percent,
@@ -201,8 +232,8 @@ func update_navigation_readout() -> void:
 				rock_count,
 				metal_count,
 			]
-			)
-			if oxygen_percent <= LIFE_SUPPORT_WARNING_PCT or water_percent <= LIFE_SUPPORT_WARNING_PCT:
-				ship_speed.text += "\nWARNING: LIFE SUPPORT LOW"
-		else:
-			ship_speed.visible = false
+		)
+		if oxygen_percent <= LIFE_SUPPORT_WARNING_PCT or water_percent <= LIFE_SUPPORT_WARNING_PCT:
+			ship_speed.text += "\nWARNING: LIFE SUPPORT LOW"
+	else:
+		ship_speed.visible = false

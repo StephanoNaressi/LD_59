@@ -147,16 +147,12 @@ func pick_antenna() -> Antenna:
 	var body: Node = EngagementTargeting.pick_forward_body_in_area(
 		camera_3d,
 		engagement_area,
-		func(body_candidate: Node) -> bool: return antenna_is_repair_target(body_candidate)
+		func(body_candidate: Node) -> bool:
+			if not (body_candidate is Antenna):
+				return false
+			return not (body_candidate as Antenna).is_repaired
 	)
 	return body as Antenna
-
-
-func antenna_is_repair_target(body: Node) -> bool:
-	if not (body is Antenna):
-		return false
-	var antenna: Antenna = body as Antenna
-	return not antenna.is_repaired
 
 
 func on_shooting_cooldown_timeout() -> void:

@@ -34,7 +34,7 @@ data = PackedVector3Array(-0.0001, 0.8279, -14, 3.1134, 1.5446999, -14, -0.0001,
 size = Vector3(14, 9, 28)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_engagement"]
-radius = 115.0
+radius = 152.0
 
 [node name="SpaceShip" type="CharacterBody3D" unique_id=1555982470]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)

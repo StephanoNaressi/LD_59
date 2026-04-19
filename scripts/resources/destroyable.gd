@@ -31,13 +31,12 @@ func take_damage(damage: float) -> void:
 	health -= damage
 	if health <= 0.0:
 		dead = true
-		GlobalValues.play_sfx_at(
-			BREAK_SFX,
-			global_position,
-			AudioLevels.SFX_BREAK_VOLUME_DB,
-			randf_range(0.96, 1.04),
-			420.0
-		)
+		process_mode = Node.PROCESS_MODE_DISABLED
+		visible = false
+		freeze = true
+		collision_layer = 0
+		collision_mask = 0
+		GlobalValues.play_break_sfx(BREAK_SFX, AudioLevels.SFX_BREAK_VOLUME_DB, randf_range(0.96, 1.04))
 		if should_drop_loot():
 			if resource_drop == Item.Item_Type.OXYGEN:
 				route_drop_to_life_support(true, drop_rate)
@@ -51,7 +50,7 @@ func take_damage(damage: float) -> void:
 			GlobalValues.update_ui.emit()
 		destroyed.emit()
 		on_destroyed()
-		queue_free()
+		call_deferred("queue_free")
 
 
 func should_drop_loot() -> bool:
@@ -63,7 +62,7 @@ func route_drop_to_life_support(oxygen: bool, units: int) -> void:
 	if not (ship is SpaceShip):
 		return
 	var space_ship: SpaceShip = ship as SpaceShip
-	var amount: float = float(units)
+	var amount: float = float(units) * 2.35
 	if oxygen:
 		space_ship.add_oxygen_to_tank(amount)
 	else:

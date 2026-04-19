@@ -54,6 +54,9 @@ func apply_stencil_outline_for_resource() -> void:
 		for surface_index: int in mesh_instance.mesh.get_surface_count():
 			var source_material: Material = mesh_instance.get_active_material(surface_index)
 			if source_material == null:
+				var fill: StandardMaterial3D = StandardMaterial3D.new()
+				fill.albedo_color = Color(0.55, 0.52, 0.48)
+				mesh_instance.set_surface_override_material(surface_index, fill)
 				continue
 			var duplicated_material: Material = source_material.duplicate(true)
 			if duplicated_material == null:

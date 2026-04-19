@@ -6,43 +6,45 @@
 [ext_resource type="Material" uid="uid://8smc4k8e250j" path="res://game/meshes/CrosshairReticleMaterial.tres" id="4_chm"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_body"]
-radius = 1.35
+radius = 103.5
 
 [sub_resource type="QuadMesh" id="QuadMesh_crosshair"]
 
 [node name="Antenna" type="StaticBody3D" unique_id=2014974688 node_paths=PackedStringArray("crosshair_marker")]
-transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
 collision_layer = 3
 collision_mask = 1048575
 script = ExtResource("1_ant")
-crosshair_marker = NodePath("CrosshairMarker")
-
-[node name="BrokenMesh" parent="." unique_id=1066109582 instance=ExtResource("2_broken")]
-
-[node name="FixedMesh" parent="." unique_id=176014088 instance=ExtResource("3_fixed")]
-visible = false
+crosshair_marker = NodePath("Visuals/CrosshairMarker")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=489978499]
 shape = SubResource("SphereShape3D_body")
 
-[node name="CrosshairMarker" type="Marker3D" parent="." unique_id=1088830538]
+[node name="Visuals" type="Node3D" parent="." unique_id=660676221]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
+
+[node name="BrokenMesh" parent="Visuals" unique_id=1066109582 instance=ExtResource("2_broken")]
+
+[node name="FixedMesh" parent="Visuals" unique_id=176014088 instance=ExtResource("3_fixed")]
+visible = false
+
+[node name="CrosshairMarker" type="Marker3D" parent="Visuals" unique_id=1088830538]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.05, 0)
 
-[node name="Reticle" type="MeshInstance3D" parent="CrosshairMarker" unique_id=1233347621]
+[node name="Reticle" type="MeshInstance3D" parent="Visuals/CrosshairMarker" unique_id=1233347621]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.5, 0)
 material_override = ExtResource("4_chm")
 mesh = SubResource("QuadMesh_crosshair")
 
-[node name="RepairProgressRoot" type="Marker3D" parent="." unique_id=16395897]
+[node name="RepairProgressRoot" type="Marker3D" parent="Visuals" unique_id=16395897]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.85, 1.2)
 
-[node name="RepairSubViewport" type="SubViewport" parent="RepairProgressRoot" unique_id=53814803]
+[node name="RepairSubViewport" type="SubViewport" parent="Visuals/RepairProgressRoot" unique_id=53814803]
 transparent_bg = true
 handle_input_locally = false
 size = Vector2i(720, 72)
 render_target_update_mode = 3
 
-[node name="ProgressRoot" type="Control" parent="RepairProgressRoot/RepairSubViewport" unique_id=1201006622]
+[node name="ProgressRoot" type="Control" parent="Visuals/RepairProgressRoot/RepairSubViewport" unique_id=1201006622]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -50,7 +52,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="RepairProgressBar" type="ProgressBar" parent="RepairProgressRoot/RepairSubViewport/ProgressRoot" unique_id=1532485444]
+[node name="RepairProgressBar" type="ProgressBar" parent="Visuals/RepairProgressRoot/RepairSubViewport/ProgressRoot" unique_id=1532485444]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -64,12 +66,12 @@ grow_vertical = 2
 theme_override_font_sizes/font_size = 28
 show_percentage = false
 
-[node name="RepairBillboard" type="Sprite3D" parent="RepairProgressRoot" unique_id=6145541]
+[node name="RepairBillboard" type="Sprite3D" parent="Visuals/RepairProgressRoot" unique_id=6145541]
 pixel_size = 0.012
 billboard = 1
 render_priority = 8
 
-[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1869832466]
+[node name="OmniLight3D" type="OmniLight3D" parent="Visuals" unique_id=1869832466]
 light_color = Color(0, 1.2760575, 2.0635488, 1)
 light_energy = 115.485
 omni_range = 356.806
