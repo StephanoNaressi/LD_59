@@ -293,7 +293,7 @@ offset_right = -10.0
 offset_bottom = 188.0
 grow_horizontal = 0
 grow_vertical = 0
-theme_override_colors/font_color = Color(0.45, 0.52, 0.58, 0.88)
+theme_override_colors/font_color = Color(0.66, 0.73, 0.8, 0.95)
 theme_override_font_sizes/font_size = 11
 text = "1 — ping"
 horizontal_alignment = 2
@@ -366,11 +366,11 @@ alignment = 1
 
 [node name="Rocks" type="Label" parent="CanvasLayer/UI/VBoxRoot/HBoxContainer" unique_id=1820381871]
 layout_mode = 2
-text = "R 0"
+text = "Rock 0"
 
 [node name="Metal" type="Label" parent="CanvasLayer/UI/VBoxRoot/HBoxContainer" unique_id=159608582]
 layout_mode = 2
-text = "M 0"
+text = "Metal 0"
 
 [node name="PlayerCoords" type="Label" parent="CanvasLayer/UI/VBoxRoot" unique_id=1820381872]
 layout_mode = 2
@@ -391,9 +391,10 @@ text = "0 | 0"
 [node name="Hints" type="Label" parent="CanvasLayer/UI/VBoxRoot" unique_id=7258942]
 layout_mode = 2
 size_flags_vertical = 0
-theme_override_colors/font_color = Color(0.45, 0.52, 0.58, 0.82)
+theme_override_colors/font_color = Color(0.66, 0.73, 0.8, 0.95)
 theme_override_font_sizes/font_size = 12
-text = "F ship · meteors give resources + fuel"
+text = "F — enter/exit ship
+Mouse Wheel — set cruise speed"
 
 [node name="Spacer" type="Control" parent="CanvasLayer/UI/VBoxRoot" unique_id=1651439110]
 layout_mode = 2

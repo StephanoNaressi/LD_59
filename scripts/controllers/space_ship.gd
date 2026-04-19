@@ -6,11 +6,11 @@ const MIN_CRUISE: float = 5.0
 const MAX_CRUISE: float = 80.0
 const CRUISE_STEP: float = 2.0
 const TANK_CAPACITY: float = 100.0
-const FUEL_DRAIN_PER_SEC: float = 0.005
+const FUEL_DRAIN_PER_SEC: float = 0.009
 const MIN_FUEL_TO_INCREASE_SPEED: float = 0.02
-const NO_FUEL_THRUST_CAP: float = 3.0
-const LIFE_SUPPORT_O2_DRAIN_PER_SEC: float = 5
-const LIFE_SUPPORT_H2O_DRAIN_PER_SEC: float = 0.4
+const NO_FUEL_THRUST_CAP: float = 15.0
+const LIFE_SUPPORT_O2_DRAIN_PER_SEC: float = 0.2
+const LIFE_SUPPORT_H2O_DRAIN_PER_SEC: float = 0.1
 const MOUSE_YAW_SENS: float = 0.002
 const YAW_SMOOTHING: float = 10.5
 

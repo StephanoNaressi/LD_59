@@ -2,8 +2,8 @@ extends CharacterBody3D
 class_name Player
 
 #region constants
-const SPEED = 3.0
-const JUMP_VELOCITY = 4.5
+const SPEED = 2
+const JUMP_VELOCITY = 2
 const MOUSE_SENS = 0.002
 #endregion
 

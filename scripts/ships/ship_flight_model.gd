@@ -16,11 +16,15 @@ func compute_thrust_wish(ship: CharacterBody3D) -> Vector3:
 	if Input.is_action_pressed("FlyDown") or Input.is_physical_key_pressed(KEY_CTRL):
 		vertical -= 1.0
 	var forward: Vector3 = -ship.global_transform.basis.z
+	var right: Vector3 = ship.global_transform.basis.x
 	forward.y = 0.0
+	right.y = 0.0
 	if forward.length_squared() > 0.0001:
 		forward = forward.normalized()
+	if right.length_squared() > 0.0001:
+		right = right.normalized()
 	var input_dir: Vector2 = Input.get_vector("Left", "Right", "Forward", "Backward")
-	return forward * (-input_dir.y) + Vector3.UP * vertical
+	return forward * (-input_dir.y) + right * input_dir.x + Vector3.UP * vertical
 
 
 func is_thrusting(ship: CharacterBody3D) -> bool:

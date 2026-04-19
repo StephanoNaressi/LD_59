@@ -2,7 +2,8 @@ extends MarginContainer
 
 const HUD_MAIN := Color(0.55, 0.62, 0.7, 0.95)
 const HUD_MUTED := Color(0.45, 0.52, 0.58, 0.88)
-const HUD_HINT := Color(0.4, 0.47, 0.54, 0.82)
+const HUD_HINT := Color(0.66, 0.73, 0.8, 0.95)
+const LIFE_SUPPORT_WARNING_PCT: int = 15
 
 @onready var rocks: Label = $VBoxRoot/HBoxContainer/Rocks
 @onready var metal: Label = $VBoxRoot/HBoxContainer/Metal
@@ -95,7 +96,7 @@ func refresh_antenna_repair_panel() -> void:
 	var target_antenna: Antenna = antenna_hud_target
 	var rock_count: int = GlobalValues.count_item_of_type(Item.Item_Type.ROCK)
 	var metal_count: int = GlobalValues.count_item_of_type(Item.Item_Type.METAL)
-	var text: String = "%s\nR %d/%d  M %d/%d" % [
+	var text: String = "%s\nRock %d/%d  Metal %d/%d" % [
 		target_antenna.name,
 		rock_count,
 		target_antenna.rock_cost,
@@ -103,7 +104,7 @@ func refresh_antenna_repair_panel() -> void:
 		target_antenna.metal_cost,
 	]
 	if GlobalValues.can_afford_items(target_antenna.metal_cost, target_antenna.rock_cost):
-		text += "\nRMB"
+		text += "\nRight Mouse Button to repair"
 	antenna_repair_label.text = text
 	antenna_repair_panel.visible = true
 
@@ -111,8 +112,8 @@ func refresh_antenna_repair_panel() -> void:
 func on_inventory_changed() -> void:
 	var rock_count: int = GlobalValues.count_item_of_type(Item.Item_Type.ROCK)
 	var metal_count: int = GlobalValues.count_item_of_type(Item.Item_Type.METAL)
-	rocks.text = "R %d" % rock_count
-	metal.text = "M %d" % metal_count
+	rocks.text = "Rock %d" % rock_count
+	metal.text = "Metal %d" % metal_count
 	refresh_antenna_repair_panel()
 
 
@@ -125,7 +126,7 @@ func update_navigation_readout() -> void:
 	)
 	if navigation_root != null:
 		var world_position: Vector3 = navigation_root.global_position
-		player_coords.text = "%d  %d  %d" % [
+		player_coords.text = "X %d  Y %d  Z %d" % [
 			roundi(world_position.x),
 			roundi(world_position.y),
 			roundi(world_position.z),
@@ -138,12 +139,14 @@ func update_navigation_readout() -> void:
 			var oxygen_percent: int = int(roundf(100.0 * ship.oxygen_tank_fill / ship.TANK_CAPACITY))
 			var water_percent: int = int(roundf(100.0 * ship.water_tank_fill / ship.TANK_CAPACITY))
 			var fuel_percent: int = int(roundf(100.0 * ship.fuel))
-			ship_speed.text = "%.0f | %.0f  ·  F %d%%  O₂ %d%%  H₂O %d%%" % [
+			ship_speed.text = "Speed %.0f m/s  |  Cruise %.0f m/s\nFuel %d%%  |  O₂ %d%%  |  H₂O %d%%" % [
 				speed,
 				ship.cruise_speed,
 				fuel_percent,
 				oxygen_percent,
 				water_percent,
 			]
+			if oxygen_percent <= LIFE_SUPPORT_WARNING_PCT or water_percent <= LIFE_SUPPORT_WARNING_PCT:
+				ship_speed.text += "\nWARNING: LIFE SUPPORT LOW"
 		else:
 			ship_speed.visible = false

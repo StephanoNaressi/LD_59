@@ -57,7 +57,7 @@ func notify_meteor_rewards(resource: Item.Item_Type, pickup_count: int) -> void:
 	loot_toast.emit("+%s %d%s" % [Item.type_name(resource), pickup_count, suffix])
 
 
-func grant_fuel_from_meteor_destroyed(amount: float = 0.14) -> void:
+func grant_fuel_from_meteor_destroyed(amount: float = 0.07) -> void:
 	if game_over_occurred:
 		return
 	var ship: Node = get_tree().get_first_node_in_group("rideable_ship")

@@ -2,8 +2,8 @@ extends StaticBody3D
 class_name Antenna
 
 #region exports
-@export var metal_cost: int = 1
-@export var rock_cost: int = 1
+@export var metal_cost: int = 2
+@export var rock_cost: int = 2
 @export var crosshair_marker: Marker3D
 @export var repair_charge_per_hit: float = 0.05
 @export var music_stream: AudioStream

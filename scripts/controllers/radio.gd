@@ -5,8 +5,8 @@ const NOISE_STREAM: AudioStream = preload("res://game/audios/noise.ogg")
 const SONAR_STREAM: AudioStream = preload("res://game/audios/sonar.ogg")
 
 const ECHO_SHELL_DEPTH: float = 1600.0
-const BROKEN_STATIC_INNER_SURFACE: float = 70.0
-const BROKEN_STATIC_OUTER_SURFACE: float = 260.0
+const BROKEN_STATIC_INNER_SURFACE: float = 120.0
+const BROKEN_STATIC_OUTER_SURFACE: float = 520.0
 const ECHO_DELAY: float = 0.22
 const SONAR_DB: float = -14.0
 
@@ -19,6 +19,7 @@ func _ready() -> void:
 	loop.loop = true
 	noise_player.stream = loop
 	noise_player.volume_db = -80.0
+	noise_player.max_db = -8.0
 	sonar_player.stream = SONAR_STREAM
 	sonar_player.volume_db = SONAR_DB
 	sonar_player.max_distance = 80000.0
@@ -81,7 +82,7 @@ func tick(listener_pos: Vector3) -> void:
 	if t <= 0.02:
 		noise_player.stop()
 		return
-	noise_player.volume_db = lerpf(-52.0, -24.0, t * t)
+	noise_player.volume_db = lerpf(-56.0, -34.0, t * t)
 	if not noise_player.playing:
 		noise_player.play()
 
