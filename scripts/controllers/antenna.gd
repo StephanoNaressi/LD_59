@@ -6,8 +6,10 @@ const WELL_DONE_SFX: AudioStream = preload("res://game/audios/well_done.ogg")
 
 @export var metal_cost: int = 2
 @export var rock_cost: int = 2
-@export var oxygen_cost: int = 0
-@export var water_cost: int = 0
+## Drain this percent of the piloted ship's *current* O₂ tank (not inventory).
+@export_range(0, 100) var oxygen_cost: int = 0
+## Drain this percent of the piloted ship's *current* H₂O tank (not inventory).
+@export_range(0, 100) var water_cost: int = 0
 @export var crosshair_marker: Marker3D
 @export var repair_charge_per_hit: float = 0.05
 @export var music_stream: AudioStream
@@ -30,10 +32,7 @@ var repair_progress: float = 0.0
 @onready var repair_viewport: SubViewport = $RepairProgressRoot/RepairSubViewport
 @onready var repair_progress_bar: ProgressBar = $RepairProgressRoot/RepairSubViewport/ProgressRoot/RepairProgressBar
 @onready var repair_billboard: Sprite3D = $RepairProgressRoot/RepairBillboard
-@onready var tower_music: AudioStreamPlayer3D = $TowerMusic
 #endregion
-
-var _tower_music_max_distance_base: float = 20000.0
 
 
 func _ready() -> void:
@@ -41,19 +40,16 @@ func _ready() -> void:
 	if crosshair_marker:
 		crosshair_marker.visible = false
 	repair_progress_root.visible = false
-	if music_stream != null:
-		tower_music.stream = music_stream
-	tower_music.volume_db = -16.0
-	_tower_music_max_distance_base = tower_music.max_distance
-	tower_music.max_distance = minf(_tower_music_max_distance_base, 900.0)
 	call_deferred("connect_repair_billboard_texture")
 
 
 func planet_surface_radius() -> float:
 	if crosshair_marker:
-		var d: float = global_position.distance_to(crosshair_marker.global_position)
-		if d > 1.0:
-			return d
+		var distance_to_marker: float = global_position.distance_to(
+			crosshair_marker.global_position
+		)
+		if distance_to_marker > 1.0:
+			return distance_to_marker
 	return 80.0
 
 
@@ -69,18 +65,6 @@ static func closest_to(world_position: Vector3, tree: SceneTree) -> Antenna:
 			best_distance = distance
 			best = antenna
 	return best
-
-
-func set_tower_music_playing(playing: bool) -> void:
-	if music_stream == null:
-		if tower_music.playing:
-			tower_music.stop()
-		return
-	if not playing:
-		tower_music.stop()
-		return
-	if not tower_music.playing:
-		tower_music.play()
 
 
 func connect_repair_billboard_texture() -> void:
@@ -143,8 +127,9 @@ func complete_repair() -> void:
 		update_repair_ui()
 		return
 	is_repaired = true
-	GlobalValues.play_sfx_at(WELL_DONE_SFX, global_position, -12.0, 1.0, 900.0)
-	tower_music.max_distance = maxf(_tower_music_max_distance_base, 22000.0)
+	GlobalValues.play_sfx_at(
+		WELL_DONE_SFX, global_position, AudioLevels.SFX_REPAIR_COMPLETE_VOLUME_DB, 1.0, 900.0
+	)
 	broken_mesh.visible = false
 	fixed_mesh.visible = true
 	repair_progress_root.visible = false

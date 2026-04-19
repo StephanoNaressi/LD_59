@@ -6,7 +6,7 @@
 [ext_resource type="Material" uid="uid://8smc4k8e250j" path="res://game/meshes/CrosshairReticleMaterial.tres" id="4_chm"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_body"]
-radius = 2.05
+radius = 1.35
 
 [sub_resource type="QuadMesh" id="QuadMesh_crosshair"]
 
@@ -68,10 +68,6 @@ show_percentage = false
 pixel_size = 0.012
 billboard = 1
 render_priority = 8
-
-[node name="TowerMusic" type="AudioStreamPlayer3D" parent="." unique_id=1596016657]
-unit_size = 320.0
-max_distance = 20000.0
 
 [node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1869832466]
 light_color = Color(0, 1.2760575, 2.0635488, 1)

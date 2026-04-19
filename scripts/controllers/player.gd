@@ -9,7 +9,7 @@ const MOUSE_SENS = 0.002
 
 var is_locked: bool = false
 var vehicle: SpaceShip = null
-var _global_xform_before_pilot: Transform3D
+var transform_before_piloting: Transform3D
 @onready var camera_3d: Camera3D = $Camera3D
 
 func _ready() -> void:
@@ -25,17 +25,20 @@ func _input(event: InputEvent) -> void:
 	handle_mouse_capture(event)
 
 
-func _unhandled_input(event: InputEvent) -> void:
-	if not Input.is_action_just_pressed("Ping"):
-		return
-	var ship: SpaceShip = get_tree().get_first_node_in_group("rideable_ship") as SpaceShip
-	if ship == null or ship.radio == null:
-		return
-	var origin: Vector3 = global_position
-	if vehicle != null:
-		origin = vehicle.global_position
-	ship.radio.play_ping(origin)
-	GlobalValues.start_radar_ping()
+func _unhandled_input(_event: InputEvent) -> void:
+	if Input.is_action_just_pressed("Ping"):
+		var ship: SpaceShip = get_tree().get_first_node_in_group("rideable_ship") as SpaceShip
+		if ship != null and ship.radio != null:
+			var ping_origin: Vector3 = global_position
+			if vehicle != null:
+				ping_origin = vehicle.global_position
+			ship.radio.play_ping(ping_origin)
+			GlobalValues.start_radar_ping()
+	if Input.is_action_just_pressed("Marker"):
+		var mark_pos: Vector3 = global_position
+		if vehicle != null:
+			mark_pos = vehicle.global_position
+		GlobalValues.push_map_marker(mark_pos)
 
 
 func _physics_process(delta: float) -> void:
@@ -48,7 +51,7 @@ func is_piloting(ship: Node) -> bool:
 	return vehicle != null and vehicle == ship
 
 func begin_pilot(ship: SpaceShip) -> void:
-	_global_xform_before_pilot = global_transform
+	transform_before_piloting = global_transform
 	vehicle = ship
 	is_locked = true
 	set_collision_shapes_enabled(false)
@@ -61,7 +64,7 @@ func end_pilot() -> void:
 		return
 	var ship: SpaceShip = vehicle
 	vehicle = null
-	global_transform = Transform3D(_global_xform_before_pilot.basis, ship.get_exit_spawn_global())
+	global_transform = Transform3D(transform_before_piloting.basis, ship.get_exit_spawn_global())
 	velocity = Vector3.ZERO
 	up_direction = Vector3.UP
 	set_collision_shapes_enabled(true)

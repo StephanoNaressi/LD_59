@@ -23,9 +23,9 @@ func _ready() -> void:
 	super._ready()
 	collision_layer_default = collision_layer
 	add_to_group(&"meteor_cull")
-	call_deferred("_apply_stencil_outline_for_resource")
-	drift_timer.timeout.connect(_on_drift_timer_timeout)
-	_randomize_drift_wait_time()
+	call_deferred("apply_stencil_outline_for_resource")
+	drift_timer.timeout.connect(on_drift_timer_timeout)
+	randomize_drift_wait_time()
 	drift_timer.start()
 
 
@@ -45,37 +45,41 @@ func set_simulated(enabled: bool) -> void:
 		drift_timer.process_mode = Node.PROCESS_MODE_DISABLED
 
 
-func _apply_stencil_outline_for_resource() -> void:
+func apply_stencil_outline_for_resource() -> void:
 	var tint_color: Color = OUTLINE_BY_DROP.get(resource_drop, Color(0, 1, 0.14))
 	for child: Node in find_children("*", "MeshInstance3D", true, false):
 		var mesh_instance: MeshInstance3D = child as MeshInstance3D
 		if mesh_instance == null or mesh_instance.mesh == null:
 			continue
 		for surface_index: int in mesh_instance.mesh.get_surface_count():
-			var active_material: Material = mesh_instance.get_active_material(surface_index)
-			if not (active_material is StandardMaterial3D):
+			var source_material: Material = mesh_instance.get_active_material(surface_index)
+			if source_material == null:
 				continue
-			var duplicated_material: StandardMaterial3D = active_material.duplicate(true)
-			duplicated_material.stencil_color = tint_color
-			if duplicated_material.next_pass is StandardMaterial3D:
-				var outline_material: StandardMaterial3D = (
-					duplicated_material.next_pass as StandardMaterial3D
-				).duplicate(true)
-				outline_material.albedo_color = tint_color
-				duplicated_material.next_pass = outline_material
+			var duplicated_material: Material = source_material.duplicate(true)
+			if duplicated_material == null:
+				continue
+			if duplicated_material is StandardMaterial3D:
+				var duplicated_standard: StandardMaterial3D = duplicated_material as StandardMaterial3D
+				duplicated_standard.stencil_color = tint_color
+				if duplicated_standard.next_pass is StandardMaterial3D:
+					var outline_material: StandardMaterial3D = (
+						duplicated_standard.next_pass as StandardMaterial3D
+					).duplicate(true)
+					outline_material.albedo_color = tint_color
+					duplicated_standard.next_pass = outline_material
 			mesh_instance.set_surface_override_material(surface_index, duplicated_material)
 
 
-func _on_destroyable_destroyed() -> void:
+func on_destroyed() -> void:
 	GlobalValues.add_fuel_from_meteor()
 	GlobalValues.show_meteor_reward_toast(resource_drop, drop_rate)
 
 
-func _randomize_drift_wait_time() -> void:
+func randomize_drift_wait_time() -> void:
 	drift_timer.wait_time = randf_range(DRIFT_INTERVAL_MIN, DRIFT_INTERVAL_MAX)
 
 
-func _on_drift_timer_timeout() -> void:
+func on_drift_timer_timeout() -> void:
 	var impulse_direction: Vector3 = Vector3(
 		randf_range(-1.0, 1.0),
 		randf_range(-1.0, 1.0),
@@ -87,4 +91,4 @@ func _on_drift_timer_timeout() -> void:
 	apply_central_impulse(
 		impulse_direction * randf_range(DRIFT_IMPULSE_MIN, DRIFT_IMPULSE_MAX)
 	)
-	_randomize_drift_wait_time()
+	randomize_drift_wait_time()

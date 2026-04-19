@@ -26,11 +26,11 @@ var random_generator: RandomNumberGenerator = RandomNumberGenerator.new()
 func _ready() -> void:
 	add_to_group(&"asteroid_belts")
 	random_generator.randomize()
-	_add_resource_labels()
-	call_deferred("_initial_spawn")
+	add_resource_labels()
+	call_deferred("initial_spawn")
 
 
-func _add_resource_labels() -> void:
+func add_resource_labels() -> void:
 	var title_label: Label3D = Label3D.new()
 	title_label.text = Item.type_name(belt_resource)
 	title_label.font_size = 128
@@ -44,24 +44,24 @@ func _add_resource_labels() -> void:
 	add_child(title_label)
 
 
-func _initial_spawn() -> void:
+func initial_spawn() -> void:
 	for spawn_index in asteroids_to_spawn:
-		_spawn_meteor_at_safe_position()
+		spawn_meteor_at_safe_position()
 
 
-func _random_belt_position() -> Vector3:
+func random_belt_position() -> Vector3:
 	var angle: float = random_generator.randf() * TAU
 	var belt_radius: float = random_generator.randf_range(inner_radius, outer_radius)
 	var height: float = random_generator.randf_range(-vertical_spread, vertical_spread)
 	return global_position + Vector3(cos(angle) * belt_radius, height, sin(angle) * belt_radius)
 
 
-func _spawn_meteor_at_safe_position() -> void:
+func spawn_meteor_at_safe_position() -> void:
 	var player: Node3D = GlobalValues.player as Node3D
 	var candidate_position: Vector3 = Vector3.ZERO
 	var found_valid_position: bool = false
 	for attempt in max_spawn_attempts:
-		candidate_position = _random_belt_position()
+		candidate_position = random_belt_position()
 		if (
 			player == null
 			or player.global_position.distance_to(candidate_position) >= min_distance_from_player
@@ -69,19 +69,19 @@ func _spawn_meteor_at_safe_position() -> void:
 			found_valid_position = true
 			break
 	if not found_valid_position:
-		candidate_position = _random_belt_position()
+		candidate_position = random_belt_position()
 
 	var meteor: Meteor = METEOR_SCENE.instantiate() as Meteor
 	meteor.resource_drop = belt_resource
 	meteor.drop_rate = 3
 	add_child(meteor)
 	meteor.global_position = candidate_position
-	meteor.destroyed.connect(_on_meteor_destroyed, CONNECT_ONE_SHOT)
+	meteor.destroyed.connect(on_meteor_destroyed, CONNECT_ONE_SHOT)
 
 
-func _on_meteor_destroyed() -> void:
+func on_meteor_destroyed() -> void:
 	var delay: float = respawn_delay_seconds + random_generator.randf_range(
 		-respawn_delay_jitter, respawn_delay_jitter
 	)
 	delay = maxf(delay, 5.0)
-	get_tree().create_timer(delay).timeout.connect(_spawn_meteor_at_safe_position)
+	get_tree().create_timer(delay).timeout.connect(spawn_meteor_at_safe_position)

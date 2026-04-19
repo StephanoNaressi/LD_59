@@ -23,6 +23,8 @@ const PILOT_CAMERA_FOV_MIN: float = 62.0
 const PILOT_CAMERA_FOV_MAX: float = 88.0
 const PILOT_CAMERA_FOV_SPEED_REF: float = 75.0
 
+const ENGINE_SOUND_MIN_SPEED: float = 0.75
+
 var is_active: bool = false
 var is_player_in_area: bool = false
 
@@ -53,9 +55,13 @@ func _ready() -> void:
 	water_tank_fill = TANK_CAPACITY * 0.5
 	ship_fly_player = AudioStreamPlayer3D.new()
 	add_child(ship_fly_player)
-	ship_fly_player.stream = SHIP_FLY_SFX
-	ship_fly_player.volume_db = -80.0
-	ship_fly_player.max_distance = 900.0
+	var looped_ship: AudioStreamOggVorbis = SHIP_FLY_SFX.duplicate() as AudioStreamOggVorbis
+	looped_ship.loop = true
+	ship_fly_player.stream = looped_ship
+	ship_fly_player.volume_db = AudioLevels.SHIP_ENGINE_OFF_DB
+	ship_fly_player.max_distance = AudioLevels.SHIP_ENGINE_MAX_DISTANCE
+	ship_fly_player.unit_size = AudioLevels.SHIP_ENGINE_UNIT_SIZE
+	ship_fly_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
 
 
 func _process(delta: float) -> void:
@@ -104,10 +110,10 @@ func _physics_process(delta: float) -> void:
 			self, delta, thrust_cruise, VELOCITY_RESPONSE, yaw_accum, MOUSE_YAW_SENS, YAW_SMOOTHING
 		)
 		move_and_slide()
-		_update_engine_sound()
-		_update_pilot_camera_fov()
+		update_engine_sound()
+		update_pilot_camera_fov()
 	else:
-		_update_engine_sound()
+		update_engine_sound()
 	AnimatableBodySync.push_transforms_to_physics(self)
 
 
@@ -184,22 +190,50 @@ func add_water_to_tank(amount: float) -> void:
 	water_tank_fill = minf(TANK_CAPACITY, water_tank_fill + amount)
 
 
-func _update_pilot_camera_fov() -> void:
+func can_afford_life_support_percent_cost(oxygen_pct: int, water_pct: int) -> bool:
+	var oxygen_percent: int = clampi(oxygen_pct, 0, 100)
+	var water_percent: int = clampi(water_pct, 0, 100)
+	if oxygen_percent > 0 and oxygen_tank_fill <= 0.001:
+		return false
+	if water_percent > 0 and water_tank_fill <= 0.001:
+		return false
+	return true
+
+
+func apply_life_support_percent_cost(oxygen_pct: int, water_pct: int) -> void:
+	var oxygen_percent: int = clampi(oxygen_pct, 0, 100)
+	var water_percent: int = clampi(water_pct, 0, 100)
+	if oxygen_percent > 0:
+		oxygen_tank_fill = maxf(
+			0.0, oxygen_tank_fill - oxygen_tank_fill * float(oxygen_percent) / 100.0
+		)
+	if water_percent > 0:
+		water_tank_fill = maxf(
+			0.0, water_tank_fill - water_tank_fill * float(water_percent) / 100.0
+		)
+
+
+func update_pilot_camera_fov() -> void:
 	var speed: float = velocity.length()
 	var speed_ratio: float = clampf(speed / PILOT_CAMERA_FOV_SPEED_REF, 0.0, 1.0)
 	camera_3d.fov = lerpf(PILOT_CAMERA_FOV_MIN, PILOT_CAMERA_FOV_MAX, speed_ratio)
 
 
-func _update_engine_sound() -> void:
+func update_engine_sound() -> void:
 	if ship_fly_player == null:
+		return
+	if not is_active:
+		ship_fly_player.stop()
 		return
 	var speed: float = velocity.length()
 	var speed_ratio: float = clampf(speed / maxf(0.001, MAX_CRUISE), 0.0, 1.0)
-	var active_flight: bool = is_active and speed > 0.75
-	if not active_flight:
-		ship_fly_player.stop()
-		return
-	ship_fly_player.pitch_scale = lerpf(0.85, 1.45, speed_ratio)
-	ship_fly_player.volume_db = lerpf(-24.0, -15.0, speed_ratio)
 	if not ship_fly_player.playing:
 		ship_fly_player.play()
+	if speed > ENGINE_SOUND_MIN_SPEED:
+		ship_fly_player.pitch_scale = lerpf(0.85, 1.45, speed_ratio)
+		ship_fly_player.volume_db = lerpf(
+			AudioLevels.SHIP_ENGINE_MIN_DB, AudioLevels.SHIP_ENGINE_MAX_DB, speed_ratio
+		)
+	else:
+		ship_fly_player.pitch_scale = 1.0
+		ship_fly_player.volume_db = AudioLevels.SHIP_ENGINE_OFF_DB

@@ -17,7 +17,7 @@ func _ready() -> void:
 	var looped_ambient: AudioStreamOggVorbis = AMBIENT_SFX.duplicate() as AudioStreamOggVorbis
 	looped_ambient.loop = true
 	ambient_player.stream = looped_ambient
-	ambient_player.volume_db = -20.0
+	ambient_player.volume_db = AudioLevels.AMBIENT_VOLUME_DB
 	ambient_player.play()
 
 
@@ -26,7 +26,7 @@ func _physics_process(delta: float) -> void:
 	if meteor_cull_accumulator_sec < meteor_cull_period_sec:
 		return
 	meteor_cull_accumulator_sec = 0.0
-	_update_meteor_activity()
+	update_meteor_activity()
 
 
 func get_player_focus_position() -> Vector3:
@@ -38,7 +38,7 @@ func get_player_focus_position() -> Vector3:
 	return player.global_position
 
 
-func _update_meteor_activity() -> void:
+func update_meteor_activity() -> void:
 	if GlobalValues.player == null:
 		return
 	var origin: Vector3 = get_player_focus_position()

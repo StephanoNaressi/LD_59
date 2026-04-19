@@ -14,3 +14,5 @@ mesh = SubResource("BoxMesh_fo3mb")
 [node name="SonarPlayer" type="AudioStreamPlayer3D" parent="." unique_id=1596016654]
 
 [node name="NoisePlayer" type="AudioStreamPlayer3D" parent="." unique_id=1596016655]
+
+[node name="TowerMusicPlayer" type="AudioStreamPlayer3D" parent="."]

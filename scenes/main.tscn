@@ -7,6 +7,13 @@
 [ext_resource type="Script" uid="uid://b2e76c86a8bso" path="res://scripts/controllers/ui.gd" id="5_tbgi4"]
 [ext_resource type="Script" uid="uid://c4nixicea8og0" path="res://scripts/main_world.gd" id="6_mainw"]
 [ext_resource type="Script" uid="uid://bp7fcx7q865j0" path="res://scripts/controllers/radial_map.gd" id="7_radmap"]
+[ext_resource type="AudioStream" uid="uid://cyeru5fxvxfg8" path="res://game/audios/a_star_seeks_joy.ogg" id="8_a8y0u"]
+[ext_resource type="AudioStream" uid="uid://dq2vf4sytkuhs" path="res://game/audios/yeah_i_listen_to_all_kinds_of_music.ogg" id="9_jkv2x"]
+[ext_resource type="AudioStream" uid="uid://x8u5hruuxw4h" path="res://game/audios/can_you_smell_a_rose_in_space.ogg" id="10_jbj1t"]
+[ext_resource type="AudioStream" uid="uid://402n43ecpynk" path="res://game/audios/cholesterol.ogg" id="11_muem4"]
+[ext_resource type="AudioStream" uid="uid://dtlb408yv2mei" path="res://game/audios/my_cookies_floated_away.ogg" id="12_dp3eg"]
+[ext_resource type="AudioStream" uid="uid://baf6n0r836ajg" path="res://game/audios/gloporbian_news.ogg" id="13_0ld40"]
+[ext_resource type="AudioStream" uid="uid://cj08jm1qgoa1i" path="res://game/audios/dont_ask_questions.ogg" id="14_gqmmt"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sun"]
 shading_mode = 2
@@ -49,9 +56,13 @@ fog_light_energy = 0.28
 fog_sun_scatter = 0.08
 fog_density = 1.0
 fog_aerial_perspective = 0.12
-fog_depth_begin = 1353.1
-fog_depth_end = 3200.0
-volumetric_fog_density = 0.0
+fog_height = 420.98
+fog_depth_begin = 466.7
+fog_depth_end = 1000.0
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0122
+volumetric_fog_albedo = Color(0.15204872, 0, 0.1843273, 1)
+volumetric_fog_length = 24.9
 adjustment_enabled = true
 adjustment_contrast = 1.08
 adjustment_saturation = 1.08
@@ -254,124 +265,265 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7200, 32, 1800)
 belt_resource = 1
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt37" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt37" parent="." unique_id=556482410 instance=ExtResource("4_belt")]
 transform = Transform3D(0.9659258, 0, -0.25881904, 0, 1, 0, 0.25881904, 0, 0.9659258, -7600, 34, 900)
 belt_resource = 2
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt38" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt38" parent="." unique_id=1107599891 instance=ExtResource("4_belt")]
 transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, 8600, -20, -2200)
 belt_resource = 3
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt39" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt39" parent="." unique_id=364017296 instance=ExtResource("4_belt")]
 transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -1500, 42, 7600)
 belt_resource = 1
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt40" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt40" parent="." unique_id=669246960 instance=ExtResource("4_belt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1900, 18, -7600)
 belt_resource = 2
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt41" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt41" parent="." unique_id=148418791 instance=ExtResource("4_belt")]
 transform = Transform3D(0.9659258, 0, 0.25881904, 0, 1, 0, -0.25881904, 0, 0.9659258, -8800, 38, -4200)
 belt_resource = 3
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt42" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt42" parent="." unique_id=663705587 instance=ExtResource("4_belt")]
 transform = Transform3D(0.8660254, 0, -0.5, 0, 1, 0, 0.5, 0, 0.8660254, 9300, 26, 5100)
 belt_resource = 1
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt43" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt43" parent="." unique_id=574246756 instance=ExtResource("4_belt")]
 transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, -7200, 44, -6200)
 belt_resource = 2
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt44" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt44" parent="." unique_id=333335501 instance=ExtResource("4_belt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5400, -28, 7400)
 belt_resource = 3
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt45" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt45" parent="." unique_id=1110632532 instance=ExtResource("4_belt")]
 transform = Transform3D(0.9659258, 0, -0.25881904, 0, 1, 0, 0.25881904, 0, 0.9659258, -9600, 16, 1700)
 belt_resource = 1
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt46" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt46" parent="." unique_id=1443641021 instance=ExtResource("4_belt")]
 transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, 7600, 48, -6900)
 belt_resource = 2
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt47" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt47" parent="." unique_id=635357203 instance=ExtResource("4_belt")]
 transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -3500, -18, 8600)
 belt_resource = 3
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt48" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt48" parent="." unique_id=278734489 instance=ExtResource("4_belt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2500, 52, -8900)
 belt_resource = 1
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt49" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt49" parent="." unique_id=663475401 instance=ExtResource("4_belt")]
 transform = Transform3D(0.9659258, 0, 0.25881904, 0, 1, 0, -0.25881904, 0, 0.9659258, -8700, 28, 6900)
 belt_resource = 2
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt50" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt50" parent="." unique_id=401211251 instance=ExtResource("4_belt")]
 transform = Transform3D(0.8660254, 0, -0.5, 0, 1, 0, 0.5, 0, 0.8660254, 9800, 22, -1200)
 belt_resource = 3
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt51" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt51" parent="." unique_id=40623558 instance=ExtResource("4_belt")]
 transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, -6200, -24, 8200)
 belt_resource = 1
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt52" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt52" parent="." unique_id=48418525 instance=ExtResource("4_belt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4200, 36, -9600)
 belt_resource = 2
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt53" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt53" parent="." unique_id=1086069040 instance=ExtResource("4_belt")]
 transform = Transform3D(0.9659258, 0, -0.25881904, 0, 1, 0, 0.25881904, 0, 0.9659258, -10000, 40, -2600)
 belt_resource = 3
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt54" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt54" parent="." unique_id=538235057 instance=ExtResource("4_belt")]
 transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, 7000, 12, 8400)
 belt_resource = 1
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt55" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt55" parent="." unique_id=343498249 instance=ExtResource("4_belt")]
 transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -4800, 30, -9400)
 belt_resource = 2
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt56" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt56" parent="." unique_id=300085505 instance=ExtResource("4_belt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8600, -26, 3200)
 belt_resource = 3
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt57" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt57" parent="." unique_id=1116341564 instance=ExtResource("4_belt")]
 transform = Transform3D(0.9659258, 0, 0.25881904, 0, 1, 0, -0.25881904, 0, 0.9659258, -9100, 24, 4800)
 belt_resource = 1
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt58" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt58" parent="." unique_id=320472308 instance=ExtResource("4_belt")]
 transform = Transform3D(0.8660254, 0, -0.5, 0, 1, 0, 0.5, 0, 0.8660254, 10400, 20, -5400)
 belt_resource = 2
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt59" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt59" parent="." unique_id=1488140757 instance=ExtResource("4_belt")]
 transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, -10400, 18, -4200)
 belt_resource = 3
 min_distance_from_player = 1.0
 
-[node name="AsteroidBelt60" parent="." instance=ExtResource("4_belt")]
+[node name="AsteroidBelt60" parent="." unique_id=750666611 instance=ExtResource("4_belt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1500, 14, 9800)
 belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltLostRock" parent="." unique_id=850001001 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2600, 0, 1100)
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltLostMetal" parent="." unique_id=850001002 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2200, 0, 1350)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltMonkeyO2" parent="." unique_id=850001003 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1000, -20, -950)
+belt_resource = 2
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltMonkeyRock" parent="." unique_id=850001004 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1400, -30, -1300)
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltMonkeyMetal" parent="." unique_id=850001005 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 900, -25, -1250)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltFunnyMetal" parent="." unique_id=850001006 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3000, 65, 2500)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltFunnyRock" parent="." unique_id=850001007 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3400, 70, 2750)
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltFunnyWater" parent="." unique_id=850001008 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3150, 68, 2400)
+belt_resource = 3
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltMelMetal" parent="." unique_id=850001009 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4200, 50, -5950)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltMelRock" parent="." unique_id=850001010 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3800, 55, -5650)
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltMelO2" parent="." unique_id=850001011 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3950, 52, -6000)
+belt_resource = 2
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltGlopMetal" parent="." unique_id=850001012 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1800, 35, 6100)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltGlopRock" parent="." unique_id=850001013 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1400, 42, 6350)
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltGlopWater" parent="." unique_id=850001014 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1650, 38, 6400)
+belt_resource = 3
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltDepthMetal" parent="." unique_id=850001015 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7000, 35, -4750)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltDepthRock" parent="." unique_id=850001016 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7400, 40, -4450)
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltDepthO2" parent="." unique_id=850001017 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7100, 36, -4500)
+belt_resource = 2
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltDepthWater" parent="." unique_id=850001018 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7300, 37, -4650)
+belt_resource = 3
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltCanMetal" parent="." unique_id=850001019 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7700, 45, 3850)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltCanRock" parent="." unique_id=850001020 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7300, 50, 4150)
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltCanO2" parent="." unique_id=850001021 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7550, 46, 4200)
+belt_resource = 2
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltCanWater" parent="." unique_id=850001022 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7400, 47, 3900)
+belt_resource = 3
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltEbeMetal" parent="." unique_id=850001023 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5300, 95, -9750)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltEbeRock" parent="." unique_id=850001024 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4900, 100, -9450)
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltEbeO2" parent="." unique_id=850001025 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5050, 102, -9500)
+belt_resource = 2
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltEbeWater" parent="." unique_id=850001026 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5150, 98, -9350)
+belt_resource = 3
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltRoseMetal" parent="." unique_id=850001027 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12200, 90, -11600)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltRoseRock" parent="." unique_id=850001028 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12600, 95, -12000)
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltRoseO2" parent="." unique_id=850001029 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12350, 92, -11750)
+belt_resource = 2
+min_distance_from_player = 1.0
+
+[node name="SupplyBeltRoseWater" parent="." unique_id=850001030 instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12450, 94, -11900)
+belt_resource = 3
 min_distance_from_player = 1.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1053174916]
@@ -415,7 +567,7 @@ grow_horizontal = 0
 grow_vertical = 0
 theme_override_colors/font_color = Color(0.66, 0.73, 0.8, 0.95)
 theme_override_font_sizes/font_size = 11
-text = "1 — ping"
+text = "1 — ping  ·  2 — marker"
 horizontal_alignment = 2
 
 [node name="GameOverOverlay" type="ColorRect" parent="CanvasLayer" unique_id=2065222517]
@@ -445,20 +597,22 @@ vertical_alignment = 1
 
 [node name="LootToast" type="Label" parent="CanvasLayer" unique_id=2065222519]
 visible = false
-z_index = 50
+z_index = 95
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -280.0
-offset_top = -52.0
+offset_left = -360.0
+offset_top = -64.0
 offset_right = -18.0
-offset_bottom = -14.0
+offset_bottom = -12.0
 grow_horizontal = 0
 grow_vertical = 0
-theme_override_colors/font_color = Color(0.52, 0.72, 0.58, 0.96)
-theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.94, 0.97, 0.92, 1)
+theme_override_colors/font_outline_color = Color(0.05, 0.07, 0.06, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 22
 text = "+Fuel"
 horizontal_alignment = 2
 vertical_alignment = 2
@@ -491,6 +645,12 @@ text = "Rock 0"
 [node name="Metal" type="Label" parent="CanvasLayer/UI/VBoxRoot/HBoxContainer" unique_id=159608582]
 layout_mode = 2
 text = "Metal 0"
+
+[node name="MarkersLabel" type="Label" parent="CanvasLayer/UI/VBoxRoot" unique_id=1820381875]
+visible = false
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 11
 
 [node name="PlayerCoords" type="Label" parent="CanvasLayer/UI/VBoxRoot" unique_id=1820381872]
 layout_mode = 2
@@ -543,58 +703,65 @@ vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="LostStar Antenna" parent="." unique_id=2014974688 instance=ExtResource("5_ant")]
-transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -650, 42, 320)
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -2400, 40, 1200)
 metal_cost = 3
 rock_cost = 3
+music_stream = ExtResource("8_a8y0u")
 
 [node name="Monkey World Antenna" parent="." unique_id=2014974689 instance=ExtResource("5_ant")]
-transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 1100, -30, -720)
- metal_cost = 5
- rock_cost = 4
-oxygen_cost = 1
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 1200, -25, -1100)
+metal_cost = 5
+rock_cost = 4
+oxygen_cost = 12
+music_stream = ExtResource("9_jkv2x")
 
 [node name="Rose Antenna" parent="." unique_id=2014974690 instance=ExtResource("5_ant")]
 transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 12400, 96, -11800)
- metal_cost = 18
- rock_cost = 15
- oxygen_cost = 4
- water_cost = 4
+metal_cost = 18
+rock_cost = 15
+oxygen_cost = 32
+water_cost = 32
+music_stream = ExtResource("10_jbj1t")
 
 [node name="Funny Guy Antenna" parent="." unique_id=2014974691 instance=ExtResource("5_ant")]
-transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 2600, 70, 2200)
- metal_cost = 7
- rock_cost = 6
-water_cost = 1
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 3200, 72, 2600)
+metal_cost = 7
+rock_cost = 6
+water_cost = 12
+music_stream = ExtResource("11_muem4")
 
 [node name="MelancholyAntenna" parent="." unique_id=2014974692 instance=ExtResource("5_ant")]
-transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -2600, 45, -5200)
- metal_cost = 12
- rock_cost = 10
- oxygen_cost = 3
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -4000, 58, -5800)
+metal_cost = 12
+rock_cost = 10
+oxygen_cost = 25
+music_stream = ExtResource("12_dp3eg")
 
-[node name="Gloporbian Planet Antenna" parent="." instance=ExtResource("5_ant")]
-transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 400, 25, 5800)
- metal_cost = 9
- rock_cost = 8
-water_cost = 2
+[node name="Gloporbian Planet Antenna" parent="." unique_id=194287813 instance=ExtResource("5_ant")]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -1600, 40, 6200)
+metal_cost = 9
+rock_cost = 8
+water_cost = 18
+music_stream = ExtResource("13_0ld40")
 
-[node name="Depths Antenna" parent="." instance=ExtResource("5_ant")]
-transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 6400, 28, -3800)
- metal_cost = 14
- rock_cost = 12
- oxygen_cost = 3
- water_cost = 2
+[node name="Depths Antenna" parent="." unique_id=1989850580 instance=ExtResource("5_ant")]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 7200, 38, -4600)
+metal_cost = 14
+rock_cost = 12
+oxygen_cost = 25
+water_cost = 18
+music_stream = ExtResource("14_gqmmt")
 
-[node name="Canine Planet Antenna" parent="." instance=ExtResource("5_ant")]
-transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -6200, 35, 3400)
- metal_cost = 15
- rock_cost = 13
- oxygen_cost = 2
- water_cost = 2
+[node name="Canine Planet Antenna" parent="." unique_id=304434916 instance=ExtResource("5_ant")]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -7500, 48, 4000)
+metal_cost = 15
+rock_cost = 13
+oxygen_cost = 18
+water_cost = 18
 
-[node name="Ebereus Antenna" parent="." instance=ExtResource("5_ant")]
-transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -4600, 108, -9800)
- metal_cost = 16
- rock_cost = 14
- oxygen_cost = 3
- water_cost = 3
+[node name="Ebereus Antenna" parent="." unique_id=1771884526 instance=ExtResource("5_ant")]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -5100, 105, -9600)
+metal_cost = 16
+rock_cost = 14
+oxygen_cost = 28
+water_cost = 28

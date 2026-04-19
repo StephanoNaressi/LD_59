@@ -123,7 +123,13 @@ func try_spawn_meteor() -> void:
 		projectile.queue_free()
 		return
 	projectile.configure_homing(reticle_meteor, muzzle)
-	GlobalValues.play_sfx_at(PEW_SFX, muzzle.global_position, -17.0, randf_range(0.98, 1.05), 560.0)
+	GlobalValues.play_sfx_at(
+		PEW_SFX,
+		muzzle.global_position,
+		AudioLevels.SFX_PEW_VOLUME_DB,
+		randf_range(0.98, 1.05),
+		560.0
+	)
 	can_shoot = false
 	shooting_cooldown.start()
 

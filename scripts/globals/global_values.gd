@@ -9,10 +9,14 @@ var inventory: Array[Item]
 
 var game_over_occurred: bool = false
 
+const MAX_MAP_MARKERS: int = 8
+var map_marker_positions: Array[Vector3] = []
+
 signal update_ui
 signal antenna_repair_hud_changed(antenna: Antenna)
 signal game_over(reason: String)
 signal loot_toast(text: String)
+signal map_markers_changed
 
 
 func _ready() -> void:
@@ -30,6 +34,8 @@ func _unhandled_input(event: InputEvent) -> void:
 func restart_game() -> void:
 	game_over_occurred = false
 	inventory.clear()
+	map_marker_positions.clear()
+	map_markers_changed.emit()
 	radar_ping_until_sec = 0.0
 	radar_ping_start_sec = 0.0
 	player = null
@@ -40,26 +46,33 @@ func restart_game() -> void:
 
 
 func play_sfx_at(
-	stream: AudioStream,
+	audio_stream: AudioStream,
 	world_position: Vector3,
-	volume_db: float = -14.0,
+	volume_db: float = AudioLevels.SFX_DEFAULT_VOLUME_DB,
 	pitch_scale: float = 1.0,
 	max_distance: float = 320.0
 ) -> void:
-	if stream == null:
+	if audio_stream == null:
 		return
 	var scene: Node = get_tree().current_scene
 	if scene == null:
 		return
 	var sfx_player: AudioStreamPlayer3D = AudioStreamPlayer3D.new()
 	scene.add_child(sfx_player)
-	sfx_player.stream = stream
+	sfx_player.stream = audio_stream
 	sfx_player.volume_db = volume_db
 	sfx_player.pitch_scale = pitch_scale
 	sfx_player.max_distance = max_distance
 	sfx_player.global_position = world_position
 	sfx_player.finished.connect(sfx_player.queue_free)
 	sfx_player.play()
+
+
+func push_map_marker(world_position: Vector3) -> void:
+	map_marker_positions.append(world_position)
+	while map_marker_positions.size() > MAX_MAP_MARKERS:
+		map_marker_positions.pop_front()
+	map_markers_changed.emit()
 
 
 func start_radar_ping(duration_sec: float = 3.4) -> void:
@@ -71,13 +84,7 @@ func start_radar_ping(duration_sec: float = 3.4) -> void:
 func show_meteor_reward_toast(resource: Item.Item_Type, pickup_count: int) -> void:
 	if game_over_occurred:
 		return
-	var suffix: String = "  +Fuel"
-	match resource:
-		Item.Item_Type.OXYGEN, Item.Item_Type.WATER:
-			suffix = "  +Fuel  (life support)"
-		_:
-			pass
-	loot_toast.emit("+%s %d%s" % [Item.type_name(resource), pickup_count, suffix])
+	loot_toast.emit("+%s %d  +Fuel" % [Item.type_name(resource), pickup_count])
 
 
 func add_fuel_from_meteor(amount: float = 0.07) -> void:
@@ -124,35 +131,42 @@ func try_remove_one_item(item_type: Item.Item_Type) -> bool:
 	return false
 
 
+func get_piloted_ship() -> SpaceShip:
+	if player == null or not (player.vehicle is SpaceShip):
+		return null
+	return player.vehicle as SpaceShip
+
+
 func has_items_for_cost(
 	metal_needed: int,
 	rock_needed: int,
-	oxygen_needed: int = 0,
-	water_needed: int = 0
+	oxygen_pct_of_current: int = 0,
+	water_pct_of_current: int = 0
 ) -> bool:
-	return (
-		metal_needed >= 0
-		and rock_needed >= 0
-		and oxygen_needed >= 0
-		and water_needed >= 0
-		and count_items(Item.Item_Type.METAL) >= metal_needed
-		and count_items(Item.Item_Type.ROCK) >= rock_needed
-		and count_items(Item.Item_Type.OXYGEN) >= oxygen_needed
-		and count_items(Item.Item_Type.WATER) >= water_needed
-	)
+	if metal_needed < 0 or rock_needed < 0 or oxygen_pct_of_current < 0 or water_pct_of_current < 0:
+		return false
+	if count_items(Item.Item_Type.METAL) < metal_needed or count_items(Item.Item_Type.ROCK) < rock_needed:
+		return false
+	if oxygen_pct_of_current == 0 and water_pct_of_current == 0:
+		return true
+	var ship: SpaceShip = get_piloted_ship()
+	if ship == null:
+		return false
+	return ship.can_afford_life_support_percent_cost(oxygen_pct_of_current, water_pct_of_current)
 
 
 func spend_items_if_possible(
 	metal_needed: int,
 	rock_needed: int,
-	oxygen_needed: int = 0,
-	water_needed: int = 0
+	oxygen_pct_of_current: int = 0,
+	water_pct_of_current: int = 0
 ) -> bool:
-	if not has_items_for_cost(metal_needed, rock_needed, oxygen_needed, water_needed):
+	if not has_items_for_cost(metal_needed, rock_needed, oxygen_pct_of_current, water_pct_of_current):
 		return false
 	remove_items(Item.Item_Type.METAL, metal_needed)
 	remove_items(Item.Item_Type.ROCK, rock_needed)
-	remove_items(Item.Item_Type.OXYGEN, oxygen_needed)
-	remove_items(Item.Item_Type.WATER, water_needed)
+	var ship: SpaceShip = get_piloted_ship()
+	if ship != null and (oxygen_pct_of_current > 0 or water_pct_of_current > 0):
+		ship.apply_life_support_percent_cost(oxygen_pct_of_current, water_pct_of_current)
 	update_ui.emit()
 	return true
