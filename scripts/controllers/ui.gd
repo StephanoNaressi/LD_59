@@ -6,8 +6,6 @@ const HUD_HINT := Color(0.4, 0.47, 0.54, 0.82)
 
 @onready var rocks: Label = $VBoxRoot/HBoxContainer/Rocks
 @onready var metal: Label = $VBoxRoot/HBoxContainer/Metal
-@onready var oxygen_carry: Label = $VBoxRoot/HBoxContainer/Oxygen
-@onready var water_carry: Label = $VBoxRoot/HBoxContainer/Water
 @onready var player_coords: Label = $VBoxRoot/PlayerCoords
 @onready var tower_coords: Label = $VBoxRoot/TowerCoords
 @onready var ship_speed: Label = $VBoxRoot/ShipSpeed
@@ -32,7 +30,7 @@ func _ready() -> void:
 
 
 func _apply_hud_visuals() -> void:
-	for label: Label in [rocks, metal, oxygen_carry, water_carry, player_coords, ship_speed]:
+	for label: Label in [rocks, metal, player_coords, ship_speed]:
 		if label == null:
 			continue
 		label.add_theme_color_override(&"font_color", HUD_MAIN)
@@ -74,7 +72,7 @@ func _on_loot_toast(text: String) -> void:
 
 func _on_game_over(reason: String) -> void:
 	if game_over_label != null:
-		game_over_label.text = "Game over\n%s" % reason
+		game_over_label.text = "Game over\n%s\n\nR — restart" % reason
 	if game_over_overlay != null:
 		game_over_overlay.visible = true
 
@@ -113,12 +111,8 @@ func refresh_antenna_repair_panel() -> void:
 func on_inventory_changed() -> void:
 	var rock_count: int = GlobalValues.count_item_of_type(Item.Item_Type.ROCK)
 	var metal_count: int = GlobalValues.count_item_of_type(Item.Item_Type.METAL)
-	var oxygen_count: int = GlobalValues.count_item_of_type(Item.Item_Type.OXYGEN)
-	var water_count: int = GlobalValues.count_item_of_type(Item.Item_Type.WATER)
 	rocks.text = "R %d" % rock_count
 	metal.text = "M %d" % metal_count
-	oxygen_carry.text = "O %d" % oxygen_count
-	water_carry.text = "W %d" % water_count
 	refresh_antenna_repair_panel()
 
 

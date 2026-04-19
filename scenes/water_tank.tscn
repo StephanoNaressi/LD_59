@@ -1,19 +1,18 @@
-[gd_scene load_steps=4 format=3 uid="uid://vma73rupwemg"]
+[gd_scene format=3 uid="uid://dnf3sb1wi7b2x"]
 
 [ext_resource type="Script" path="res://scripts/ships/resource_tank.gd" id="1_tank"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_5o236"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_tank"]
-size = Vector3(1, 1, 1)
 
-[node name="WaterTank" type="StaticBody3D"]
+[node name="WaterTank" type="StaticBody3D" unique_id=1670699856]
 script = ExtResource("1_tank")
 kind = 1
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=758647835]
 transform = Transform3D(0.3045992, 0, 0, 0, 0.6120552, 0, 0, 0, 0.31322128, 0, 0, 0)
 mesh = SubResource("BoxMesh_5o236")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2094839798]
 shape = SubResource("BoxShape3D_tank")

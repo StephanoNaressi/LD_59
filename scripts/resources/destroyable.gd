@@ -30,10 +30,15 @@ func take_damage(damage: float) -> void:
 	if health <= 0.0:
 		dead = true
 		if _drops_inventory_on_death():
-			for drop_index in range(drop_rate):
-				var drop: Item = Item.new()
-				drop.type = resource_drop
-				GlobalValues.inventory.append(drop)
+			if resource_drop == Item.Item_Type.OXYGEN:
+				_grant_life_support_to_ship(true, drop_rate)
+			elif resource_drop == Item.Item_Type.WATER:
+				_grant_life_support_to_ship(false, drop_rate)
+			else:
+				for drop_index in range(drop_rate):
+					var drop: Item = Item.new()
+					drop.type = resource_drop
+					GlobalValues.inventory.append(drop)
 			GlobalValues.update_ui.emit()
 		destroyed.emit()
 		_on_destroyable_destroyed()
@@ -42,6 +47,18 @@ func take_damage(damage: float) -> void:
 
 func _drops_inventory_on_death() -> bool:
 	return true
+
+
+func _grant_life_support_to_ship(oxygen: bool, units: int) -> void:
+	var ship: Node = get_tree().get_first_node_in_group("rideable_ship")
+	if not (ship is SpaceShip):
+		return
+	var s: SpaceShip = ship as SpaceShip
+	var amount: float = float(units)
+	if oxygen:
+		s.add_oxygen_to_tank(amount)
+	else:
+		s.add_water_to_tank(amount)
 
 
 func _on_destroyable_destroyed() -> void:

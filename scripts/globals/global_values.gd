@@ -15,6 +15,30 @@ signal game_over(reason: String)
 signal loot_toast(text: String)
 
 
+func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not game_over_occurred:
+		return
+	if event.is_action_pressed(&"RestartGame"):
+		restart_run()
+		get_viewport().set_input_as_handled()
+
+
+func restart_run() -> void:
+	game_over_occurred = false
+	inventory.clear()
+	radar_ping_until_sec = 0.0
+	radar_ping_start_sec = 0.0
+	player = null
+	get_tree().paused = false
+	var err: Error = get_tree().reload_current_scene()
+	if err != OK:
+		push_error("Failed to reload scene: %s" % error_string(err))
+
+
 func register_radar_ping(duration_sec: float = 3.4) -> void:
 	var now_sec: float = Time.get_ticks_msec() / 1000.0
 	radar_ping_start_sec = now_sec
@@ -24,7 +48,13 @@ func register_radar_ping(duration_sec: float = 3.4) -> void:
 func notify_meteor_rewards(resource: Item.Item_Type, pickup_count: int) -> void:
 	if game_over_occurred:
 		return
-	loot_toast.emit("+%s %d  +Fuel" % [Item.type_name(resource), pickup_count])
+	var suffix: String = "  +Fuel"
+	match resource:
+		Item.Item_Type.OXYGEN, Item.Item_Type.WATER:
+			suffix = "  +Fuel  (life support)"
+		_:
+			pass
+	loot_toast.emit("+%s %d%s" % [Item.type_name(resource), pickup_count, suffix])
 
 
 func grant_fuel_from_meteor_destroyed(amount: float = 0.14) -> void:

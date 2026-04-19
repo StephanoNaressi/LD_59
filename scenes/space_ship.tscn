@@ -4,8 +4,6 @@
 [ext_resource type="PackedScene" uid="uid://bsd3vi25qxmb5" path="res://game/meshes/spaceship.glb" id="1_dp8cb"]
 [ext_resource type="PackedScene" uid="uid://cuutkagxm6kgs" path="res://scenes/player.tscn" id="3_jy7xo"]
 [ext_resource type="PackedScene" uid="uid://1fcrlfm5l5wx" path="res://scenes/radio.tscn" id="4_n0g6o"]
-[ext_resource type="PackedScene" uid="uid://bemsd62rif68h" path="res://scenes/oxygen_tank.tscn" id="6_ivtut"]
-[ext_resource type="PackedScene" uid="uid://vma73rupwemg" path="res://scenes/water_tank.tscn" id="7_ob1pc"]
 [ext_resource type="Script" uid="uid://nq2s5h4w1gdv" path="res://scripts/ships/ship_weapon_system.gd" id="wsys"]
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_dp8cb"]
@@ -173,12 +171,6 @@ one_shot = true
 
 [node name="Radio" parent="." unique_id=1197043511 instance=ExtResource("4_n0g6o")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 3.610678, 1.5723044, -1.3136913)
-
-[node name="OxygenTank" parent="." unique_id=850696642 instance=ExtResource("6_ivtut")]
-transform = Transform3D(3.3333328, 0, 0, 0, 3.3333328, 0, 0, 0, 3.3333328, 3.4216795, 1.9959545, 0.5385903)
-
-[node name="WaterTank" parent="." unique_id=1932666661 instance=ExtResource("7_ob1pc")]
-transform = Transform3D(3.333333, 0, 0, 0, 3.333333, 0, 0, 0, 3.333333, 3.5359197, 2.1929107, 3.7824683)
 
 [connection signal="body_entered" from="spaceship/Chair/Camera3D/ChairArea" to="." method="on_chair_area_body_entered"]
 [connection signal="body_exited" from="spaceship/Chair/Camera3D/ChairArea" to="." method="on_chair_area_body_exited"]

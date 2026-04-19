@@ -38,7 +38,6 @@ reflected_light_source = 2
 tonemap_mode = 2
 tonemap_exposure = 1.12
 tonemap_white = 1.35
-sdfgi_enabled = true
 sdfgi_cascades = 1
 sdfgi_energy = 0.5
 sdfgi_normal_bias = 5.0
@@ -372,14 +371,6 @@ text = "R 0"
 [node name="Metal" type="Label" parent="CanvasLayer/UI/VBoxRoot/HBoxContainer" unique_id=159608582]
 layout_mode = 2
 text = "M 0"
-
-[node name="Oxygen" type="Label" parent="CanvasLayer/UI/VBoxRoot/HBoxContainer" unique_id=1820381875]
-layout_mode = 2
-text = "O 0"
-
-[node name="Water" type="Label" parent="CanvasLayer/UI/VBoxRoot/HBoxContainer" unique_id=1820381876]
-layout_mode = 2
-text = "W 0"
 
 [node name="PlayerCoords" type="Label" parent="CanvasLayer/UI/VBoxRoot" unique_id=1820381872]
 layout_mode = 2

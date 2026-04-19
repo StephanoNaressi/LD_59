@@ -9,8 +9,8 @@ const TANK_CAPACITY: float = 100.0
 const FUEL_DRAIN_PER_SEC: float = 0.005
 const MIN_FUEL_TO_INCREASE_SPEED: float = 0.02
 const NO_FUEL_THRUST_CAP: float = 3.0
-const LIFE_SUPPORT_O2_DRAIN_PER_SEC: float = 0.2
-const LIFE_SUPPORT_H2O_DRAIN_PER_SEC: float = 0.2
+const LIFE_SUPPORT_O2_DRAIN_PER_SEC: float = 5
+const LIFE_SUPPORT_H2O_DRAIN_PER_SEC: float = 0.4
 const MOUSE_YAW_SENS: float = 0.002
 const YAW_SMOOTHING: float = 10.5
 
@@ -169,14 +169,6 @@ func add_oxygen_to_tank(amount: float) -> void:
 
 func add_water_to_tank(amount: float) -> void:
 	water_tank_fill = minf(TANK_CAPACITY, water_tank_fill + amount)
-
-
-func oxygen_tank_remaining_capacity() -> float:
-	return maxf(0.0, TANK_CAPACITY - oxygen_tank_fill)
-
-
-func water_tank_remaining_capacity() -> float:
-	return maxf(0.0, TANK_CAPACITY - water_tank_fill)
 
 
 func _update_pilot_camera_fov() -> void:

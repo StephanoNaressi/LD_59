@@ -26,9 +26,6 @@ func _input(event: InputEvent) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if Input.is_action_just_pressed("TankUse"):
-		_try_use_looked_at_resource_tank()
-		return
 	if not Input.is_action_just_pressed("Ping"):
 		return
 	var ship: SpaceShip = get_tree().get_first_node_in_group("rideable_ship") as SpaceShip
@@ -40,30 +37,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	ship.radio.play_ping(origin)
 	GlobalValues.register_radar_ping()
 
-
-func _try_use_looked_at_resource_tank() -> void:
-	var camera: Camera3D = _active_camera_3d()
-	if camera == null:
-		return
-	var space: PhysicsDirectSpaceState3D = camera.get_world_3d().direct_space_state
-	var ray_from: Vector3 = camera.global_position
-	var ray_to: Vector3 = ray_from - camera.global_transform.basis.z * 12.0
-	var ray_parameters: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.create(
-		ray_from, ray_to
-	)
-	ray_parameters.collision_mask = 8
-	var intersection: Dictionary = space.intersect_ray(ray_parameters)
-	if intersection.is_empty():
-		return
-	var collider: Object = intersection.get("collider")
-	if collider is ResourceTank:
-		(collider as ResourceTank).try_deposit_from_inventory()
-
-
-func _active_camera_3d() -> Camera3D:
-	if vehicle != null:
-		return vehicle.camera_3d
-	return camera_3d
 
 func _physics_process(delta: float) -> void:
 	if vehicle != null:
