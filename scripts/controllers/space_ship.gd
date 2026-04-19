@@ -17,6 +17,10 @@ const YAW_SMOOTHING: float = 10.5
 const SEAT_OFFSET_LOCAL: Vector3 = Vector3(0, 1.2, -1.0)
 const EXIT_SPEED_MAX: float = 2.0
 
+const PILOT_CAMERA_FOV_MIN: float = 62.0
+const PILOT_CAMERA_FOV_MAX: float = 88.0
+const PILOT_CAMERA_FOV_SPEED_REF: float = 75.0
+
 var is_active: bool = false
 var is_player_in_area: bool = false
 
@@ -34,10 +38,13 @@ var flight: ShipFlightModel = ShipFlightModel.new()
 
 var mouse_yaw_delta: float = 0.0
 
+var pilot_camera_fov_default: float = 75.0
+
 
 func _ready() -> void:
 	process_priority = -10
 	camera_3d.current = false
+	pilot_camera_fov_default = camera_3d.fov
 	add_to_group("rideable_ship")
 	oxygen_tank_fill = TANK_CAPACITY * 0.5
 	water_tank_fill = TANK_CAPACITY * 0.5
@@ -71,8 +78,10 @@ func _input(event: InputEvent) -> void:
 func _physics_process(delta: float) -> void:
 	if is_active:
 		if flight.is_thrusting(self) and cruise_speed > MIN_CRUISE:
-			var t: float = (cruise_speed - MIN_CRUISE) / maxf(0.001, MAX_CRUISE - MIN_CRUISE)
-			fuel = maxf(0.0, fuel - FUEL_DRAIN_PER_SEC * t * delta)
+			var cruise_speed_ratio: float = (cruise_speed - MIN_CRUISE) / maxf(
+				0.001, MAX_CRUISE - MIN_CRUISE
+			)
+			fuel = maxf(0.0, fuel - FUEL_DRAIN_PER_SEC * cruise_speed_ratio * delta)
 		if fuel <= MIN_FUEL_TO_INCREASE_SPEED:
 			cruise_speed = MIN_CRUISE
 		oxygen_tank_fill = maxf(0.0, oxygen_tank_fill - LIFE_SUPPORT_O2_DRAIN_PER_SEC * delta)
@@ -85,6 +94,7 @@ func _physics_process(delta: float) -> void:
 		var thrust_cruise: float = get_effective_thrust_cruise_speed()
 		flight.apply_arcade_thrust(self, delta, thrust_cruise, VELOCITY_RESPONSE, yaw_accum, MOUSE_YAW_SENS, YAW_SMOOTHING)
 		move_and_slide()
+		_update_pilot_camera_fov()
 	AnimatableBodySync.push_transforms_to_physics(self)
 
 
@@ -126,6 +136,7 @@ func activate_pilot_camera() -> void:
 
 
 func deactivate_pilot_camera() -> void:
+	camera_3d.fov = pilot_camera_fov_default
 	camera_3d.current = false
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
@@ -151,7 +162,7 @@ func on_chair_area_body_exited(body: Node3D) -> void:
 	if body is Player:
 		is_player_in_area = false
 
-# PLAYER FALLS THRU GROUND
+
 func add_oxygen_to_tank(amount: float) -> void:
 	oxygen_tank_fill = minf(TANK_CAPACITY, oxygen_tank_fill + amount)
 
@@ -166,3 +177,9 @@ func oxygen_tank_remaining_capacity() -> float:
 
 func water_tank_remaining_capacity() -> float:
 	return maxf(0.0, TANK_CAPACITY - water_tank_fill)
+
+
+func _update_pilot_camera_fov() -> void:
+	var speed: float = velocity.length()
+	var speed_ratio: float = clampf(speed / PILOT_CAMERA_FOV_SPEED_REF, 0.0, 1.0)
+	camera_3d.fov = lerpf(PILOT_CAMERA_FOV_MIN, PILOT_CAMERA_FOV_MAX, speed_ratio)

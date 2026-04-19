@@ -30,7 +30,7 @@ func take_damage(damage: float) -> void:
 	if health <= 0.0:
 		dead = true
 		if _drops_inventory_on_death():
-			for i in range(drop_rate):
+			for drop_index in range(drop_rate):
 				var drop: Item = Item.new()
 				drop.type = resource_drop
 				GlobalValues.inventory.append(drop)

@@ -116,6 +116,28 @@ light_energy = 0.581
 light_indirect_energy = 3.46
 omni_range = 4096.0
 
+[node name="OmniLight3D4" type="OmniLight3D" parent="." unique_id=182817410]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.825788, 1.5672345, -17.968792)
+light_color = Color(0.48235294, 0.5320008, 0.5843137, 1)
+light_energy = 16.0
+light_indirect_energy = 16.0
+light_volumetric_fog_energy = 0.0
+light_size = 1.0
+light_specular = 0.0
+omni_range = 14.206
+omni_attenuation = 2.047
+
+[node name="OmniLight3D5" type="OmniLight3D" parent="." unique_id=2039081307]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.4510617, 1.5672344, -17.968792)
+light_color = Color(0.48235294, 0.5320008, 0.5843137, 1)
+light_energy = 16.0
+light_indirect_energy = 16.0
+light_volumetric_fog_energy = 0.0
+light_size = 1.0
+light_specular = 0.0
+omni_range = 14.206
+omni_attenuation = 2.047
+
 [node name="OmniLight3D2" type="OmniLight3D" parent="." unique_id=1062362062]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.8759172, -5.566082)
 light_color = Color(0.48235294, 0.5320008, 0.5843137, 1)

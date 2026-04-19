@@ -11,7 +11,7 @@ const LABEL_TINT: Dictionary = {
 }
 
 @export var belt_resource: Item.Item_Type = Item.Item_Type.ROCK
-@export var asteroids_to_spawn: int = 44
+@export var asteroids_to_spawn: int = 18
 @export var inner_radius: float = 70.0
 @export var outer_radius: float = 150.0
 @export var vertical_spread: float = 30.0
@@ -20,62 +20,68 @@ const LABEL_TINT: Dictionary = {
 @export var respawn_delay_seconds: float = 120.0
 @export var respawn_delay_jitter: float = 35.0
 
-var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
+var random_generator: RandomNumberGenerator = RandomNumberGenerator.new()
 
 
 func _ready() -> void:
-	_rng.randomize()
+	add_to_group(&"asteroid_belts")
+	random_generator.randomize()
 	_add_resource_labels()
 	call_deferred("_initial_spawn")
 
 
 func _add_resource_labels() -> void:
-	var lb: Label3D = Label3D.new()
-	lb.text = Item.type_name(belt_resource)
-	lb.font_size = 128
-	lb.pixel_size = 0.065
-	lb.modulate = LABEL_TINT.get(belt_resource, Color(0.9, 0.9, 0.95))
-	lb.outline_size = 14
-	lb.outline_modulate = Color(0, 0, 0, 0.88)
-	lb.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	lb.shaded = false
-	lb.position = Vector3(0, vertical_spread + outer_radius * 0.35, 0)
-	add_child(lb)
+	var title_label: Label3D = Label3D.new()
+	title_label.text = Item.type_name(belt_resource)
+	title_label.font_size = 128
+	title_label.pixel_size = 0.065
+	title_label.modulate = LABEL_TINT.get(belt_resource, Color(0.9, 0.9, 0.95))
+	title_label.outline_size = 14
+	title_label.outline_modulate = Color(0, 0, 0, 0.88)
+	title_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	title_label.shaded = false
+	title_label.position = Vector3(0, vertical_spread + outer_radius * 0.35, 0)
+	add_child(title_label)
 
 
 func _initial_spawn() -> void:
-	for i in asteroids_to_spawn:
+	for spawn_index in asteroids_to_spawn:
 		_spawn_meteor_at_safe_position()
 
 
 func _random_belt_position() -> Vector3:
-	var angle: float = _rng.randf() * TAU
-	var r: float = _rng.randf_range(inner_radius, outer_radius)
-	var y: float = _rng.randf_range(-vertical_spread, vertical_spread)
-	return global_position + Vector3(cos(angle) * r, y, sin(angle) * r)
+	var angle: float = random_generator.randf() * TAU
+	var belt_radius: float = random_generator.randf_range(inner_radius, outer_radius)
+	var height: float = random_generator.randf_range(-vertical_spread, vertical_spread)
+	return global_position + Vector3(cos(angle) * belt_radius, height, sin(angle) * belt_radius)
 
 
 func _spawn_meteor_at_safe_position() -> void:
 	var player: Node3D = GlobalValues.player as Node3D
-	var pos: Vector3 = Vector3.ZERO
-	var found: bool = false
+	var candidate_position: Vector3 = Vector3.ZERO
+	var found_valid_position: bool = false
 	for attempt in max_spawn_attempts:
-		pos = _random_belt_position()
-		if player == null or player.global_position.distance_to(pos) >= min_distance_from_player:
-			found = true
+		candidate_position = _random_belt_position()
+		if (
+			player == null
+			or player.global_position.distance_to(candidate_position) >= min_distance_from_player
+		):
+			found_valid_position = true
 			break
-	if not found:
-		pos = _random_belt_position()
+	if not found_valid_position:
+		candidate_position = _random_belt_position()
 
 	var meteor: Meteor = METEOR_SCENE.instantiate() as Meteor
 	meteor.resource_drop = belt_resource
 	meteor.drop_rate = 3
 	add_child(meteor)
-	meteor.global_position = pos
+	meteor.global_position = candidate_position
 	meteor.destroyed.connect(_on_meteor_destroyed, CONNECT_ONE_SHOT)
 
 
 func _on_meteor_destroyed() -> void:
-	var delay: float = respawn_delay_seconds + _rng.randf_range(-respawn_delay_jitter, respawn_delay_jitter)
+	var delay: float = respawn_delay_seconds + random_generator.randf_range(
+		-respawn_delay_jitter, respawn_delay_jitter
+	)
 	delay = maxf(delay, 5.0)
 	get_tree().create_timer(delay).timeout.connect(_spawn_meteor_at_safe_position)

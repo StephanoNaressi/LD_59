@@ -19,7 +19,7 @@ const HUD_HINT := Color(0.4, 0.47, 0.54, 0.82)
 @onready var loot_toast: Label = $"../LootToast"
 
 var antenna_hud_target: Antenna = null
-var _loot_toast_hide_sec: float = 0.0
+var loot_toast_hide_seconds_remaining: float = 0.0
 
 
 func _ready() -> void:
@@ -32,19 +32,17 @@ func _ready() -> void:
 
 
 func _apply_hud_visuals() -> void:
-	for lb: Label in [rocks, metal, oxygen_carry, water_carry, player_coords, ship_speed]:
-		if lb == null:
+	for label: Label in [rocks, metal, oxygen_carry, water_carry, player_coords, ship_speed]:
+		if label == null:
 			continue
-		lb.add_theme_color_override(&"font_color", HUD_MAIN)
+		label.add_theme_color_override(&"font_color", HUD_MAIN)
 	if tower_coords != null:
-		tower_coords.add_theme_color_override(&"font_color", HUD_MUTED)
+		tower_coords.visible = false
 	if hints != null:
 		hints.add_theme_color_override(&"font_color", HUD_HINT)
 		hints.add_theme_font_size_override(&"font_size", 12)
 	if player_coords != null:
 		player_coords.add_theme_font_size_override(&"font_size", 14)
-	if tower_coords != null:
-		tower_coords.add_theme_font_size_override(&"font_size", 12)
 	if ship_speed != null:
 		ship_speed.add_theme_font_size_override(&"font_size", 14)
 	if game_over_label != null:
@@ -60,9 +58,9 @@ func _apply_hud_visuals() -> void:
 
 func _process(delta: float) -> void:
 	update_navigation_readout()
-	if _loot_toast_hide_sec > 0.0:
-		_loot_toast_hide_sec -= delta
-		if _loot_toast_hide_sec <= 0.0 and loot_toast != null:
+	if loot_toast_hide_seconds_remaining > 0.0:
+		loot_toast_hide_seconds_remaining -= delta
+		if loot_toast_hide_seconds_remaining <= 0.0 and loot_toast != null:
 			loot_toast.visible = false
 
 
@@ -71,7 +69,7 @@ func _on_loot_toast(text: String) -> void:
 		return
 	loot_toast.text = text
 	loot_toast.visible = true
-	_loot_toast_hide_sec = 2.2
+	loot_toast_hide_seconds_remaining = 2.2
 
 
 func _on_game_over(reason: String) -> void:
@@ -89,52 +87,69 @@ func on_antenna_repair_target_changed(antenna: Antenna) -> void:
 func refresh_antenna_repair_panel() -> void:
 	if antenna_repair_panel == null or antenna_repair_label == null:
 		return
-	if antenna_hud_target == null or not is_instance_valid(antenna_hud_target) or antenna_hud_target.is_repaired:
+	if (
+		antenna_hud_target == null
+		or not is_instance_valid(antenna_hud_target)
+		or antenna_hud_target.is_repaired
+	):
 		antenna_repair_panel.visible = false
 		return
-	var a: Antenna = antenna_hud_target
-	var m_have: int = GlobalValues.count_item_of_type(Item.Item_Type.METAL)
-	var r_have: int = GlobalValues.count_item_of_type(Item.Item_Type.ROCK)
-	var text: String = "%s\nR %d/%d  M %d/%d" % [a.name, r_have, a.rock_cost, m_have, a.metal_cost]
-	if GlobalValues.can_afford_items(a.metal_cost, a.rock_cost):
+	var target_antenna: Antenna = antenna_hud_target
+	var rock_count: int = GlobalValues.count_item_of_type(Item.Item_Type.ROCK)
+	var metal_count: int = GlobalValues.count_item_of_type(Item.Item_Type.METAL)
+	var text: String = "%s\nR %d/%d  M %d/%d" % [
+		target_antenna.name,
+		rock_count,
+		target_antenna.rock_cost,
+		metal_count,
+		target_antenna.metal_cost,
+	]
+	if GlobalValues.can_afford_items(target_antenna.metal_cost, target_antenna.rock_cost):
 		text += "\nRMB"
 	antenna_repair_label.text = text
 	antenna_repair_panel.visible = true
 
 
 func on_inventory_changed() -> void:
-	var rock_n: int = GlobalValues.count_item_of_type(Item.Item_Type.ROCK)
-	var metal_n: int = GlobalValues.count_item_of_type(Item.Item_Type.METAL)
-	var o2_n: int = GlobalValues.count_item_of_type(Item.Item_Type.OXYGEN)
-	var h2o_n: int = GlobalValues.count_item_of_type(Item.Item_Type.WATER)
-	rocks.text = "R %d" % rock_n
-	metal.text = "M %d" % metal_n
-	oxygen_carry.text = "O %d" % o2_n
-	water_carry.text = "W %d" % h2o_n
+	var rock_count: int = GlobalValues.count_item_of_type(Item.Item_Type.ROCK)
+	var metal_count: int = GlobalValues.count_item_of_type(Item.Item_Type.METAL)
+	var oxygen_count: int = GlobalValues.count_item_of_type(Item.Item_Type.OXYGEN)
+	var water_count: int = GlobalValues.count_item_of_type(Item.Item_Type.WATER)
+	rocks.text = "R %d" % rock_count
+	metal.text = "M %d" % metal_count
+	oxygen_carry.text = "O %d" % oxygen_count
+	water_carry.text = "W %d" % water_count
 	refresh_antenna_repair_panel()
 
 
 func update_navigation_readout() -> void:
-	if player_coords == null or tower_coords == null:
+	if player_coords == null:
 		return
-	var p: Player = GlobalValues.player
-	var nav: Node3D = p.vehicle if p != null and p.vehicle != null else p
-	if nav != null:
-		var pos: Vector3 = nav.global_position
-		player_coords.text = "%d  %d  %d" % [roundi(pos.x), roundi(pos.y), roundi(pos.z)]
+	var player: Player = GlobalValues.player
+	var navigation_root: Node3D = (
+		player.vehicle if player != null and player.vehicle != null else player
+	)
+	if navigation_root != null:
+		var world_position: Vector3 = navigation_root.global_position
+		player_coords.text = "%d  %d  %d" % [
+			roundi(world_position.x),
+			roundi(world_position.y),
+			roundi(world_position.z),
+		]
 	if ship_speed != null:
-		var s: SpaceShip = p.vehicle if p != null else null
-		if s != null:
+		var ship: SpaceShip = player.vehicle if player != null else null
+		if ship != null:
 			ship_speed.visible = true
-			var spd: float = s.velocity.length()
-			var o2p: int = int(roundf(100.0 * s.oxygen_tank_fill / s.TANK_CAPACITY))
-			var h2op: int = int(roundf(100.0 * s.water_tank_fill / s.TANK_CAPACITY))
-			var fuelp: int = int(roundf(100.0 * s.fuel))
-			ship_speed.text = "%.0f | %.0f  ·  F %d%%  O₂ %d%%  H₂O %d%%" % [spd, s.cruise_speed, fuelp, o2p, h2op]
+			var speed: float = ship.velocity.length()
+			var oxygen_percent: int = int(roundf(100.0 * ship.oxygen_tank_fill / ship.TANK_CAPACITY))
+			var water_percent: int = int(roundf(100.0 * ship.water_tank_fill / ship.TANK_CAPACITY))
+			var fuel_percent: int = int(roundf(100.0 * ship.fuel))
+			ship_speed.text = "%.0f | %.0f  ·  F %d%%  O₂ %d%%  H₂O %d%%" % [
+				speed,
+				ship.cruise_speed,
+				fuel_percent,
+				oxygen_percent,
+				water_percent,
+			]
 		else:
 			ship_speed.visible = false
-	var lines: PackedStringArray = TowerRegistry.sorted_labels()
-	if lines.size() == 0:
-		tower_coords.text = "—"
-		return
-	tower_coords.text = "\n".join(lines)

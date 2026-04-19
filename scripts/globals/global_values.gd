@@ -2,6 +2,9 @@ extends Node
 
 var player: Player
 
+var radar_ping_until_sec: float = 0.0
+var radar_ping_start_sec: float = 0.0
+
 var inventory: Array[Item]
 
 var game_over_occurred: bool = false
@@ -10,6 +13,12 @@ signal update_ui
 signal antenna_repair_hud_changed(antenna: Antenna)
 signal game_over(reason: String)
 signal loot_toast(text: String)
+
+
+func register_radar_ping(duration_sec: float = 3.4) -> void:
+	var now_sec: float = Time.get_ticks_msec() / 1000.0
+	radar_ping_start_sec = now_sec
+	radar_ping_until_sec = now_sec + duration_sec
 
 
 func notify_meteor_rewards(resource: Item.Item_Type, pickup_count: int) -> void:
@@ -54,9 +63,9 @@ func remove_items_of_type(item_type: Item.Item_Type, amount: int) -> void:
 
 
 func try_remove_one_item(item_type: Item.Item_Type) -> bool:
-	for i in range(inventory.size()):
-		if inventory[i].type == item_type:
-			inventory.remove_at(i)
+	for inventory_index in range(inventory.size()):
+		if inventory[inventory_index].type == item_type:
+			inventory.remove_at(inventory_index)
 			update_ui.emit()
 			return true
 	return false

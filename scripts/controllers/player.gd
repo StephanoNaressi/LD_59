@@ -38,21 +38,24 @@ func _unhandled_input(event: InputEvent) -> void:
 	if vehicle != null:
 		origin = vehicle.global_position
 	ship.radio.play_ping(origin)
+	GlobalValues.register_radar_ping()
 
 
 func _try_use_looked_at_resource_tank() -> void:
-	var cam: Camera3D = _active_camera_3d()
-	if cam == null:
+	var camera: Camera3D = _active_camera_3d()
+	if camera == null:
 		return
-	var space: PhysicsDirectSpaceState3D = cam.get_world_3d().direct_space_state
-	var from: Vector3 = cam.global_position
-	var to: Vector3 = from - cam.global_transform.basis.z * 12.0
-	var q: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.create(from, to)
-	q.collision_mask = 8
-	var hit: Dictionary = space.intersect_ray(q)
-	if hit.is_empty():
+	var space: PhysicsDirectSpaceState3D = camera.get_world_3d().direct_space_state
+	var ray_from: Vector3 = camera.global_position
+	var ray_to: Vector3 = ray_from - camera.global_transform.basis.z * 12.0
+	var ray_parameters: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.create(
+		ray_from, ray_to
+	)
+	ray_parameters.collision_mask = 8
+	var intersection: Dictionary = space.intersect_ray(ray_parameters)
+	if intersection.is_empty():
 		return
-	var collider: Object = hit.get("collider")
+	var collider: Object = intersection.get("collider")
 	if collider is ResourceTank:
 		(collider as ResourceTank).try_deposit_from_inventory()
 
