@@ -94,8 +94,10 @@ func refresh_antenna_repair_panel() -> void:
 		antenna_repair_panel.visible = false
 		return
 	var target_antenna: Antenna = antenna_hud_target
-	var rock_count: int = GlobalValues.count_item_of_type(Item.Item_Type.ROCK)
-	var metal_count: int = GlobalValues.count_item_of_type(Item.Item_Type.METAL)
+	var rock_count: int = GlobalValues.count_items(Item.Item_Type.ROCK)
+	var metal_count: int = GlobalValues.count_items(Item.Item_Type.METAL)
+	var oxygen_count: int = GlobalValues.count_items(Item.Item_Type.OXYGEN)
+	var water_count: int = GlobalValues.count_items(Item.Item_Type.WATER)
 	var text: String = "%s\nRock %d/%d  Metal %d/%d" % [
 		target_antenna.name,
 		rock_count,
@@ -103,15 +105,27 @@ func refresh_antenna_repair_panel() -> void:
 		metal_count,
 		target_antenna.metal_cost,
 	]
-	if GlobalValues.can_afford_items(target_antenna.metal_cost, target_antenna.rock_cost):
+	if target_antenna.oxygen_cost > 0 or target_antenna.water_cost > 0:
+		text += "\nOxygen %d/%d  Water %d/%d" % [
+			oxygen_count,
+			target_antenna.oxygen_cost,
+			water_count,
+			target_antenna.water_cost,
+		]
+	if GlobalValues.has_items_for_cost(
+		target_antenna.metal_cost,
+		target_antenna.rock_cost,
+		target_antenna.oxygen_cost,
+		target_antenna.water_cost
+	):
 		text += "\nRight Mouse Button to repair"
 	antenna_repair_label.text = text
 	antenna_repair_panel.visible = true
 
 
 func on_inventory_changed() -> void:
-	var rock_count: int = GlobalValues.count_item_of_type(Item.Item_Type.ROCK)
-	var metal_count: int = GlobalValues.count_item_of_type(Item.Item_Type.METAL)
+	var rock_count: int = GlobalValues.count_items(Item.Item_Type.ROCK)
+	var metal_count: int = GlobalValues.count_items(Item.Item_Type.METAL)
 	rocks.text = "Rock %d" % rock_count
 	metal.text = "Metal %d" % metal_count
 	refresh_antenna_repair_panel()

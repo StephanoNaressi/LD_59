@@ -2,8 +2,12 @@ extends StaticBody3D
 class_name Antenna
 
 #region exports
+const WELL_DONE_SFX: AudioStream = preload("res://game/audios/well_done.ogg")
+
 @export var metal_cost: int = 2
 @export var rock_cost: int = 2
+@export var oxygen_cost: int = 0
+@export var water_cost: int = 0
 @export var crosshair_marker: Marker3D
 @export var repair_charge_per_hit: float = 0.05
 @export var music_stream: AudioStream
@@ -39,6 +43,7 @@ func _ready() -> void:
 	repair_progress_root.visible = false
 	if music_stream != null:
 		tower_music.stream = music_stream
+	tower_music.volume_db = -16.0
 	_tower_music_max_distance_base = tower_music.max_distance
 	tower_music.max_distance = minf(_tower_music_max_distance_base, 900.0)
 	call_deferred("connect_repair_billboard_texture")
@@ -133,11 +138,12 @@ func apply_repair_hit() -> void:
 func complete_repair() -> void:
 	if is_repaired:
 		return
-	if not GlobalValues.try_spend_items(metal_cost, rock_cost):
+	if not GlobalValues.spend_items_if_possible(metal_cost, rock_cost, oxygen_cost, water_cost):
 		repair_progress = 0.85
 		update_repair_ui()
 		return
 	is_repaired = true
+	GlobalValues.play_sfx_at(WELL_DONE_SFX, global_position, -12.0, 1.0, 900.0)
 	tower_music.max_distance = maxf(_tower_music_max_distance_base, 22000.0)
 	broken_mesh.visible = false
 	fixed_mesh.visible = true

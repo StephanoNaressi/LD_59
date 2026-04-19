@@ -9,7 +9,7 @@ func reset_smoothing() -> void:
 	smoothed_yaw = 0.0
 
 
-func compute_thrust_wish(ship: CharacterBody3D) -> Vector3:
+func get_move_input_vector(ship: CharacterBody3D) -> Vector3:
 	var vertical: float = 0.0
 	if Input.is_action_pressed("FlyUp") or Input.is_physical_key_pressed(KEY_SPACE):
 		vertical += 1.0
@@ -27,11 +27,11 @@ func compute_thrust_wish(ship: CharacterBody3D) -> Vector3:
 	return forward * (-input_dir.y) + right * input_dir.x + Vector3.UP * vertical
 
 
-func is_thrusting(ship: CharacterBody3D) -> bool:
-	return compute_thrust_wish(ship).length_squared() > 0.0001
+func is_accelerating(ship: CharacterBody3D) -> bool:
+	return get_move_input_vector(ship).length_squared() > 0.0001
 
 
-func apply_arcade_thrust(
+func apply_flight_controls(
 	ship: CharacterBody3D,
 	delta: float,
 	cruise_speed: float,
@@ -44,7 +44,7 @@ func apply_arcade_thrust(
 	smoothed_yaw = lerpf(smoothed_yaw, raw_yaw, clampf(yaw_smoothing * delta, 0.0, 1.0))
 	ship.rotate_y(smoothed_yaw)
 
-	var wish: Vector3 = compute_thrust_wish(ship)
+	var wish: Vector3 = get_move_input_vector(ship)
 	var blend: float = clampf(velocity_response * delta, 0.0, 1.0)
 	if wish.length_squared() < 0.0001:
 		ship.velocity = ship.velocity.lerp(Vector3.ZERO, blend)

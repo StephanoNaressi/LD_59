@@ -35,7 +35,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if vehicle != null:
 		origin = vehicle.global_position
 	ship.radio.play_ping(origin)
-	GlobalValues.register_radar_ping()
+	GlobalValues.start_radar_ping()
 
 
 func _physics_process(delta: float) -> void:

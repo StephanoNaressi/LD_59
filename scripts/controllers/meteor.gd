@@ -67,8 +67,8 @@ func _apply_stencil_outline_for_resource() -> void:
 
 
 func _on_destroyable_destroyed() -> void:
-	GlobalValues.grant_fuel_from_meteor_destroyed()
-	GlobalValues.notify_meteor_rewards(resource_drop, drop_rate)
+	GlobalValues.add_fuel_from_meteor()
+	GlobalValues.show_meteor_reward_toast(resource_drop, drop_rate)
 
 
 func _randomize_drift_wait_time() -> void:

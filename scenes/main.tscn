@@ -254,6 +254,126 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7200, 32, 1800)
 belt_resource = 1
 min_distance_from_player = 1.0
 
+[node name="AsteroidBelt37" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(0.9659258, 0, -0.25881904, 0, 1, 0, 0.25881904, 0, 0.9659258, -7600, 34, 900)
+belt_resource = 2
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt38" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, 8600, -20, -2200)
+belt_resource = 3
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt39" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -1500, 42, 7600)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt40" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1900, 18, -7600)
+belt_resource = 2
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt41" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(0.9659258, 0, 0.25881904, 0, 1, 0, -0.25881904, 0, 0.9659258, -8800, 38, -4200)
+belt_resource = 3
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt42" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(0.8660254, 0, -0.5, 0, 1, 0, 0.5, 0, 0.8660254, 9300, 26, 5100)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt43" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, -7200, 44, -6200)
+belt_resource = 2
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt44" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5400, -28, 7400)
+belt_resource = 3
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt45" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(0.9659258, 0, -0.25881904, 0, 1, 0, 0.25881904, 0, 0.9659258, -9600, 16, 1700)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt46" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, 7600, 48, -6900)
+belt_resource = 2
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt47" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -3500, -18, 8600)
+belt_resource = 3
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt48" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2500, 52, -8900)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt49" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(0.9659258, 0, 0.25881904, 0, 1, 0, -0.25881904, 0, 0.9659258, -8700, 28, 6900)
+belt_resource = 2
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt50" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(0.8660254, 0, -0.5, 0, 1, 0, 0.5, 0, 0.8660254, 9800, 22, -1200)
+belt_resource = 3
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt51" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, -6200, -24, 8200)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt52" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4200, 36, -9600)
+belt_resource = 2
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt53" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(0.9659258, 0, -0.25881904, 0, 1, 0, 0.25881904, 0, 0.9659258, -10000, 40, -2600)
+belt_resource = 3
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt54" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, 7000, 12, 8400)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt55" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -4800, 30, -9400)
+belt_resource = 2
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt56" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8600, -26, 3200)
+belt_resource = 3
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt57" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(0.9659258, 0, 0.25881904, 0, 1, 0, -0.25881904, 0, 0.9659258, -9100, 24, 4800)
+belt_resource = 1
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt58" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(0.8660254, 0, -0.5, 0, 1, 0, 0.5, 0, 0.8660254, 10400, 20, -5400)
+belt_resource = 2
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt59" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, -10400, 18, -4200)
+belt_resource = 3
+min_distance_from_player = 1.0
+
+[node name="AsteroidBelt60" parent="." instance=ExtResource("4_belt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1500, 14, 9800)
+belt_resource = 1
+min_distance_from_player = 1.0
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1053174916]
 environment = SubResource("Environment_jyhfs")
 
@@ -422,17 +542,59 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="Antenna" parent="." unique_id=2014974688 instance=ExtResource("5_ant")]
-transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -7800, 125, 5600)
+[node name="LostStar Antenna" parent="." unique_id=2014974688 instance=ExtResource("5_ant")]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -650, 42, 320)
+metal_cost = 3
+rock_cost = 3
 
-[node name="Antenna2" parent="." unique_id=2014974689 instance=ExtResource("5_ant")]
-transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 9000, 120, -5000)
+[node name="Monkey World Antenna" parent="." unique_id=2014974689 instance=ExtResource("5_ant")]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 1100, -30, -720)
+ metal_cost = 5
+ rock_cost = 4
+oxygen_cost = 1
 
-[node name="Antenna3" parent="." unique_id=2014974690 instance=ExtResource("5_ant")]
+[node name="Rose Antenna" parent="." unique_id=2014974690 instance=ExtResource("5_ant")]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 12400, 96, -11800)
+ metal_cost = 18
+ rock_cost = 15
+ oxygen_cost = 4
+ water_cost = 4
+
+[node name="Funny Guy Antenna" parent="." unique_id=2014974691 instance=ExtResource("5_ant")]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 2600, 70, 2200)
+ metal_cost = 7
+ rock_cost = 6
+water_cost = 1
+
+[node name="MelancholyAntenna" parent="." unique_id=2014974692 instance=ExtResource("5_ant")]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -2600, 45, -5200)
+ metal_cost = 12
+ rock_cost = 10
+ oxygen_cost = 3
+
+[node name="Gloporbian Planet Antenna" parent="." instance=ExtResource("5_ant")]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 400, 25, 5800)
+ metal_cost = 9
+ rock_cost = 8
+water_cost = 2
+
+[node name="Depths Antenna" parent="." instance=ExtResource("5_ant")]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 6400, 28, -3800)
+ metal_cost = 14
+ rock_cost = 12
+ oxygen_cost = 3
+ water_cost = 2
+
+[node name="Canine Planet Antenna" parent="." instance=ExtResource("5_ant")]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -6200, 35, 3400)
+ metal_cost = 15
+ rock_cost = 13
+ oxygen_cost = 2
+ water_cost = 2
+
+[node name="Ebereus Antenna" parent="." instance=ExtResource("5_ant")]
 transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -4600, 108, -9800)
-
-[node name="Antenna4" parent="." unique_id=2014974691 instance=ExtResource("5_ant")]
-transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 9800, 132, 2800)
-
-[node name="Antenna5" parent="." unique_id=2014974692 instance=ExtResource("5_ant")]
-transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -5400, 98, -3400)
+ metal_cost = 16
+ rock_cost = 14
+ oxygen_cost = 3
+ water_cost = 3

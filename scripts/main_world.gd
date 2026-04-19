@@ -1,14 +1,24 @@
 extends Node3D
 
+const AMBIENT_SFX: AudioStream = preload("res://game/audios/ambient.ogg")
+
 @export var meteor_sleep_m: float = 340.0
 @export var meteor_wake_m: float = 280.0
 @export var meteor_cull_period_sec: float = 0.16
 
 var meteor_cull_accumulator_sec: float = 0.0
+var ambient_player: AudioStreamPlayer
 
 
 func _ready() -> void:
-	TowerRegistry.refresh_from_tree(get_tree())
+	TowerRegistry.rebuild_from_tree(get_tree())
+	ambient_player = AudioStreamPlayer.new()
+	add_child(ambient_player)
+	var looped_ambient: AudioStreamOggVorbis = AMBIENT_SFX.duplicate() as AudioStreamOggVorbis
+	looped_ambient.loop = true
+	ambient_player.stream = looped_ambient
+	ambient_player.volume_db = -20.0
+	ambient_player.play()
 
 
 func _physics_process(delta: float) -> void:
@@ -16,10 +26,10 @@ func _physics_process(delta: float) -> void:
 	if meteor_cull_accumulator_sec < meteor_cull_period_sec:
 		return
 	meteor_cull_accumulator_sec = 0.0
-	_update_meteor_simulation()
+	_update_meteor_activity()
 
 
-func player_or_ship_position() -> Vector3:
+func get_player_focus_position() -> Vector3:
 	var player: Player = GlobalValues.player
 	if player == null:
 		return Vector3.ZERO
@@ -28,10 +38,10 @@ func player_or_ship_position() -> Vector3:
 	return player.global_position
 
 
-func _update_meteor_simulation() -> void:
+func _update_meteor_activity() -> void:
 	if GlobalValues.player == null:
 		return
-	var origin: Vector3 = player_or_ship_position()
+	var origin: Vector3 = get_player_focus_position()
 	var sleep_distance_squared: float = meteor_sleep_m * meteor_sleep_m
 	var wake_distance_m: float = minf(meteor_wake_m, meteor_sleep_m - 1.0)
 	var wake_distance_squared: float = wake_distance_m * wake_distance_m

@@ -1,6 +1,8 @@
 extends CharacterBody3D
 class_name SpaceShip
 
+const SHIP_FLY_SFX: AudioStream = preload("res://game/audios/ship_fly.ogg")
+
 const VELOCITY_RESPONSE: float = 3.25
 const MIN_CRUISE: float = 5.0
 const MAX_CRUISE: float = 80.0
@@ -39,6 +41,7 @@ var flight: ShipFlightModel = ShipFlightModel.new()
 var mouse_yaw_delta: float = 0.0
 
 var pilot_camera_fov_default: float = 75.0
+var ship_fly_player: AudioStreamPlayer3D
 
 
 func _ready() -> void:
@@ -48,15 +51,20 @@ func _ready() -> void:
 	add_to_group("rideable_ship")
 	oxygen_tank_fill = TANK_CAPACITY * 0.5
 	water_tank_fill = TANK_CAPACITY * 0.5
+	ship_fly_player = AudioStreamPlayer3D.new()
+	add_child(ship_fly_player)
+	ship_fly_player.stream = SHIP_FLY_SFX
+	ship_fly_player.volume_db = -80.0
+	ship_fly_player.max_distance = 900.0
 
 
 func _process(delta: float) -> void:
 	handle_input()
 	if radio != null:
-		radio.tick(radio_listener_position())
+		radio.tick(get_radio_listener_position())
 
 
-func radio_listener_position() -> Vector3:
+func get_radio_listener_position() -> Vector3:
 	if GlobalValues.player != null and GlobalValues.player.vehicle != self:
 		return GlobalValues.player.global_position
 	return global_position
@@ -77,7 +85,7 @@ func _input(event: InputEvent) -> void:
 
 func _physics_process(delta: float) -> void:
 	if is_active:
-		if flight.is_thrusting(self) and cruise_speed > MIN_CRUISE:
+		if flight.is_accelerating(self) and cruise_speed > MIN_CRUISE:
 			var cruise_speed_ratio: float = (cruise_speed - MIN_CRUISE) / maxf(
 				0.001, MAX_CRUISE - MIN_CRUISE
 			)
@@ -91,14 +99,19 @@ func _physics_process(delta: float) -> void:
 			return
 		var yaw_accum: float = mouse_yaw_delta
 		mouse_yaw_delta = 0.0
-		var thrust_cruise: float = get_effective_thrust_cruise_speed()
-		flight.apply_arcade_thrust(self, delta, thrust_cruise, VELOCITY_RESPONSE, yaw_accum, MOUSE_YAW_SENS, YAW_SMOOTHING)
+		var thrust_cruise: float = get_current_thrust_speed()
+		flight.apply_flight_controls(
+			self, delta, thrust_cruise, VELOCITY_RESPONSE, yaw_accum, MOUSE_YAW_SENS, YAW_SMOOTHING
+		)
 		move_and_slide()
+		_update_engine_sound()
 		_update_pilot_camera_fov()
+	else:
+		_update_engine_sound()
 	AnimatableBodySync.push_transforms_to_physics(self)
 
 
-func get_effective_thrust_cruise_speed() -> float:
+func get_current_thrust_speed() -> float:
 	if fuel > MIN_FUEL_TO_INCREASE_SPEED:
 		return cruise_speed
 	return minf(cruise_speed, NO_FUEL_THRUST_CAP)
@@ -175,3 +188,18 @@ func _update_pilot_camera_fov() -> void:
 	var speed: float = velocity.length()
 	var speed_ratio: float = clampf(speed / PILOT_CAMERA_FOV_SPEED_REF, 0.0, 1.0)
 	camera_3d.fov = lerpf(PILOT_CAMERA_FOV_MIN, PILOT_CAMERA_FOV_MAX, speed_ratio)
+
+
+func _update_engine_sound() -> void:
+	if ship_fly_player == null:
+		return
+	var speed: float = velocity.length()
+	var speed_ratio: float = clampf(speed / maxf(0.001, MAX_CRUISE), 0.0, 1.0)
+	var active_flight: bool = is_active and speed > 0.75
+	if not active_flight:
+		ship_fly_player.stop()
+		return
+	ship_fly_player.pitch_scale = lerpf(0.85, 1.45, speed_ratio)
+	ship_fly_player.volume_db = lerpf(-24.0, -15.0, speed_ratio)
+	if not ship_fly_player.playing:
+		ship_fly_player.play()

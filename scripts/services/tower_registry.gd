@@ -6,7 +6,7 @@ const GROUP_ANTENNAS: StringName = &"antennas"
 var xy_by_name: Dictionary = {}
 
 
-func refresh_from_tree(tree: SceneTree) -> void:
+func rebuild_from_tree(tree: SceneTree) -> void:
 	xy_by_name.clear()
 	for n in tree.get_nodes_in_group(GROUP_ANTENNAS):
 		if not (n is Antenna):
@@ -15,7 +15,7 @@ func refresh_from_tree(tree: SceneTree) -> void:
 		xy_by_name[antenna.name] = Vector2(antenna.global_position.x, antenna.global_position.z)
 
 
-func sorted_labels() -> PackedStringArray:
+func get_sorted_labels() -> PackedStringArray:
 	var keys: Array = xy_by_name.keys()
 	keys.sort()
 	var lines: PackedStringArray = PackedStringArray()

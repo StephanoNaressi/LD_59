@@ -1,6 +1,8 @@
 extends RigidBody3D
 class_name Destroyable
 
+const BREAK_SFX: AudioStream = preload("res://game/audios/break.ogg")
+
 @export var crosshair_marker: Marker3D
 @export var resource_drop: Item.Item_Type
 
@@ -29,11 +31,12 @@ func take_damage(damage: float) -> void:
 	health -= damage
 	if health <= 0.0:
 		dead = true
-		if _drops_inventory_on_death():
+		GlobalValues.play_sfx_at(BREAK_SFX, global_position, -13.0, randf_range(0.96, 1.04), 420.0)
+		if _should_drop_loot():
 			if resource_drop == Item.Item_Type.OXYGEN:
-				_grant_life_support_to_ship(true, drop_rate)
+				_route_drop_to_life_support(true, drop_rate)
 			elif resource_drop == Item.Item_Type.WATER:
-				_grant_life_support_to_ship(false, drop_rate)
+				_route_drop_to_life_support(false, drop_rate)
 			else:
 				for drop_index in range(drop_rate):
 					var drop: Item = Item.new()
@@ -45,11 +48,11 @@ func take_damage(damage: float) -> void:
 		queue_free()
 
 
-func _drops_inventory_on_death() -> bool:
+func _should_drop_loot() -> bool:
 	return true
 
 
-func _grant_life_support_to_ship(oxygen: bool, units: int) -> void:
+func _route_drop_to_life_support(oxygen: bool, units: int) -> void:
 	var ship: Node = get_tree().get_first_node_in_group("rideable_ship")
 	if not (ship is SpaceShip):
 		return

@@ -3,6 +3,7 @@ class_name ShipWeaponSystem
 
 const METEOR_PROJECTILE_SCENE: PackedScene = preload("uid://b65juspb4p45s")
 const REPAIR_PROJECTILE_SCENE: PackedScene = preload("res://scenes/repair_proyectile.tscn")
+const PEW_SFX: AudioStream = preload("res://game/audios/pew.ogg")
 
 var ship: SpaceShip
 var is_shooting: bool = false
@@ -88,7 +89,12 @@ func tick_repair_hold() -> void:
 func try_fire_repair() -> void:
 	if not can_fire_repair or reticle_antenna == null:
 		return
-	if not GlobalValues.can_afford_items(reticle_antenna.metal_cost, reticle_antenna.rock_cost):
+	if not GlobalValues.has_items_for_cost(
+		reticle_antenna.metal_cost,
+		reticle_antenna.rock_cost,
+		reticle_antenna.oxygen_cost,
+		reticle_antenna.water_cost
+	):
 		return
 	var muzzle: Node3D = turret_pos if next_turret_left else turret_pos_2
 	next_turret_left = not next_turret_left
@@ -117,6 +123,7 @@ func try_spawn_meteor() -> void:
 		projectile.queue_free()
 		return
 	projectile.configure_homing(reticle_meteor, muzzle)
+	GlobalValues.play_sfx_at(PEW_SFX, muzzle.global_position, -17.0, randf_range(0.98, 1.05), 560.0)
 	can_shoot = false
 	shooting_cooldown.start()
 
